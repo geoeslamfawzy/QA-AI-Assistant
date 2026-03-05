@@ -1,0 +1,21 @@
+{
+  "jira": {
+    "domain": "https://your-domain.atlassian.net/",
+    "apiToken": "YOUR_JIRA_API_TOKEN",
+    "email": "your-email@example.com"
+  },
+  "figma": {
+    "accessToken": "YOUR_FIGMA_ACCESS_TOKEN"
+  },
+  "behavior": {
+    "autoFetchFigma": true,
+    "includeProjectContext": true,
+    "autoTagComments": true,
+    "includeScreenshots": false
+  },
+  "activeModules": [
+    "B2B Corporate Portal",
+    "B2C Web Interface",
+    "Admin Panel"
+  ]
+}

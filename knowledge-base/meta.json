@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-01T00:00:00.000Z",
+  "moduleCount": 28,
+  "ruleCount": 87,
+  "description": "Yassir Mobility Project Context - QA Knowledge Base",
+  "categories": {
+    "modules": 4,
+    "atomic_rules": 13,
+    "state_machines": 6,
+    "cross_dependencies": 3,
+    "financial_logic": 3
+  }
+}

@@ -1,0 +1,315 @@
+#!/usr/bin/env node
+
+/**
+ * CLI tool to test Jira connection and fetch tickets
+ *
+ * Usage:
+ *   ./bin/jira-test                    # Test connection status
+ *   ./bin/jira-test CMB-32860          # Fetch a specific ticket
+ *   ./bin/jira-test CMB-32860 --json   # Output raw JSON
+ *   ./bin/jira-test --help             # Show help
+ */
+
+const path = require('path');
+const fs = require('fs');
+
+// Load environment variables from .env.local
+const envPath = path.join(__dirname, '..', '.env.local');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf-8');
+  envContent.split('\n').forEach(line => {
+    const match = line.match(/^([^#=]+)=(.*)$/);
+    if (match) {
+      const key = match[1].trim();
+      const value = match[2].trim();
+      if (!process.env[key]) {
+        process.env[key] = value;
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// Configuration
+// ─────────────────────────────────────────────
+
+const JIRA_DOMAIN = process.env.JIRA_DOMAIN;
+const JIRA_EMAIL = process.env.JIRA_EMAIL;
+const JIRA_API_TOKEN = process.env.JIRA_API_TOKEN;
+const JIRA_PROJECT_KEY = process.env.JIRA_PROJECT_KEY || 'CMB';
+
+// ─────────────────────────────────────────────
+// Colors for terminal output
+// ─────────────────────────────────────────────
+
+const colors = {
+  reset: '\x1b[0m',
+  bright: '\x1b[1m',
+  dim: '\x1b[2m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  magenta: '\x1b[35m',
+  cyan: '\x1b[36m',
+};
+
+const c = (color, text) => `${colors[color]}${text}${colors.reset}`;
+
+// ─────────────────────────────────────────────
+// Help
+// ─────────────────────────────────────────────
+
+function showHelp() {
+  console.log(`
+${c('bright', 'Jira Connection Test CLI')}
+
+${c('yellow', 'Usage:')}
+  ./bin/jira-test                    Test connection status
+  ./bin/jira-test <TICKET_ID>        Fetch a specific ticket
+  ./bin/jira-test <TICKET_ID> --json Output raw JSON
+  ./bin/jira-test --help             Show this help
+
+${c('yellow', 'Examples:')}
+  ./bin/jira-test CMB-32860
+  ./bin/jira-test CMB-32860 --json
+
+${c('yellow', 'Configuration:')}
+  Reads credentials from .env.local:
+    JIRA_DOMAIN=${JIRA_DOMAIN || '(not set)'}
+    JIRA_EMAIL=${JIRA_EMAIL ? JIRA_EMAIL.replace(/(.{3}).*(@.*)/, '$1***$2') : '(not set)'}
+    JIRA_API_TOKEN=${JIRA_API_TOKEN ? '****' + JIRA_API_TOKEN.slice(-4) : '(not set)'}
+`);
+}
+
+// ─────────────────────────────────────────────
+// Jira API
+// ─────────────────────────────────────────────
+
+function isConfigured() {
+  if (!JIRA_DOMAIN || !JIRA_EMAIL || !JIRA_API_TOKEN) return false;
+  if (JIRA_EMAIL.includes('REPLACE') || JIRA_API_TOKEN.includes('REPLACE')) return false;
+  return true;
+}
+
+function getAuthHeader() {
+  const credentials = Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64');
+  return `Basic ${credentials}`;
+}
+
+async function jiraGet(path) {
+  const url = `https://${JIRA_DOMAIN}/rest/api/3${path}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': getAuthHeader(),
+      'Accept': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    const error = new Error(`Jira ${response.status}: ${text}`);
+    error.status = response.status;
+    throw error;
+  }
+
+  return response.json();
+}
+
+// ─────────────────────────────────────────────
+// ADF Parser (simplified)
+// ─────────────────────────────────────────────
+
+function adfToText(node) {
+  if (!node) return '';
+  if (typeof node === 'string') return node;
+  if (typeof node !== 'object') return '';
+
+  if (node.type === 'text') return node.text || '';
+  if (node.type === 'hardBreak') return '\n';
+
+  if (node.type === 'paragraph' || node.type === 'heading') {
+    const inner = Array.isArray(node.content)
+      ? node.content.map(adfToText).join('')
+      : '';
+    return inner + '\n';
+  }
+
+  if (node.type === 'bulletList' || node.type === 'orderedList') {
+    return (Array.isArray(node.content)
+      ? node.content.map((item, i) => {
+          const text = adfToText(item).trim();
+          const prefix = node.type === 'orderedList' ? `${i + 1}. ` : '- ';
+          return prefix + text;
+        }).join('\n')
+      : '') + '\n';
+  }
+
+  if (node.type === 'listItem') {
+    return Array.isArray(node.content)
+      ? node.content.map(adfToText).join('')
+      : '';
+  }
+
+  if (Array.isArray(node.content)) {
+    return node.content.map(adfToText).join('');
+  }
+
+  return '';
+}
+
+// ─────────────────────────────────────────────
+// Commands
+// ─────────────────────────────────────────────
+
+async function testConnection() {
+  console.log(c('bright', '\n🔌 Testing Jira Connection...\n'));
+
+  if (!isConfigured()) {
+    console.log(c('red', '✗ Jira is not configured\n'));
+    console.log('  Missing or invalid credentials in .env.local');
+    console.log('  Required variables:');
+    console.log(`    JIRA_DOMAIN    = ${JIRA_DOMAIN || c('red', '(not set)')}`);
+    console.log(`    JIRA_EMAIL     = ${JIRA_EMAIL && !JIRA_EMAIL.includes('REPLACE') ? c('green', '***') : c('red', '(not set or placeholder)')}`);
+    console.log(`    JIRA_API_TOKEN = ${JIRA_API_TOKEN && !JIRA_API_TOKEN.includes('REPLACE') ? c('green', '***') : c('red', '(not set or placeholder)')}`);
+    console.log('\n  Get your API token from:');
+    console.log('  https://id.atlassian.com/manage-profile/security/api-tokens\n');
+    process.exit(1);
+  }
+
+  try {
+    const me = await jiraGet('/myself');
+
+    console.log(c('green', '✓ Connected to Jira!\n'));
+    console.log(`  ${c('dim', 'Domain:')}  https://${JIRA_DOMAIN}`);
+    console.log(`  ${c('dim', 'User:')}    ${me.displayName}`);
+    console.log(`  ${c('dim', 'Email:')}   ${me.emailAddress}`);
+    console.log(`  ${c('dim', 'Project:')} ${JIRA_PROJECT_KEY}\n`);
+
+  } catch (err) {
+    console.log(c('red', '✗ Connection failed\n'));
+
+    if (err.status === 401) {
+      console.log('  Authentication failed. Your API token may be invalid or expired.');
+      console.log('  Generate a new one at: https://id.atlassian.com/manage-profile/security/api-tokens');
+    } else if (err.status === 403) {
+      console.log('  Access denied. Your account may not have permission.');
+    } else {
+      console.log(`  Error: ${err.message}`);
+    }
+    console.log('');
+    process.exit(1);
+  }
+}
+
+async function fetchTicket(ticketId, outputJson) {
+  const id = ticketId.toUpperCase();
+
+  if (!outputJson) {
+    console.log(c('bright', `\n🎫 Fetching ${id}...\n`));
+  }
+
+  if (!isConfigured()) {
+    console.error(c('red', 'Error: Jira is not configured. Run ./bin/jira-test to check status.\n'));
+    process.exit(1);
+  }
+
+  try {
+    const issue = await jiraGet(`/issue/${id}`);
+    const f = issue.fields;
+
+    const descText = adfToText(f.description);
+
+    // Extract sprint
+    const sprintField = f.customfield_10020;
+    let sprint = 'Backlog';
+    if (Array.isArray(sprintField) && sprintField.length > 0) {
+      const active = sprintField.find(s => s.state === 'active');
+      sprint = (active || sprintField[sprintField.length - 1])?.name || 'Backlog';
+    }
+
+    const ticket = {
+      ticketId: issue.key,
+      title: f.summary || '',
+      status: f.status?.name || 'Unknown',
+      type: f.issuetype?.name || 'Story',
+      priority: f.priority?.name || 'Medium',
+      sprint,
+      assignee: f.assignee?.displayName || 'Unassigned',
+      reporter: f.reporter?.displayName || 'Unknown',
+      labels: f.labels || [],
+      components: (f.components || []).map(c => c.name),
+      description: descText.substring(0, 500),
+      created: f.created,
+      updated: f.updated,
+    };
+
+    if (outputJson) {
+      console.log(JSON.stringify(ticket, null, 2));
+      return;
+    }
+
+    // Pretty print
+    console.log(`  ${c('cyan', ticket.ticketId)} ${c('bright', ticket.title)}`);
+    console.log('');
+    console.log(`  ${c('dim', 'Status:')}    ${c('yellow', ticket.status)}`);
+    console.log(`  ${c('dim', 'Type:')}      ${ticket.type}`);
+    console.log(`  ${c('dim', 'Priority:')}  ${ticket.priority}`);
+    console.log(`  ${c('dim', 'Sprint:')}    ${ticket.sprint}`);
+    console.log(`  ${c('dim', 'Assignee:')}  ${ticket.assignee}`);
+    console.log(`  ${c('dim', 'Reporter:')}  ${ticket.reporter}`);
+
+    if (ticket.labels.length > 0) {
+      console.log(`  ${c('dim', 'Labels:')}    ${ticket.labels.join(', ')}`);
+    }
+    if (ticket.components.length > 0) {
+      console.log(`  ${c('dim', 'Components:')} ${ticket.components.join(', ')}`);
+    }
+
+    console.log('');
+    console.log(`  ${c('dim', 'Description:')}`);
+    console.log(`  ${ticket.description.split('\n').join('\n  ')}`);
+    console.log('');
+    console.log(`  ${c('dim', 'URL:')} https://${JIRA_DOMAIN}/browse/${ticket.ticketId}`);
+    console.log('');
+
+  } catch (err) {
+    if (err.status === 404) {
+      console.error(c('red', `Error: Ticket ${id} not found in Jira.\n`));
+    } else if (err.status === 401) {
+      console.error(c('red', 'Error: Authentication failed. Check your API token.\n'));
+    } else {
+      console.error(c('red', `Error: ${err.message}\n`));
+    }
+    process.exit(1);
+  }
+}
+
+// ─────────────────────────────────────────────
+// Main
+// ─────────────────────────────────────────────
+
+async function main() {
+  const args = process.argv.slice(2);
+
+  if (args.includes('--help') || args.includes('-h')) {
+    showHelp();
+    return;
+  }
+
+  const ticketId = args.find(a => !a.startsWith('-'));
+  const outputJson = args.includes('--json');
+
+  if (ticketId) {
+    await fetchTicket(ticketId, outputJson);
+  } else {
+    await testConnection();
+  }
+}
+
+main().catch(err => {
+  console.error(c('red', `\nUnexpected error: ${err.message}\n`));
+  process.exit(1);
+});
