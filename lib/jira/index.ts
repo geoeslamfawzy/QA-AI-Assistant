@@ -27,6 +27,9 @@ export {
   // Generic issue creation
   createJiraIssue,
 
+  // JQL search with pagination
+  searchJiraIssues,
+
   // HTTP helpers (for advanced usage)
   jiraGet,
   jiraPost,
@@ -43,7 +46,7 @@ export {
 } from './client';
 
 // Re-export types
-export type { JiraConfig, JiraTicket, JiraComment } from './client';
+export type { JiraConfig, JiraTicket, JiraComment, SearchOptions } from './client';
 
 // Re-export field configuration
 export {

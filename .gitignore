@@ -36,6 +36,12 @@ yarn-error.log*
 # settings with secrets
 settings.json
 
+# Auto-generated Jira context (rebuilt from Jira)
+knowledge-base/jira-context/
+knowledge-base/sync-state.json
+knowledge-base/sync-checkpoint.json
+knowledge-base/sync-progress.json
+
 # vercel
 .vercel
 

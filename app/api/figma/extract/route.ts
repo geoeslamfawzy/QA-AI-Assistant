@@ -1,84 +1,80 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// Mock Figma frames
-const mockFrames = [
-  {
-    id: 'frame-1',
-    name: 'Booking Form (Multi-stop)',
-    width: 1440,
-    height: 900,
-    thumbnailUrl: null,
-  },
-  {
-    id: 'frame-2',
-    name: 'Add Stop Modal',
-    width: 480,
-    height: 640,
-    thumbnailUrl: null,
-  },
-  {
-    id: 'frame-3',
-    name: 'Confirmation Popup',
-    width: 480,
-    height: 320,
-    thumbnailUrl: null,
-  },
-  {
-    id: 'frame-4',
-    name: 'Ride Summary',
-    width: 1440,
-    height: 800,
-    thumbnailUrl: null,
-  },
-];
+import {
+  parseFigmaUrl,
+  fetchFigmaFile,
+  fetchFigmaNodes,
+  fetchFigmaImages,
+  isFigmaConfigured,
+} from '@/lib/figma/client';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { url } = body;
+    const { url, figmaUrl, fileKey: providedFileKey, includeThumbnails = false } = await request.json();
+    const figmaInput = url || figmaUrl;
 
-    if (!url) {
+    if (!isFigmaConfigured()) {
       return NextResponse.json(
-        { success: false, error: 'Figma URL is required' },
-        { status: 400 }
+        { error: 'Figma not configured. Add FIGMA_ACCESS_TOKEN to .env.local', _isMock: true },
+        { status: 503 }
       );
     }
 
-    // Validate that it looks like a Figma URL
-    if (!url.includes('figma.com')) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid Figma URL' },
-        { status: 400 }
-      );
+    // Parse the Figma URL to get file key
+    let fileKey = providedFileKey;
+    let nodeId: string | undefined;
+
+    if (figmaInput) {
+      const parsed = parseFigmaUrl(figmaInput);
+      if (!parsed) {
+        return NextResponse.json({ error: 'Invalid Figma URL' }, { status: 400 });
+      }
+      fileKey = parsed.fileKey;
+      nodeId = parsed.nodeId;
     }
 
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    if (!fileKey) {
+      return NextResponse.json({ error: 'Figma URL or fileKey is required' }, { status: 400 });
+    }
 
-    // In a real implementation, this would:
-    // 1. Parse the Figma file ID and node ID from the URL
-    // 2. Authenticate with Figma API using stored access token
-    // 3. Fetch the file/frame details
-    // 4. Get thumbnail images for each frame
+    // Fetch frames
+    let frames;
+    let fileName = 'Untitled';
+    if (nodeId) {
+      const nodeIds = nodeId.split(',');
+      const result = await fetchFigmaNodes(fileKey, nodeIds);
+      frames = result.nodes;
+    } else {
+      const result = await fetchFigmaFile(fileKey);
+      frames = result.frames;
+      fileName = result.fileName;
+    }
 
-    // Return random subset of mock frames
-    const frameCount = Math.floor(Math.random() * 3) + 2; // 2-4 frames
-    const frames = mockFrames.slice(0, frameCount);
+    // Fetch thumbnails only when explicitly requested (reduces API calls)
+    let thumbnails: Record<string, string> = {};
+    if (includeThumbnails && frames.length > 0) {
+      const frameIds = frames.slice(0, 20).map((f) => f.id); // Limit to 20
+      try {
+        thumbnails = await fetchFigmaImages(fileKey, frameIds);
+      } catch {
+        // Thumbnails are optional — don't fail if they can't be fetched
+      }
+    }
+
+    // Merge thumbnails into frames
+    const framesWithThumbnails = frames.map((f) => ({
+      ...f,
+      thumbnailUrl: thumbnails[f.id] || null,
+    }));
 
     return NextResponse.json({
       success: true,
-      frames,
-      fileId: 'mock-file-id',
-      fileName: 'B2B Portal - Booking Flow',
+      fileKey,
+      fileName,
+      frames: framesWithThumbnails,
+      _isMock: false,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error extracting Figma frames:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message, success: false }, { status: 500 });
   }
 }

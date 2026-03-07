@@ -12,6 +12,7 @@ import {
   History,
   FileText,
   Settings,
+  BookOpen,
 } from 'lucide-react';
 
 const workflowNavigation = [
@@ -48,6 +49,11 @@ const managementNavigation = [
     name: 'Prompt Templates',
     href: '/templates',
     icon: FileText,
+  },
+  {
+    name: 'Project Context',
+    href: '/project-context',
+    icon: BookOpen,
   },
   {
     name: 'Settings',

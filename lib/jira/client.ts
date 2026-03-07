@@ -853,6 +853,157 @@ export async function findIssueByExactSummary(params: {
 }
 
 // ════════════════════════════════════
+// JQL SEARCH WITH PAGINATION
+// ════════════════════════════════════
+
+/**
+ * Response from the new /search/jql endpoint.
+ * Note: This endpoint uses nextPageToken for pagination, NOT startAt/total.
+ * See: https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-jql/
+ */
+interface JiraSearchResponse {
+  issues: JiraIssue[];
+  maxResults: number;
+  isLast: boolean;
+  nextPageToken?: string;
+}
+
+export interface SearchOptions {
+  fields?: string[];
+  maxResults?: number;
+  maxPages?: number;
+}
+
+/**
+ * Search Jira issues using JQL with pagination support.
+ * Uses the new /search/jql endpoint with nextPageToken-based pagination.
+ *
+ * @param jql - JQL query string
+ * @param options - Search options (fields, maxResults per page, maxPages)
+ * @returns Array of parsed JiraTicket objects
+ */
+export async function searchJiraIssues(
+  jql: string,
+  options?: SearchOptions
+): Promise<JiraTicket[]> {
+  const config = getJiraConfig();
+  if (!config) return [];
+
+  const fields = options?.fields || [
+    'summary',
+    'description',
+    'status',
+    'issuetype',
+    'labels',
+    'components',
+    'created',
+    'updated',
+    'priority',
+    'assignee',
+    'reporter',
+    'attachment',
+    // Sprint fields
+    'customfield_10020',
+    'customfield_10016',
+  ];
+  const pageSize = Math.min(options?.maxResults || 100, 100); // Jira max is 100
+  const maxPages = options?.maxPages || 20; // Default: up to 2000 tickets
+
+  const allTickets: JiraTicket[] = [];
+  let nextPageToken: string | undefined;
+  let page = 0;
+
+  console.log(`[Jira Search] Starting search with JQL: ${jql.substring(0, 100)}...`);
+
+  while (page < maxPages) {
+    // Build request body for the new /search/jql endpoint
+    // Note: Uses nextPageToken instead of startAt for pagination
+    const requestBody: Record<string, unknown> = {
+      jql,
+      maxResults: pageSize,
+      fields,
+    };
+
+    // Add nextPageToken for subsequent pages (not needed for first page)
+    if (nextPageToken) {
+      requestBody.nextPageToken = nextPageToken;
+    }
+
+    const response = await jiraPost<JiraSearchResponse>(config, '/search/jql', requestBody);
+
+    for (const issue of response.issues) {
+      const ticket = parseIssueToTicket(issue);
+      allTickets.push(ticket);
+    }
+
+    console.log(`[Jira Search] Fetched ${allTickets.length} issues (page ${page + 1}, isLast: ${response.isLast})...`);
+
+    // Check if this is the last page
+    if (response.isLast || !response.nextPageToken) {
+      break;
+    }
+
+    // Use nextPageToken for the next page
+    nextPageToken = response.nextPageToken;
+    page++;
+
+    // Rate limiting delay between pages
+    await new Promise((r) => setTimeout(r, 200));
+  }
+
+  console.log(`[Jira Search] Complete. Fetched ${allTickets.length} total issues.`);
+  return allTickets;
+}
+
+/**
+ * Parse a raw Jira issue into a JiraTicket object.
+ * Reuses existing parsing logic from fetchJiraTicket.
+ */
+function parseIssueToTicket(issue: JiraIssue): JiraTicket {
+  const f = issue.fields;
+
+  const descText = adfToText(f.description);
+  const acceptanceCriteria = extractAcceptanceCriteria(descText);
+
+  // Extract user story sentence
+  const storyMatch = descText.match(
+    /as\s+an?\s+.+?,?\s*i\s+want\s+.+?(so\s+that\s+.+?)?[.\n]/i
+  );
+  const userStory = storyMatch
+    ? storyMatch[0].trim()
+    : descText.split('\n').find((l: string) => l.trim().length > 10)?.trim() ||
+      descText.substring(0, 300);
+
+  const labels = (f.labels || []) as string[];
+  const components = ((f.components || []) as { name: string }[]).map((c) => c.name);
+  const figmaLinks = extractFigmaLinks(descText);
+
+  return {
+    ticketId: issue.key,
+    title: f.summary || '',
+    status: f.status?.name || 'Unknown',
+    type: f.issuetype?.name || 'Story',
+    sprint: extractSprint(f),
+    assignee: f.assignee?.displayName || 'Unassigned',
+    reporter: f.reporter?.displayName || 'Unknown',
+    userStory,
+    acceptanceCriteria,
+    labels,
+    components,
+    module: detectModule(labels, components, f.summary || '', descText),
+    priority: f.priority?.name || 'P2 - Medium',
+    created: (f.created as string) || '',
+    updated: (f.updated as string) || '',
+    figmaLinks,
+    attachments: ((f.attachment || []) as { filename: string; content: string }[]).map((a) => ({
+      filename: a.filename,
+      url: a.content,
+    })),
+    _isMock: false,
+  };
+}
+
+// ════════════════════════════════════
 // GENERIC ISSUE CREATION
 // ════════════════════════════════════
 

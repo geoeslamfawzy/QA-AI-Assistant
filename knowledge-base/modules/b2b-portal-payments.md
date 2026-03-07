@@ -1,0 +1,3347 @@
+---
+id: "jira-b2b-portal-payments"
+title: "B2B Portal — Payments"
+system: "B2B Corporate Portal"
+type: "jira_context"
+source: "auto-generated"
+tags: ["jira-context","auto-generated","b2b-corporate-portal","b2b_webapp","b2b","crafttheme_mobility","craft_sync"]
+last_synced: "2026-03-05T12:03:46.528Z"
+ticket_count: 87
+active_ticket_count: 68
+---
+
+# B2B Portal — Payments
+
+> Auto-generated from 87 Jira tickets.
+> Last synced: 2026-03-05T12:03:46.528Z
+> Active features: 68
+> Superseded: 19
+
+## User Stories
+
+### CMB-31489: [WEBAPP] B2B giftcard Trips History and remaining budget on webApp
+
+**Status:** Blocked | **Priority:** P2 - Medium
+**Created:** 2025-10-29
+
+**Description:**
+As a SuperAdmin, I want to be able to see all the trips that have been paid using the giftcards purchased
+
+**Acceptance Criteria:**
+- Scenario 01 : List B2B Giftcard Trips on The Trips History Section
+- Given A rider used a coupon for a giftcard that have been purchased
+- When The trip is completed
+- Then it should be listed on the trips history section on webApp
+- Details:
+- Trip appears in gift card trips list endpoint: GET /api/b2b/giftcards/:giftcardId/trips
+- Only confirmed trips (status = CONFIRMED) are shown
+- List includes: trip ID, date, time, amount, cardValueUsed, pickup/destination, Rider Info
+- Scenario 02 : Trips Details Screen
+- Given A trip have been payed using the giftcard coupon
+- When I open the trip details screen
+- Then I should see
+- the amount of the coupon which was business paid
+- amount that was paid cash displayed
+- the ID of the giftcard
+- Rider Info
+- Driver Info
+- Details:
+- Display cardValueUsed (gift card amount)
+- Display amount - cardValueUsed (cash amount)
+- Display voucherCode (gift card identifier)
+- Display rider fullName and phone
+- Display driver information (if available)
+- Scenario 03 : Check Remaining Value Before Coupon Selection
+- Given A user is requesting a trip and has available gift cards
+- When The user views available coupons
+- Then The system should check remaining value via CHECK API
+- And Only coupons with sufficient remaining value should be shown as available
+- Details:
+- Private Backend calls an API
+- B2B Backend returns canUse: true/false and sufficient: true/false
+- UI displays coupon availability based on response
+- Scenario 04: Reserve Amount When Trip is Confirmed
+- Given A user has selected a gift card coupon for a trip
+- When The user request the trip
+- Then Private Backend should call RESERVE API atomically
+- And The amount should be reserved from remaining value
+- And If insufficient balance, trip creation should fail
+- Details:
+- Private Backend calls an api with voucherCode, amount, externalTripId
+- B2B Backend performs atomic update: remainingValue = remainingValue - amount, reservedValue = reservedValue + amount
+- If remainingValue < amount, return 422 error,
+- If duplicate externalTripId, return 409 error
+- Reservation status set to RESERVED
+- Scenario 05: Confirm Reservation When Trip is finished
+- Given A trip was created with a reserved gift card amount
+- When The trip status changes to "finished"
+- Then Private Backend should call CONFIRM API
+- And The reserved amount should be permanently deducted
+- And The trip should be added to gift card usage history
+- Details:
+- Private Backend calls an api with voucherCode, externalTripId, actualAmountUsed
+- B2B Backend updates: reservedValue = reservedValue - reservedAmount
+- If actualAmountUsed differs, adjust remainingValue accordingly
+- Reservation status set to CONFIRMED
+- Trip ObjectId added to usedInTrips array
+- If remainingValue == 0 && reservedValue == 0, gift card status set to EXPIRED
+- Scenario 06: Revert Reservation When Trip is Cancelled
+- Given A trip was created with a reserved gift card amount
+- When The trip is cancelled or fails
+- Then Private Backend should call REVERT API
+- And The reserved amount should be restored to remaining value
+- And The reservation should be marked as CANCELLED
+- Details:
+- Private Backend calls an api with voucherCode, externalTripId
+- B2B Backend updates: remainingValue = remainingValue + reservedAmount, reservedValue = reservedValue - reservedAmount
+- Reservation status set to CANCELLED
+- Trip is NOT added to usedInTrips array
+- Scenario 07: Handle Concurrent Reservation Requests
+- Given Multiple trips attempt to reserve from the same gift card simultaneously
+- When The total requested amount exceeds remaining value
+- Then Only one reservation should succeed
+- And Other reservations should fail with 422 (Insufficient Balance)
+- And No overspending should occur
+- Details:
+- Atomic database update ensures only one succeeds
+- Example: remainingValue = 1000, Trip A reserves 800, Trip B reserves 800
+- Only Trip A succeeds, Trip B fails
+- No negative balances possible
+- Scenario 08: Handle Duplicate Reservation Requests
+- Given A reservation request was sent but network timeout occurred
+- When Private Backend retries the same reservation request
+- Then B2B Backend should return existing reservation details
+- And No duplicate reservation should be created
+- Details:
+- Same externalTripId used in retry
+- B2B Backend checks if reservation already exists
+- If exists, return 409 Conflict with existing reservation details
+- If not exists, create new reservation
+- Scenario 09: Handle Insufficient Remaining Value
+- Given A gift card has remainingValue = 400
+- When Private Backend attempts to reserve amount = 600
+- Then B2B Backend should return 422
+- And Trip creation should be prevented
+- Details:
+- Atomic check: remainingValue >= amount fails
+- Error response includes current remainingValue
+
+---
+
+### CMB-32860: [ADMINPANEL] Payment Section
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2025-12-14
+
+**Description:**
+As an admin on Admin Panel I need to manage all business-related payments in a centralized and dedicated Payment Management section that allows me to track online payments and bank/cheque transfers efficiently.
+
+**Acceptance Criteria:**
+- Scenario 01: Payment Section Structure
+- As an admin
+- When I access the Admin Panel
+- Then I should see a new centralized section called Payments
+- And the Payments section should contain two sub-sections:
+- Online Payments
+- Cheque / Bank Transfers
+- Scenario 02: Common table Online and Bank / Cheque Payments Screen
+- As an admin
+- When I open the Online Payments section
+- Then I should see a list/table displaying the following columns:
+- Month (displayed in letters)
+- Transfer Date (Online payment Date when the business does an online payment, for bank transfers it should be the date of uploading bank payment receipt on webApp)
+- Amount (Amount topped up by the business)
+- Business Name (Name of the business that made the top-up)
+- Budget Top-up Status, with the following states:
+- In progress
+- Done
+- Action Column
+- Create pre-payment invoice
+- See all details
+- Scenario 03: Accessing Online payment details screen
+- As an admin
+- When I open the Online Payments section
+- Then I should see a list/table displaying the following columns:
+- Month (displayed in letters)
+- Transfer Date
+- Value Date (Date when the company receives the funds should be filled manually by the admins)
+- Amount (Amount topped up by the business)
+- Code 1 (Reference code identifying the payment source – e.g. YC3539332)
+- Code 2 (Secondary reference code identifying the payment source – e.g. 21f98b20425d76e5c81f)
+- Business Name (Name of the business that made the top-up)
+- Budget Top-up Status, with the following states:
+- In progress
+- Done
+- Attachments, including:
+- Pre-payment invoice (Facture d’avance)
+- Payment receipt
+- Create Pre-payment Invoice button (should be disabled in case a pre-payment invoice is attached to the payment)
+- Scenario 03: Accessing Bank / Cheque Transfers Details Screen
+- As an admin
+- When I open the Online Payments section
+- Then I should see a list/table displaying the following columns:
+- Month (displayed in letters)
+- Transfer Date
+- Amount (Amount topped up by the business)
+- Code 1 (Reference code identifying the payment source – e.g. YC3539332)
+- Code 2 (Secondary reference code identifying the payment source – e.g. 21f98b20425d76e5c81f)
+- Business Name (Name of the business that made the top-up)
+- Budget Top-up Status, with the following states:
+- In progress
+- Done
+- Attachments, including:
+- Pre-payment invoice (Facture d’avance)
+- Create Pre-payment Invoice button (should be disabled in case a pre-payment invoice is attached to the payment)
+- Scenario 04: File Upload on Attachments
+- As an admin
+- When I visit a payment details screen (either online or bank/cheque transfers)
+- Then I should be able to upload files in the Attachments section if they were empty
+- And uploaded files should be linked to the corresponding payment entry
+- Scenario 05: Admin Comments
+- As an admin
+- When I visit a payment details screen (either online or bank/cheque transfers)
+- Then I should be able to add comments
+- And comments should be added to the activity log
+- And each comment should include:
+- Date
+- Editor
+- Value
+- Scenario 06: Notification on File Upload by Business
+- As an admin
+- When a business uploads a cheque or payment receipt (on bank transfers section on webApp)
+- Then a notification should be sent to admins
+- And the notification message should indicate: “Business X has uploaded a cheque / payment receipt for a completed bank Transfer”
+- And when I click on the notification I should be redirected to the corresponding bank transfer details screen
+- Scenario 07: Notification on Pre-payment Invoice Creation
+- As an admin
+- When a pre-payment invoice is created
+- Then a notification should be sent to relevant admins
+- And the notification message should indicate: “Admin A has created a pre-payment invoice for Business X”
+- Once the notification is clicked, admin is redirected to the details screen of the corresponding payment
+- Scenario 08: Notification on Admin Comment
+- As an admin
+- When another admin adds a comment on a pre-payment invoice
+- Then a notification should be sent to relevant admins
+- And the notification message should indicate: “Admin A has added a comment on Business X’s pre-payment invoice”
+- and when the notification is clicked I should be redirected to the payment details screen for the corresponding comment
+- Scenario 09: Admin Permissions & Access Control
+- As a superAdmin on adminPanel
+- When I access the Admin Permissions / Accesses screen
+- Then I should be able to enable or disable access to the Payments section
+- Scenario 10: Pre-payment Invoice Template
+- As an admin
+- When I create a pre-payment invoice
+- Then the invoice should follow the following template : Factures d'avance sur consommation 2025 - Google Sheets
+- Scenario 11 : Budget topup status update
+- As an admin
+- When I click on the status of the topup on 'budget topup' column
+- Then I should be able to change the status manually from in progress to done or vice versa
+- Scenario 12 : Activity logs Records
+- As an admin
+- When I access the activity log section
+- Then the following records should be listed there
+- updating status of the budget topup,
+- creation of a pre-payment invoice,
+- the date when was the line added to the table (the date of the online topup or the date of uploading the bank payment receipt on webApp
+- Scenario : Viewing Comments
+- As an admin
+- When I access the payment details screen and I click on a comment
+- Then I should be able to see an overlay screen displaying the comment and it should not be an editable field
+- Scenario : Online Payment Notification Redirection
+- As an admin
+- When A user have done a successful online topup for their budget
+- Then I should receive a notification that the business have done a successfull online payment (which we already have implemented) and Once the notification is clicked then I should be redirected to the payment details screen for the corresponding online payment
+
+---
+
+### CMB-26390: Payment methods for Yassir webapp
+
+**Status:** Blocked | **Priority:** P1 - High
+**Created:** 2025-06-10
+
+**Description:**
+As a Yassir web app user, I want to be able to add, manage, and select my payment methods, so that I can conveniently pay for my rides without needing to switch to the mobile app.
+
+**Acceptance Criteria:**
+- Scenario 1: User wants to add a new credit/debit card.
+- Given I am logged into the Yassir web app.
+- And I am on the payment methods section
+- When I click on "Add payment method"
+- Then a form should appear, prompting me to enter:
+- Email address
+- Card number
+- MM/YY (expiration date)
+- Country (e.g., Algeria)
+- Postal code
+- When I fill my card details
+- And I click on “Add card”
+- Then a confirmation message message should appear “New payment method added succesfully”
+- Then I should be able to submit the form to securely save my card details
+- And the newly added card should be displayed as an available payment option.
+- Scenario 2: Payment method on Pre-ride
+- Given I am logged into the Yassir ride on web
+- When I select my pick-up and destination to search for a driver
+- Then on the bottom of the price estimation screen, “Payment method” button is displayed to either select:
+- Cash by default
+- Payment method (Choose card, or add a new one)
+
+---
+
+### CMB-13299: Enable Payment in Senegal 
+
+**Status:** To Do | **Priority:** No Priority
+**Created:** 2024-03-20
+
+**Acceptance Criteria:**
+- Scenario 1: Accessing Online Payment
+- Given I am a Moroccan BAM or Business Admin,
+- When I navigate to the Payment section on the Yassir for Business platform,
+- Then I should see an option labeled “Online Payment” among the available payment methods.
+- Google Analytics Event:
+- Event Name:
+- Event Trigger: When the user views the Online Payment option in the Payment section.
+- Scenario 2: Selecting Payment Gateway
+- Given I have chosen the “Online Payment” method,
+- When I click on “Proceed to Pay” or an equivalent button,
+- Then I should see a selection of payment gateway options suitable for Morocco (e.g., local or international card processing).
+- Event Trigger: When the user opens the gateway selection interface.
+- Scenario 3: Entering Card Details
+- Given I am on the payment gateway interface,
+- When I enter my card details (card number, expiry date, CVV, etc.),
+- Then the system should securely capture and process this information to complete the payment.
+- Scenario 4: Confirming Payment
+- Given I have submitted valid card information,
+- When the payment gateway processes my transaction successfully,
+- Then I should see a confirmation screen indicating the payment has been completed,
+- And my budget or due balance should be updated accordingly.
+- Event Trigger: When the payment gateway returns a success response, and the user sees a confirmation screen.
+- Scenario 5: Payment Failure Handling
+- Given I have submitted card information,
+- When the payment fails or is declined,
+- Then I should receive an error message explaining the issue,
+- And I should have the option to retry or select a different payment method.
+- Event Trigger: When the payment gateway returns a failure response.
+
+---
+
+### CMB-31557: [ADMINPANEL] B2B Contract Creation
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2025-11-02
+
+**Description:**
+As an Admin on the Admin Panel, I need to create a B2B contract depending on the payment plan of the client, so that all the contracts created for our clients are centrelized in adminPanel.
+
+**Acceptance Criteria:**
+- Scenario 01: Accessing Contracts Section
+- Given I am an admin on adminPanel,
+- When I access adminPanel,
+- Then I should see a new section on adminPanel dedicated for contracts
+- Scenario 02: Adding a New Contract on the Contracts Table with Pending Status
+- Given that I am an Admin and I have have approved legal information of a client,
+- When I access the contract section,
+- Then I should be able to see a new contract line on the table with pending status
+- Scenario 03: Contracts Table
+- Given that I am on adminPanel,
+- When I access the contract section,
+- Then I should be able to view all the businesses in which the legal information have been approved in a table :
+- company (business name)
+- Contract Status
+- pending : Default value, waiting for the contract creation
+- created : once create contract button is clicked,
+- In Review : manual update (will allow us to display the contract for the client on webApp)
+- Signed = manual update business activated,
+- Ongoing = after signed manual update,
+- Terminated = after the contract duration is over
+- Duration : Default Value = 2 years
+- start date : The day of the activation of the account
+- end date : after 2 years of the start date
+- Comment : we need to display an overlay screen to allow the admins to add comments, which will be displayed on the activity log
+- Actions :
+- Send contract (allows to send an email to the BAM with the unsigned contract template Email Template)
+- Create contract
+- See Details (on click admin is redirected to the contract details screen)
+- Scenario 04: Contracts Details Screen
+- Given that I have have approved legal information of a client,
+- When I access the contract section,
+- Then I should be able to view al the businesses in which the legal information have been approved in a table :
+- company (business name)
+- Update Status
+- update the contract status according to this flow
+- Duration : Default Value = 2 years
+- start date
+- end date
+- renewal type (manual, once the user clicks on renew contract)
+- termination date
+- Renew
+- Comment
+- Attachement files
+- Unsigned contract
+- Signed contract
+- Avenant
+- Actions : Send contract (allows to send an email to the BAM with the unsigned contract attached Email Template)
+- logs section (Scenario 14)
+- Scenario 05: Contract Templates
+- Given that I am an admin on the contracts section on adminPanel,
+- When I click on create contract button
+- Then I need to be able to click between two templates attached to this user story
+- pre-paid
+- post-paid
+- Scenario 06: Creating a Contract
+- Given that I am an admin on the contracts section on adminPanel,
+- When I choose a template from pre-paid/post-paid and I confirm the creation of the contract
+- Then a notification should be added to the notification section (A pre-paid/ post-paid contract Have been created for business X) and the contract status should update from 'Pending' to 'Created'
+- Scenario 07: Changement of Payment Plan of the Business
+- Given I am an admin on adminPanel,
+- When I attempt to change the payment status of the business from post-paid to pre-paid or vice versa,
+- Then
+- a duplicate of the existing contract is created with a new page (avenant) added
+- legal information attached to the duplicated contract should be updated to the new ones which were approved
+- the rest of the data except legal information should remain unchanged
+- Scenario 08: Legal Information Update
+- Given the legal information of the client have been updated (either from adminPanel or from webApp),
+- When Changements are approved,
+- Then I should be able to
+- add a new page to the contract (avenant) on the approval averlay screen (to attach avenant to the contract)
+- and avenant should reflect on the contract section and on the profile of the client on webApp
+- the rest of the data (previously created contract) should remain unchanged
+- Scenario 09: Delete Contract
+- Given I am an admin on adminPanel,
+- When the contract status = created
+- Then I am able to see a button to delete the contract created in case of mistakes of choosing the wrong template and if the contract status has changed to 'In Review' I no longer can delete the contract
+- Scenario 10: Contract Renewal (client account should remain active)
+- Given I am an admin on adminPanel,
+- When the contract status=Terminated
+- Then I should see a button to allow me to renew the contract, once the button is clicked a then I should be able to choose from contract template (either pre-paid or post-paid)
+- Scenario 11: Upload Signed Contract on AdminPanel
+- Given I am an admin on adminPanel,
+- When the contract status=In Review
+- Then I should see a button which allows me upload the signed contract (in case the client did not upload it on webApp)
+- Scenario 12: History Logs
+- Given I am an admin on adminPanel,
+- When any actions of the following is performed on the contract :
+- creation
+- deletion
+- termination
+- renew
+- legal information update/ or changement of payment plan (adding a new page on the contract)
+- Comments
+- Avenant added
+- Then It should be saved on the activity logs with the following information
+- Date
+- Editor
+- Action
+- contract creation
+- deletion
+- termination
+- renewal
+- contract update (l’ajout d'avenant)
+- Comment
+- Scenario 13: Adding Comment
+- Given I am an admin on adminPanel,
+- When I click on add comment
+- Then I should see an overlay screen allowing me to add a comment which will be added on the history log
+- Scenario 14: Viewing Comment
+- Given I am an admin on adminPanel,
+- When I click on a comment on the history log
+- Then I should see an overlay screen allowing me to see the comment dropped by other admins, and it should not be editable
+
+---
+
+### CMB-29387: Updating Yassir's Legal Information
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2025-09-02
+
+**Description:**
+As a Super Admin on adminPanel, I want to be able to easily update Yassir's legal information on the Admin Panel, so that all invoices and payment receipts are automatically updated and reflect the most current and accurate data.
+
+**Acceptance Criteria:**
+- Scenario: Accessing the legal information section
+- Given I am on the Admin Panel.
+- Then a new menu item titled "Yassir's Legal Information" should be displayed in the menu box.
+- When I click on this menu item.
+- Then a new screen should be displayed showing the legal information.
+- Scenario: Viewing and editing legal information
+- Given I am on the Yassir's Legal Information screen.
+- Then the following fields should be displayed and pre-populated with the current values:
+- Enterprise Name
+- Address
+- RC Number
+- Bank
+- Agency
+- Capital Social
+- Bank Number
+- Support Phone Number
+- And the fields should be in a non-editable state.
+- When I click an "Edit" button.
+- Then all legal information fields should become editable.
+- Scenario: Updating legal information and invoices
+- Given I have edited and saved the legal information.
+- When an invoice  is generated or viewed.
+- Then the updated legal information should be displayed on both past and future invoices and receipts.
+- Scenario: Managing permissions for the new section
+- Given I am a Super Admin.
+- When I access the permissions table.
+- Then I should see a new entry for "Yassir's Legal Information" that I can assign to other admins.
+- And only admins with this permission should be able to view and access this section.
+
+---
+
+### CMB-20043: Enable invoice sending for businesseses labeled 'Individual'
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2024-11-25
+
+**Description:**
+As an admin on Dashops, I want to send trip invoices to businesses labeled as "individual" in the admin panel from the trip details screen.
+
+**Acceptance Criteria:**
+- Scenario 1: Sending an invoice to a business labeled 'Individual'
+- Given the admin is on the trip details screen on dashops,
+- And the business is labeled as "individual" on the admin panel,
+- When the admin clicks the "Send Invoice" button,
+- Then the invoice is sent successfully to the rider’s inbox.
+- Scenario 1: Sending an invoice confirmation
+- Given the admin has clicked the "Send Invoice" button,
+- When the invoice is sent successfully,
+- Then a success notification should be displayed
+- Scenario 2: Disabling invoice sending for a businesses labeled 'company'
+- Given the admin is on the trip details screen,
+- When the business is labeled as a "company" on the admin panel,
+- Then the "Send Invoice" button should be disabled.
+
+---
+
+### CMB-18460: Admin Management of Automatic Invoice Email
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2024-10-08
+
+**Description:**
+As an Admin on the Admin Panel,
+
+**Acceptance Criteria:**
+- Scenario 1: Navigating to the Edit Legal Information section
+- Given the admin is logged into the admin panel,
+- When I navigate to the "Enterprises" section, select an enterprise, and go to "Enterprise Information" → "Edit Legal Information,"
+- Then I should see a dropdown list to select the frequency of invoice emails (quarterly, monthly, yearly)
+- Scenario 2: Frequency selection
+- Given selects a frequency from the dropdown,
+- When I save the changes,
+- Then the system should automatically start sending emails to the BAM of that enterprise according to the selected frequency
+- Scenario 3: Updating frequency
+- Given that the admin has updated the email frequency,
+- When the new period (quarterly, monthly, yearly) is due,
+- Then the BAM of that enterprise should receive the invoices in their email inbox as per the updated schedule
+- Scenario 4: Default frequency
+- Given the admin has not selected any frequency for an enterprise,
+- When the default frequency should be set to ‘Monthly’
+- Scenario 5: Generating Invoices for monthly invoices
+- Given that, a company account is created on the platform and have created trips for a month
+- When I go to the invoices section
+- Then the Admin Should see the monthly invoices for all months since the company account setup listed
+- Scenario 6: Generating Invoices for Quarltery invoices
+- Given that, a company account is created on the platform, and have created trips for a quarter
+- When I go to the invoices section and then move to the quarterly section
+- Then the Admin Should see the monthly invoices for all quarterly since the company account setup is listed
+- Scenario 7: Generating Invoices for  yearly
+- Given that, a company account is created on the platform and I have created trips for a year
+- Then the Admin Should see the yearly invoices for all years since the company account setup is listed
+- & businesses which have made trips during the month selected only (TTC =/= 0)
+- invoice link provided should be clickable
+
+---
+
+### CMB-26722: Challenge Cash-back Processing
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2025-06-22
+
+**Description:**
+As a business user, I want my challenge cash-backs to be accurately calculated and reflected on my invoices and finance reports, so that I can trust the financial outcomes of my challenge participation.
+
+**Acceptance Criteria:**
+- Scenario 01: Eligibility Criteria for The Challenge
+- As an admin on AdminPanel,
+- When I create a challenge,
+- Then the businesses that are eligible to join the challenge their status should be Active (either created manually from adminPanel or not)
+- Scenario 02: Company Deletion Impact
+- As a business,
+- When my company is deleted,
+- Then any associated challenges cashbacks should not be processed.
+- Scenario 03: Company status change to inactive
+- As a business,
+- When my company status is changed from active to inactive,
+- Then the progress of the challenge should be set ON-HOLD until business is active by then the progress is resumed only if by the date of activating the business the challenge is still on-going.
+- Scenario 04: Individual Discount + Challenge Cash-back
+- As a business,
+- When an individual company discount was applied for the company and there is an ongoing challenge,
+- Then the business redeems individual discount+challenge cash-back and the notifications should be sent seperately for traceability. and the sum of discounts should be applied on the HT of the invoice
+- Scenario 05: Discount Reflection on Invoice
+- As a business,
+- When a challenge is finished,
+- Then my earned discount should be reflected on the invoice within T2 (Type 2).
+- Scenario 06: Finance Report Update
+- As a finance department user,
+- When a challenge cash-back is applied to a business's invoice,
+- Then the discount amount should be reflected in the finance report (country settings>Payment>finance report) on a new columns which covers (the percentage of the challenge cash-back along with the amount of money earned).
+- Challenge cash-back %
+- Challenge Cash-back Value
+- Scenario 07: Cash-back Timing (within the billing cycle of the challenge's validity end date)
+- As a business,
+- When I complete a challenge,
+- Then the challenge cash-back is processed within the billing cycle of the challenge's validity end date, even if the challenge started in a previous month.
+- Scenario 08: Finished Trip Cancellation
+- As a business,
+- When a finished trip is cancelled from the dashops,
+- Then finished trips counter should not be impacted.
+- Scenario 09: Payment Plan Change
+- As a business,
+- When the payment plan is changed,
+- Then the progress of the finished trips counter should not be impacted.
+- Scenario 10: Newly Created Businesses Active Business Joining Active Challenge (or created manually and activated)
+- As a BAM or admin on adminPanel,
+- When the business account creation has been completed, and there is an ongoing challenge which includes all active businesses,
+- Then I should be elligible to join the challenge.
+
+---
+
+### CMB-27065: Invoice Generation for Finished and Adjusted Trips
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2025-07-01
+
+**Description:**
+As a system, I want to generate two distinct invoices per month, one for finished trips and one for adjusted trips, each containing all necessary data and following a naming convention, so that financial records are clear, accurate, and easily identifiable.
+
+**Acceptance Criteria:**
+- Scenario 01: Generation of Two Monthly Invoices
+- As a system,
+- When invoices are generated by the end of each month,
+- Then two separate invoices should be created: one specifically for finished trips and another exclusively for adjusted trips.
+- Scenario 02: Content of Finished Trips Invoice (Main Page)
+- As a system,
+- When the invoice for finished trips is generated,
+- Then it should include all the usual invoice data, specifically covering only the finished trips And Discount line would have all the amount of discounts T1 (Individual discounts)+T2(referrals discount)+T3 (challenge discount)
+- Scenario 03: Finished Trips Invoice Annexes Page
+- As a system,
+- When the invoice for finished trips is generated,
+- Then a second page, should be included, detailing discount types in a table format with the following four columns: "Discount Type," "Description," "Discount Percentage," and "Discount Amount (in Dinars)."
+- T1 (remises),
+- T2 (remises de parrainage),
+- T3 (Challenge cash-backs)
+- Scenario 04: Content of Adjusted Trips Invoice
+- As a system,
+- When the invoice for adjusted trips is generated (Facture d’avoir),
+- Then it should include all the usual invoice data, specifically covering only the adjusted trips.
+- Scenario 05: Adjusted Trips Invoice Header Details
+- As a system,
+- When the invoice for adjusted trips is generated,
+- Then its header should include
+- Adjusted trips invoice date
+- Avoir n : Adjusted trips invoice reference.
+- Facture n : finished trips invoice reference for the same month.
+- Scenario 06: Adjusted Trips Invoice Reference
+- As a system,
+- When the invoice for adjusted trips is generated,
+- Then the adjusted trips invoice reference (Avoir n ) should start from 0
+- Scenario 07: Adjusted Trips Invoice Generation
+- As a system,
+- When there is no adjusted trips done for a specific month
+- Then the invoice should not be generated
+- Scenario 08: Invoice Naming Convention
+- As a system,
+- When both invoices are generated,
+- Then the one for finished trips should follow the usual naming convention NomEntreprise Mois_Année - Statut.pdf and the one for adjusted should should follow the convention: NomEntreprise Mois Année - Avoir - Statut (Payée/NonPayée).pdf.
+- Note : Find below the adjusted trips template that we should follow (taking into consideration the monthly invoices update issue link)
+
+---
+
+### CMB-26782: Online Topup Notification on AdminPanel
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2025-06-23
+
+**Description:**
+As an administrator on adminPanel, I want to be notified of online top-ups that are done by our clients, and easily access transaction details, including payment receipts, so that I can efficiently manage business budgets and provide necessary documentation.
+
+**Acceptance Criteria:**
+- Scenario 01: Notification Icon Display
+- As an admin,
+- When I login on adminPanel,
+- Then I should see a notification icon.
+- Scenario 02: Admin Notification of Online Topup
+- As an admin on adminPanel,
+- When a client completes a successful online top-up on the WebApp,
+- Then I should receive an instant notification on the AdminPanel which includes :
+- Business's budget top-up amount
+- Business name
+- Date and time of the topUp
+- Full name of the user who made the topup
+- Scenario 03: Accessing Transaction Table and Payment Receipt
+- As an admin on AdminPanel,
+- When I click on the business's budget top-up notification on the AdminPanel,
+- Then I should be directed to the transaction table for that specific business, and the payment receipt tshould be opened automatically (if the admin had access to the transaction table).
+- Scenario 04: Notification Sent Per Country
+- As an admin on AdminPanel,
+- When a notification is sent to the adminPanel,
+- Then I should be able to see the notifications for the countries I have access to.
+- Scenario 05: Notification Feature Permission
+- As a superAdmin on AdminPanel,
+- Then I should be able to set the permission for different admins (to have access to the notification section or not).
+- Scenario 06: Access granted for notification but not for transaction table
+- As an admin who has access for notification but not for transaction table,
+- When a notification is sent to the adminPanel,
+- Then I should be able to see it but on clicki the user should not be redirected to the transaction table (since admin does not have access).
+
+---
+
+### CMB-10054: No Budget Available Error 
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2023-10-26
+
+**Description:**
+As a Business Rider using the Yassir for Business platform, I want to receive a clear error message when attempting to book a trip without sufficient budget.
+
+**Acceptance Criteria:**
+- Scenario 1: Insufficient Budget for Booking
+- Given I am a Business Rider using Yassir for Business,
+- When I try to book a trip, and my business profile has insufficient budget to cover the cost,
+- Then I should receive a message stating that I cannot proceed with the trip request due to low budget.
+- Scenario 2: Different Services of the User Programs
+- Given that I have two services within my program
+- When one of the services cost is more than the available budget, and the other is within the available budget
+- Then I can only see the service that is within the available budget
+- Scenario 3: I have enough budget
+- Given I am a Business Rider using Yassir for Business,
+- When I try to book a trip, and my business profile has sufficient budget to cover the cost,
+- Then I should be able to book the trip directly
+
+---
+
+### CMB-20897: Reflecting Referral Rewards on Invoices and Financial Reports
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2024-12-20
+
+**Description:**
+As an Admin on the Admin Panel,
+
+**Acceptance Criteria:**
+- Scenario 1: Exporting the Finance Report
+- Given that I have chosen to export the finance report,
+- When I initiate the export process,
+- Then the exported report should include UPDATED REPORT LINK
+- For postpaid payment plans :
+- A column for T1 Discount % which reflects the traditional discount (set per company) applied on the invoice
+- A column for T2 Discount Value which reflects the amount of money gained from referrals discount
+- For pre-paid payment plans :
+- A column for Free trips counts which reflects how many free trips have been rewarded
+- A column for Total amount of free trips which reflects the sum of the estimated cost rewarded
+- DISCOUNT APPLIED column should be renamed to T1 DISCOUNT VALUE
+- DISCOUNT APPLIED % column should be renamed to T1 DISCOUNT %
+- Scenario 3: Adding Type2 Discount on the invoice
+- Given I am on admin panel
+- When I download the invoice of any company
+- Then I need to see two Discount types T1 & T2
+- T1 would reflect regular discounts values
+- T2 would reflect the value earned from the referrals (for pre-paid acounts it should be the sum of the values of the estimation of free trips)
+- Scenario 4: Reflecting free trips on WebApp/AdminPanel/Dashops for pre-paid companies
+- Given I am an admin,
+- When I access webApp/adminPanel/Dashops on the free trips for pre-paid companies,
+- Then I should see the estimated price Strikethrough and a 0 is displayed instead, and the estimated price should not be deducted from the budget (either for instant or booked for later trips)
+- Scenario 4: Reflecting free trips on the export file of WebApp/ AdminPanel/ Dashops for pre-paid companies
+- Given I am an admin,
+- When I download the trips export file on webApp/adminPanel/Dashops,
+- Then I should see
+- a column that reflects the estimated price
+- a new column FREE TRIP with two possible values YES/NO
+
+---
+
+### CMB-13294: How to top up budget?
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2024-03-20
+
+---
+
+### CMB-26235: 2.0 Setting Up Reward Rules on AdminPanel
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2025-06-03
+
+**Description:**
+As an admin on the adminPanel, I want to configure reward rules for prepaid and postpaid businesses, based on specific actions taken by referred businesses so that I can create tailored benefits for the referring businesses.
+
+**Acceptance Criteria:**
+- Scenario 1: Access Business Referrals Section on AdminPanel
+- Given I am an admin who has access to the business referrals tab on the adminPanel,
+- When I navigate to the "Country Settings" section,
+- Then I should see a new tab “Business Referrals" where I can
+- see and set both rules for pre-paid and post-paid businesses
+- A referrals links history list for both pre-paid and post-paid businesses
+- Scenario 2: Create Reward Rule
+- Given I am superAdmin on the Business Referrals tab,
+- When I choose the payment plan and click on "Create Rule,"
+- Then I should see a screen with the following options for
+- required actions :
+- for pre-paid : Budget Top-up, Users Onboarded, Trips Completion
+- for Pot-paid : Amount Spent, Users Onboarded, Trips Completion
+- And input fields for :
+- reward :
+- discount percentage for applied on the monthly spending amount for business X for Post-paid accounts
+- A number of free trips for pre-paid accounts
+- Completion threshold : minimum value for required actions to reach
+- Reward price limit : limit for the price that the reward earned gained by business X should not exceed
+- Reward Validity date : can be unlimited / or limited by time
+- Scenario 3: View and Edit Existing Rule
+- Given I have previously created reward rule,
+- When I view the Business Referral section,
+- Then I should see a list of existing rule for each payment plans with details such as:
+- Required action
+- completion threshold
+- reward
+- Creation Date
+- Amount of discount applied
+- Number of free trips
+- Reward Validity date
+- And I should have the option to edit or delete existing rule for each payment plan.
+- Scenario 4: Edit Existing Rule
+- Given a reward rule exists for the country for each payment plan,
+- When I click "Edit Rule,"
+- Then I should be able to modify the existing rule parameters (e.g., required actions, discount percentage, thresholds) and the edits should apply for businesses that are under the chosen payment plan.
+- Scenario 5: Delete Existing Rule
+- Given a reward rule exists for the country for each payment plan,
+- When I click "Delete,"
+- Then the rule should be deleted for the chosen payment plan and the create rule button should be enabled again
+- Scenario 6: Validation for Rule Creation
+- Given I am creating a new reward rule,
+- When I attempt to save the rule without specifying all required fields (action, threshold, or reward),
+- Then I should see an error message prompting me to complete the missing fields.
+- Scenario 7: No Existing Rules
+- Given there are no reward rules created yet,
+- When I view the "Reward Rules" section,
+- Then I should see an empty state screen with a prompt to create the first reward rule.
+- Scenario 8: Referral Link Shared with No Reward Rule Set
+- Given no reward rule has been set on the adminPanel,
+- When a BAM accesses the referral link sharing section on the webApp,
+- Then sharing link are disabled.
+- note :
+- the percentage of the reward should be from 0 to 100 %
+- the reward should be applied per country
+- only one rule should be configured per country for each payment plan
+
+---
+
+### CMB-24996: Webapp-Option to get a payment receipt when topping up the budget 
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2025-04-29
+
+**Description:**
+As a yassir business user, I want to get a payment receipt to my email address once I top up my budget on the webapp, so that I can keep track of my transactions.
+
+**Acceptance Criteria:**
+- Scenario 1: Payment receipt email from webapp
+- Given I am on the yassir for business webapp
+- When I click payments section
+- Then “Pay now” button
+- Then if I select “Online Payment”
+- And I do my payment
+- Then I should get the payment receipt of the amount I topped up to my email inbox
+- Scenario 2: Tracking the actions on the transaction table_Admin Panel
+- Given I am an admin on the admin panel
+- When I click on transactions
+- Then I should see this action listed “User X, topped budget, X amount,)
+- And the payment receipt should be attached as well and could be downloaded
+- NOTE:
+- We need to log the receipt in the transaction table.
+- we need to include the company name in the receipt as well.
+
+---
+
+### CMB-13283: new invoice for individuals 
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2024-03-20
+
+---
+
+### CMB-13282: Send invoices to Business Riders after every trip 
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2024-03-20
+
+---
+
+### CMB-4365: Add Yassir Legal Details on the Invoice: Tunisia, Senegal, Morocco 
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2023-03-28
+
+**Description:**
+As a Business Account Manager in Tunisia, or Morocco , I want to receive the invoice from Yassir with the complete legal information of Yassir's office, including the address, company legal name, tax number, and other relevant details.
+
+**Acceptance Criteria:**
+- When I receive the invoice from Yassir, it should contain the following legal information,
+- when operating in Tunisia:
+- Address: 1 rue Monastir, 2045 l'Aouina, Tunis L'aouina, 2045
+- Company Legal Name: YASSIR SARL.
+- Tax Number: MF: 1582982RAM000
+- When Operating in Morocco:
+- ICE: 002148105000084
+- IF: 26164744
+- RC: 413733
+- Address: 9 AV 2 MARS, 2ND FLOOR, CASABLANCA
+- CNSS affiliation number: 1175605
+- When Operating in Senegal:
+- Adress in Details: Lot n° A W01 Cité Keur Gorgui -  Sacré Coeur 3
+- Company Legal Name :  Yassir Sénégal Sarl
+- NINEA N°008922522D2
+- ID de la société: RCCM N° SN.DKR.2021.B36050
+- Algeria:
+- Oran Office Address: N°34 Iot 388 ilot 142 Coop ibn rochd, cité
+- point du jour, 1er étage, Oran
+- N ̊ RCS: 31/01 - 0999489 B 17
+- Constantine:
+- B, Rue Horchi Slimane centre commerciale smk supérieure ,Constantine
+- N ̊ RCS: 25/02 - 0999489 B 17
+- EURL YASSIR
+- Capital Social 747659000 DZD
+- Tél: 021 99 99 95 / Fax: 023 59 91 30
+- Adresse: Zone d'activité Said Hamdine, Lot n11,
+- Bir Mourad Rais, Alger, Algérie
+- AI: 16096247114
+- RC N ̊: 17 B 0999489-00/16
+- NIF N ̊: 001716099948978
+- NIS: 001716010111763
+- Banque : AGB GULF BANK ALGERIE
+- AGB N° 032 00004 2684431208 32
+
+---
+
+### CMB-4428: Saving the last Top Up Amount
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2023-03-29
+
+**Description:**
+As a business account manager, I want the system to save the last topped-up amount I made to the company account so that when the company has consumed 90% of the budget, I can receive an email alert.
+
+**Acceptance Criteria:**
+- The system should save the last topped-up amount made by the business account manager and display it in the Enterprise Details page.
+- The system should calculate when the company has consumed 90% of the budget based on the last topped-up amount.
+- The system should send an email alert to the business account manager when the company has consumed 90% of the budget.
+- The email alert should include information on the remaining budget and any other relevant details.
+- Suggested Behaviour:
+- globalBudget at T0 = 2000 DA
+- fixedValue at T0 = 2000 DA
+- globalBudget at Tn-2 = 1300 DA
+- fixedValue at Tn-2 = 2000 DA
+- the business has been topped up with 500 DA
+- globalBudget at Tn-1 = 1800 DA
+- fixedValue at Tn-1 = 1800 DA
+- globalBudget at Tn = 180 DA
+- fixedValue at Tn = 1800 DA
+- % of 1800 DA is 180 DA, then the business should send a notification
+- Given When Then Scenarios:
+- Given *that I am a business account manager on the prepaid plan
+- When *I top up the company account with a specific amount
+- Then *the system should save the amount as (*the last topped-up+ The left budget) *amount and display it on the Enterprise Details page.
+- Given *that the system has saved the last topped-up amount
+- When *the company has consumed 90% of the budget based on the last topped-up amount
+- Then *the system should send an email alert to me as the business account manager.
+
+---
+
+### CMB-173: Dev - BE: Sending Payment Updates 
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2022-07-29
+
+**Description:**
+As a business account manager I need to be able to add a business email, where I can receive the billing information, and expenses reports on Weekly and Monthly Basis, summarizing my expenses, and Trips requested
+
+**Acceptance Criteria:**
+- Email must be verified
+- Email contains:
+- Sum of the total expenses in the last duration (Week, Month)
+- Total number of Trips
+- Total Number of Riders who made trips
+- A button for referring the users to the financial Dashboard
+
+---
+
+### CMB-4368: Invoice Template
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2023-03-28
+
+**Description:**
+As a business account manager, I want to receive a PDF invoice that contains all the necessary company details, payment information, and financial transactions, tailored to the specific requirements of each country.
+
+**Acceptance Criteria:**
+- The PDF invoice should include the relevant company details based on the country's requirements:
+- a) For Morocco:
+- Legal Company Name
+- Legal Address (including Building Number/Apt., First Line of Address, Second Line of Address)
+- City (selected from a dropdown list)
+- Zip/Postal Code (numerical value)
+- ICE (Common Company Identifier)
+- IF (Tax Identification)
+- RC (Commercial Register)
+- TTC (Pre-tax price + tax)
+- Payment Period (Monthly, Quarterly, Yearly)
+- b) For Algeria:
+- Legal Company Name
+- Legal Company Address (including Building Number/Apt., First Line of Address, Second Line of Address)
+- City (selected from a dropdown list)
+- Zip/Postal Code (numerical value)
+- Raison Sociale
+- Payment Period (Monthly, Quarterly, Yearly)
+- c) For Senegal:
+- Legal Company Name
+- Legal Address (including Building Number/Apt., First Line of Address, Second Line of Address)
+- City (selected from a dropdown list)
+- Zip/Postal Code (numerical value)
+- ID de la société
+- NINEA
+- Payment Period (Monthly, Quarterly, Yearly)
+- d) For Tunisia:
+- Legal Company Name
+- Legal Billing Address (including Building Number/Apt., First Line of Address, and Second Line of Address)
+- City (selected from a dropdown list)
+- Zip/Postal Code (numerical value)
+- Tax Number
+- Payment Terms (Transfer, Cheque)
+- Payment Period (Monthly, Quarterly, Yearly)
+- The PDF invoice should be sent according to the duration specified by the ops manager for each enterprise invoice email sent to the business account manager.
+- The Invoice PDF will contain the total trip cost of all trips made in that duration. been specified by the ops manager
+- The invoice will contain the total cost which: Total Cost = Total Trip Cost * Tax (if Applied)
+- PDF Example:
+- https://docs.google.com/document/d/1IAajghEYtddaIhcz_l8Tcbs45Jkmv1K_ACzk09a74Xo/edit?usp=sharing
+- Scenario 1: Generating a PDF Invoice for a Moroccan Enterprise
+- Given: I am a business account manager for a Moroccan enterprise.
+- When: I receive the monthly invoice email.
+- Then: I open the attached PDF invoice and verify that it includes the correct company details payment information, and financial transactions according to Morocco's requirements.
+- Scenario 2: Generating a PDF Invoice for an Algerian Enterprise
+- Given: I am a business account manager for an Algerian enterprise.
+- When: I receive the monthly invoice email.
+- Then: I open the attached PDF invoice and verify that it includes the accurate company details, payment information, and financial transactions based on Algeria's requirements.
+- Scenario 3: Generating a PDF Invoice for a Senegalese Enterprise
+- Given: I am a business account manager for a Senegalese enterprise.
+- When: I receive the monthly invoice email.
+- Then: I open the attached PDF invoice and ensure that it contains the appropriate company details, payment information, and financial transactions as per Senegal's requirements.
+- Scenario 4: Generating a PDF Invoice for a Tunisian Enterprise
+- Given: I am a business account manager for a Tunisian enterprise.
+- When: I receive the monthly invoice email.
+- Then: I open the attached PDF invoice and verify that it presents the correct company details, payment information, and financial transactions according to Tunisia's requirements.
+- Scenario 5: Generating a PDF Invoice for an Enterprise with No Legal Information Entered
+- Given: I am a business account manager for an enterprise that has not entered any legal information.
+- When: I receive the monthly invoice email.
+- Then: I open the attached PDF invoice and verify that all the fields related to legal information are empty and that the invoice reflects the default setup for the respective country's requirements. as Taxes being applied by default. The invoice should accurately display the payment information, financial transactions, and other relevant details for the enterprise, even in the absence of legal information.
+
+---
+
+### CMB-1699: Upload invoices directly from cronjob
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2022-11-06
+
+**Description:**
+This should allow us to avoid the issue where certain invoices are not uploaded on each run of the invoicing worker.
+
+---
+
+### CMB-3243: Implement Logs for Business Actions 
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2023-02-01
+
+**Description:**
+As an Ops manager, I need to be able to see a table of actions(Budget Changes/ changing payment plans/ Activating-De-Activation Businesses) been made by all of the other admins, so that I can know what’s the business name, payment plan, the action made, Date and time of the actions, the admin who did this action, and a link to the invoice/ or statement if attached
+
+**Acceptance Criteria:**
+- The log shall display a table of all actions made by other admins, including Budget Changes, changing payment plans, and Activating-De-Activating Businesses.
+- The table shall include the following information for each action: a. Business name b. Payment plan c. The action made d. Date and time of the action e. Admin who performed the action f. A link to the invoice/statement if attached
+- The Ops manager shall be able to filter the table by date range
+- The system shall provide search functionality for the Ops manager to quickly find specific actions based on business admin
+- Business Logs:
+- TOP_UP
+
+---
+
+### CMB-3242: Dev BE: Changing Business Contract Type Prepaid to Postpaid 
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2023-02-01
+
+**Description:**
+As an OPs Admin, I need to be able to change the payment plan of an enterprise from Upfront to Post Paid from the Admin Panel, so I need to find a place where I can settle the company budget limit and attach its relevant papers. and then change the payment and add the budget left amount to be used before consuming the budget. so that the business account manager can use the service with the new plan
+
+**Acceptance Criteria:**
+- Settlement of Budget:
+- The Admin should be able to enter the budget limit for the enterprise after switching the payment plan.
+- The Remaining Budget should be consumed before using the due budget.
+- The Admin should be able to provide relevant invoices or supporting documents for the settled budget.
+- The Admin should be able to attach the invoice link for the paid amount, which can include both the budget settlement, and it should reflect on the transactions table
+- Scenario 1: Settling the Budget and Top-Up
+- Given the OPs Admin is logged into the Admin Panel,
+- When they navigate to the enterprise details page and select the payment plan tab,
+- Then they should be able to enter the budget limit for the enterprise and specify the amount of the top-up, after clicking on changing plan button
+- And they should be able to provide relevant invoices or supporting documents for the settled budget.
+- Scenario 2: Attaching Invoice Link
+- Given the OPs Admin is on the payment plan tab of the enterprise details page,
+- When they attach the invoice link for the paid amount, which includes both the new budget agreement
+- Then the invoice link should be saved and associated with the payment plan change, and it must reflect on the transaction table
+- Scenario 3: handling the Remaining Budget
+- Given the OPs Admin is on the payment plan tab of the enterprise details page,
+- When the Enterprise is on the pre-paid plan, and they have a remaining budget, and they switch to the post-paid plan
+- Then The Enterprise must be able to consume the remaining budget before accumulating the due budget for the business and reaching the business limit
+- Scenario 4: Defining the Budget Limit
+- Given the OPs Admin is on the payment plan tab of the enterprise details page,
+- When the business has a budget left. the OPs Admin can add a budget limit bigger or smaller than the remaining budget
+- Then the enterprise can consume from the left budget first, then they can have a due budget till the reach the budget limit
+
+---
+
+### CMB-2558: Design: Changing Budget
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2022-12-19
+
+**Description:**
+As an OPs Manager I need to be able to change the business budget, by entering the payment plan the BAM have chosen and the payment method they used for transferring the budget
+
+**Acceptance Criteria:**
+- The user needs to be able to see each business payment plan and method on the dashboard
+- The user needs to be able to change the budget left if the payment method is upfront
+- The user needs to be able to attach legal docs, bank transfer statements
+
+---
+
+### CMB-2564: Design: Adding another instant Payment
+
+**Status:** Done | **Priority:** P3 - Low
+**Created:** 2022-12-19
+
+**Description:**
+As a BAM who has chosen instant payment, and have saved a card on the platform, I need to be able to add another card and choose one of the previously added cards as the payment method
+
+**Acceptance Criteria:**
+- The user needs to be able to add another card and save it
+- The user needs to be able to switch between the cards instantly
+- The user can delete one of the previously added cards it has more than one card
+- The user can't remove a card if he has one card only, and his payment plan is Instant payment
+- The user can add another card even if he has another payment plan, without withdrawing from it
+
+---
+
+### CMB-623: AI number in invoices
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2022-09-12
+
+**Description:**
+Need to fix AI number across all invoice template
+
+**Acceptance Criteria:**
+- Scenario 1: Generating Invoices for Business V2 Platform
+- Given: I am logged into the Yassir Admin Panel.
+- When: I select a business that is operating on the Business V2 platform and proceed to generate an invoice for them.
+- Then: The serial number of the generated invoice should start with "B V.2" followed by a counter that begins at 1.
+- And: This counter should be unique for each business on the Business V2 platform.
+- Scenario 2: Multiple Invoices for the Same Business on V2 Platform
+- When: I generate multiple invoices for the same business on the Business V2 platform.
+- Then: Each invoice should have a distinct serial number that starts with "B V.2" followed by an incrementing counter.
+- And: The counter should start from 1 for the first invoice and increment sequentially for subsequent invoices for the same business.
+- Scenario 3: Invoices for Business on V1 Platform
+- When: I select a business that is still operating on the Business V1 platform.
+- Then: The serial number of the generated invoice for this business should follow the existing format without the "B V.2" symbol.
+- And: The counter for this invoice should follow the sequential numbering system used for V1 platform invoices.
+
+---
+
+### CMB-5011: BAM Paying Due Budget with Online Card Post Paid 
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2023-04-14
+
+**Description:**
+As a Business Account Manager (BAM) on the Postpaid business plan, I want to be able to view my budget limit and the due budget for my business.
+
+**Acceptance Criteria:**
+- As a BAM on the Postpaid business plan, I can access my account dashboard.
+- The dashboard displays my current budget limit and the total due budget for my business.
+- On the dashboard, there is a "Pay Due Budget" option that allows me to proceed with paying the outstanding amount.
+- If I choose the "Pay Due Budget" option, a payment screen should appear.
+- When I select the online payment method, I can see an input field to enter the amount I want to pay. in my local currency
+- The input field should not allow me to enter an amount greater than the total due budget.
+- After entering the desired payment amount, I can review the payment details before confirming the transaction.
+- After successful payment, my due budget should be updated, and the due budget should be reduced by the paid amount.
+- If the payment amount exceeds the total due budget, the user should get an error
+- The payment transaction must reflect on the enterprise transaction table, saying how much the BAM added, and what’s his due budget
+- Given-When-Then Scenarios:
+- Scenario 1:
+- Given that I am a Business Account Manager on the Postpaid business plan,
+- When I log in to the dashboard,
+- Then I can see my budget limit and the total due budget displayed on the dashboard.
+- Scenario 2:
+- Given that I am on the dashboard and I have an outstanding due budget,
+- When I click on the "Pay Due Budget" option,
+- Then I am redirected to the payment popup.
+- Scenario 3:
+- Given that I am on the payment screen and I choose the online payment method,
+- When I enter the desired payment amount,
+- Then the input field should not allow me to exceed the total due budget.
+- Scenario 4:
+- Given that I am on the payment screen and I have chosen the online payment method,
+- When I enter an amount within the total due budget and click "Confirm Payment",
+- Then I should be directed to the payment screen
+- The Business Account Manager can access the "Add Budget" feature on the Payment Tab in the Web App
+- Upon clicking the "Add Budget" button, the manager is redirected to a screen with various payment options. [Offline Payment and Online Payment]
+- The manager can choose the online payment option from the available payment methods.
+- The manager can enter the desired amount of budget to top up.
+- After entering the amount, the manager is taken to a secure screen where they can enter their card information for payment processing.
+- The system processes the payment securely and updates the budget on the manager's account accordingly.
+- The manager receives a confirmation of the successful payment along with the updated budget amount. (Your Budget is updated)
+- Review the payment’s success or failure.
+- The Budget Needs to be updated instantly
+- The payment transaction must reflect on the enterprise transaction table, saying how much the BAM added, and what’s his payment plan
+- Given that I am a Business Account Manager on a prepaid plan,
+- When I access the payment tab on the dashboard and click on the "Add Budget" button,
+- Then I should be redirected to the payment options screen.
+- Given that I am on the payment options screen,
+- When I choose the online payment option,
+- Then the online payment option should be selected.
+- Given that I am on the payment screen and have selected the online payment option,
+- When I enter the desired amount to top up, in my local currency
+- Then the entered amount should be displayed and ready for payment processing. and a confirmation  message shows for the BAM
+- Given that I have entered the desired amount for the budget top-up,
+- When I click on the "Proceed with Payment" button,
+- Then I should be redirected to a secure payment information screen.
+- Scenario 5:
+- Given that I am on the secure payment information screen,
+- When I enter my card details, including card number, expiry date, CVV,
+- And I confirm the card information,
+- Then the payment should be securely processed.
+- Scenario 6:
+- Given that the payment was successfully processed,
+- When the system confirms the payment,
+- Then I should receive a payment confirmation message on the web app,
+- And the budget on my account should be updated with the new amount.
+- Scenario 7:
+- Given that the payment was failure processed,
+- When the system denies the payment,
+- Then I should receive a payment error message on the web app,
+- And the budget on my account should not be updated with the new amount.
+- Scenario 8:
+- Given the Ops Manager on the enterprise transaction table
+- When the payment was successfully processed,
+- Then I should see the log updated, with the payment process made, and the amount been deposited
+- The system processes the payment securely and updates the budget on the manager's account accordingly. using satim
+
+---
+
+### CMB-2168: Changing Budget-Prepaid
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2022-11-30
+
+**Description:**
+As an OPs Manager, I need to be able to change the business budget, by entering the payment plan the BAM have chosen and the payment method they used for transferring the budget
+
+**Acceptance Criteria:**
+- The user needs to be able to see each business payment plan and method on the dashboard
+- The user needs to be able to change the budget left if the payment method is upfront
+- The user needs to be able to attach legal docs, bank transfer statements
+
+---
+
+### CMB-4999: Adding a Dedicated Account Manager 
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2023-04-14
+
+**Description:**
+As an Admin, I want to be able to change the contact support details for each Enterprise from the default country-based contact information to the dedicated account manager's information, so that it can reflect on the Payment and Support sections of the Business Account Manager's (BAM) web app.
+
+**Acceptance Criteria:**
+- We need to have a Field on the Settings pages
+- Change the contact support details from the default main phone number and email of the country to the dedicated account manager's information using input fields.
+- the changes should Reflect on the updated contact support details in the Payment and Support sections of the BAM's web app.
+- Listed Admins will be the only eligible admins, they have access to this country’s enterprises, and they have phone numbers assigned
+- If Admin is de-activated then the support information will be the main support email and phone number by default
+- Scenario 1: Access Enterprise Page in Admin Panel
+- Given: I am an Admin
+- When: I access the Admin Panel and navigate to each Enterprise page
+- Then: I can view and manage the contact support details for each Enterprise
+- Scenario 2: Change Contact Support Details to Dedicated Account Manager
+- Given: I am an Admin accessing the Enterprise details page and choosing the support info page in the Admin Panel
+- When: I change the contact support details from the default main phone number and email of the country to the dedicated account manager's information using input fields
+- Then: I ensure that I provide the correct contact details for the dedicated account manager
+- And: The updated contact support details are saved
+- Scenario 3: Reflect Updated Contact Support Details for BAM
+- Given: I am an Admin who has changed the contact support details for an Enterprise in the Admin Panel
+- When: A BAM accesses the Payment and Support sections in their web app
+- Then: The updated contact support details, including the dedicated account manager's information, are displayed, providing the BAM with the correct contact information for support and payment-related inquiries
+
+---
+
+### CMB-678: Bug Budget
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2022-09-15
+
+**Description:**
+When a race is done, the budget is reduced (which is normal), but if the race is canceled or not finished the budget remains reduced (does not increase/does not reset).
+
+---
+
+### CMB-2757: Design: Listing Business
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2023-01-04
+
+**Description:**
+As an Admin, on the Admin Panel, I need to be able to see the business list, so that I can Check its Name, BAM, status, Payment Plan, Payment Method, and Submission Date. so that I can click on any of them and check their details or adjust their configuration
+
+**Acceptance Criteria:**
+- For All businesses, we need to be able to filter them based on country
+- Super Admins need to be able to change the Admin access from the configuration, so they can give them access to a certain set of countries, or remove it
+- If an Admin lost access to one of the Country lists, all of the changes he made, must not be affected
+- If an Admin lost access to one of the Country lists, all of the changes he made, must not be effected
+- When I log into the system, I should see a list of countries where I have access to businesses.
+- When I choose a country, I should be able to see all the businesses in that country only
+- When I switch to a different country, the list of businesses should update to only show businesses that are in that country only.
+- I should not be able to see or access businesses that I do not have permission to access, even if they are located in a country where I have access to other businesses.
+- OPs Manager Can list businesses of two or more countries if he has access to those two or more countries
+- Scenarios:
+- Given that I am an Ops Manager with access to multiple countries' businesses,
+- _*When *_I log into the system and select a country,
+- _*Then *_I should be able to see a list of all the businesses I have permission to access in that country.
+- Given *that I am an Ops Manager with access to multiple countries' businesses,
+- When *I switch to a different country,
+- Then *the list of businesses displayed on the system should update to only show businesses that I have permission to access in that country.
+- When *I try to access a business that I do not have permission to access,
+- Then *the system should display an error message indicating that I do not have permission to access that business.
+- Scenario 1: Uploading Payment Proof Document
+- Given I am logged into the Admin Panel,
+- When I navigate to the payment transaction details, and I click on pay due budget or top up payment
+- Then I should find an option to upload a payment proof document or attach a file link on the pop-up
+- Scenario 2: Attaching Document to Payment Transaction Table
+- Given I am viewing a specific  transaction table
+- When I upload or attach a document as payment proof,
+- Then the document link should appear on the transaction table.
+- Scenario 3: Attaching the Document and checking its format
+- Given I am uploading a document for the payment
+- When I upload or attach a document I need its type to be checked
+- Then the document format needs to be one of the following:
+- .docx
+- The max size should be 10MB
+- Additional Information:
+- Users Can still attach links
+
+---
+
+### CMB-8452: Rebrand the Old B2B Invoices 
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2023-08-21
+
+**Description:**
+As a Business Account Manager, I want to receive invoices with the updated rebranding in Yassir, so that the invoices align visually with the new brand design.
+
+**Acceptance Criteria:**
+- The invoice header, including the logo and company name, should be updated to the new brand colors as specified in the attached ticket.
+- The table colors within the invoice, including rows, columns, and borders, should be adjusted to match the designated colors in the rebranding guidelines.
+- The font styles and sizes used in the invoice should remain consistent with the new brand guidelines.
+- The layout and formatting of the invoice should not be compromised during the color adjustments.
+- The changes should be applied to all types of invoices, including monthly statements, transaction summaries, and any other relevant invoice types.
+- The rebranded invoices should be visually reviewed and approved by the design team to ensure they accurately represent the new brand identity.
+- Scenarios:
+- Given that I am a logged-in Business Account Manager
+- When I access my account's invoices section
+- Then I should see the monthly statement invoice with the updated rebranded colors on the header and the table.
+- Scenario 2: BAM Views Rebranded Transaction Summary Invoice
+- Given that I am a logged-in Business Account Manager
+- When I navigate to the transactions history and view a specific transaction's details
+- Then I should see the transaction summary invoice with the rebranded colors, ensuring consistency across all types of invoices.
+- Scenario 3: Design Team Approval
+- Given that the rebranded invoices have been updated as per the new brand guidelines
+- When the design team reviews the invoices
+- Then they should approve the changes, ensuring that the invoices accurately represent the new brand identity.
+- Scenario 4: Colors Matching Rebranding Guidelines
+- Given the attached ticket containing the new brand color specifications
+- When the colors on the rebranded invoices are compared to the guidelines
+- Then they should match the specified colors, providing a cohesive and aligned look with the updated brand.
+
+---
+
+### CMB-6660: Payment Overview Tab 
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2023-06-15
+
+**Description:**
+As a business account manager, I want to be able to view the payment overview details on the Payment Overview screen, so that I can easily access information about my payment plan, payment method, and budget status.
+
+**Acceptance Criteria:**
+- The business account manager is logged into the system and navigates to the Payment Overview screen.
+- On the Payment Overview screen, the manager can see the following information:
+- Payment Plan Type: The type of payment plan associated with the business account (e.g., Prepaid or Postpaid).
+- Payment Method: The default payment method for the account, which is Bank Transfer.
+- If on Prepaid Plan:
+- Remaining Budget: The remaining budget amount is available for usage within the current payment cycle.
+- If on Postpaid Plan:
+- Due Budget: The amount of budget that is due and pending payment.
+- Budget Limit: The predefined limit of budget for the postpaid plan.
+- The information is up-to-date, reflecting the latest payment plan, payment method, and budget status.
+- Scenarios:
+- Scenario 1: Viewing Payment Overview on Prepaid Plan
+- Given a business account manager logged into the system
+- When the manager navigates to the Payment Overview screen
+- Then the manager can see the Payment Plan Type as Prepaid
+- And the manager can see the Payment Method as Bank Transfer (default)
+- And the manager can see the Remaining Budget amount displayed
+- Scenario 2: Viewing Payment Overview on Postpaid Plan
+- Given a business account manager logged into the system
+- When the manager navigates to the Payment Overview screen
+- Then the manager can see the Payment Plan Type as Postpaid
+- And the manager can see the Payment Method as Bank Transfer (default)
+- And the manager can see the Due Budget amount displayed
+- And the manager can see the Budget Limit amount displayed
+
+---
+
+### CMB-7749: Export Invoices for BAM
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2023-07-25
+
+**Description:**
+As a business account manager, I want to be able to access and download my previous [monthly -quarterly - half annual] invoices conveniently from the payment screen.
+
+**Acceptance Criteria:**
+- Given that I am a logged-in business account manager on monthly invoices when I navigate to the payment screen, then I should find a widget labeled "Previous Monthly Invoices".
+- Given that I am a logged-in business account manager on quarterly invoices when I navigate to the payment screen, then I should find a widget labeled "Previous quarters Invoices".
+- Given that I am a logged-in business account manager on Bi-Annual invoices when I navigate to the payment screen, then I should find a widget labeled "Previous half Invoices".
+- Given that I am on the payment screen, when I click on the "Previous Monthly Invoices" widget, then I should be presented with a list of invoices available for download.
+- Given that there are available invoices for previous months, when I select an invoice, then it should be downloaded as a PDF file.
+- Given that there are no invoices available for the  [month, quarter - half]. when my business was operating, when I view the "Previous  [month, quarter - half]. Invoices" widget, I should see a message indicating that no invoices are available for download.
+- Given that I have invoices for specific months, when I click on the "Previous Monthly Invoices" widget, then the list of available invoices should only include months when my business was operating.
+- Let’s assume that once a company is created it doesn’t change the gets invoices
+- If a business on monthly invoices it should be written as: [September 2023, and its correspondence in a different language]
+- If a business on Quarterly invoices it should be written as: [Quarter 1, 2023, and its correspondence in a different language]
+- If a business on monthly invoices it should be written as [Half 1st, 2023, its correspondence in a different language]
+- Scenarios:
+- Scenario 1: Downloading an Available Invoice
+- Given: I am on the payment screen
+- When: I click on the "Previous Monthly Invoices" widget and select an available invoice
+- Then: The invoice for the selected month is downloaded as a PDF file, clearly indicating the corresponding month.
+- Scenario 2: No Invoices Available
+- Given: There are no invoices available for the months when my business was operating
+- When: I view the "Previous Monthly Invoices" widget
+- Then: I see a message stating that there are no invoices available for download.
+- Scenario 3: Selecting Invoices for Operating Months Only
+- Given: I have invoices for specific operating months
+- When: I click on the "Previous Monthly Invoices" widget
+- Then: The list of available invoices only includes months when my business was operating.
+- Given that I am logged in as an operations manager when I navigate to the admin panel and access the details of a specific enterprise, then I should find an option to download invoices.
+- Given that I am viewing the details of an enterprise, when I click on the "Review Invoices" option, then a list of available invoices corresponding to the months when the business was operating should be displayed.
+- Given that there are available invoices for the operating months of the enterprise, when I select an invoice, then it should be downloaded as a PDF file.
+- Given that I have downloaded an invoice, when I open the PDF file, then the invoice should clearly indicate the month to which it belongs (e.g., "Invoice for May 2023").
+- Given that there are no invoices available for the operating months of the enterprise, when I click on the "Review Invoices" option, then I should see a message indicating that there are no invoices available for download.
+- Given that I have invoices available for specific operating months, when I click on the "Review Invoices" option, then the list of available invoices should only include months when the enterprise was operating.
+- If a business on monthly invoices it should be written as: [Feb 2023, and its correspondence in a different language]
+- If a business on Quarterly invoices it should be written as: [Q1, 2023, and its correspondence in a different language]
+- Scenario 1: Downloading an Available Invoice for an Enterprise
+- Given: I am viewing the details of a specific enterprise on the admin panel
+- When: I click on the "Review Invoices" option and select an available invoice
+- Scenario 2: No Invoices Available for an Enterprise
+- Given: There are no invoices available for the operating months of the enterprise
+- When: I click on the "Review Invoices" option
+- Given: I have invoices available for specific operating months of the enterprise
+- Then: The list of available invoices only includes months when the enterprise was operating.
+- Scenario 1: Accessing the Payment Screen
+- Given I am logged into the Admin panel as an Admin,
+- When I navigate to the "Country Configuration" tab and move to the "Payment" screen,
+- Then I should see options to export both the finance report file and the invoices file.
+- Scenario 2: Exporting the Finance Report and Invoices File
+- Given I am on the "Payment" screen,
+- When I select the option to export either the finance report or the invoices file,
+- Then the system should generate the respective file containing the required data without altering any of the information.
+- Scenario 3: Receiving the Exported Files on Slack
+- Given I have successfully requested the export of the finance report or invoices file,
+- When the export process is completed,
+- Then the respective file should be sent directly to a pre-configured Slack channel or direct message for easy access.
+- Scenario 4: Slack Notification for Export Failure
+- Given there is an issue with exporting the finance report or invoices file,
+- When I click on the export button,
+- Then I should receive an error message on Slack notifying me of the failure (e.g., "Export Failed: File generation error").
+- Scenario 5: No Email Notification on Export Completion
+- Given the finance report or invoices file has been successfully exported,
+- When the file is sent to Slack,
+- Then I should not receive an email containing the exported file.
+- Scenario 6: File Format and Content Integrity
+- Given the export is completed successfully,
+- When I receive the finance report or invoices file on Slack,
+- Then the file should be properly formatted (e.g., as a CSV, and Excel File Fotmat ) and contain all relevant financial details, including invoice numbers, amounts, payment statuses, and any other required data, without any alterations.
+
+---
+
+### CMB-7753: Adding a Business Discount 
+
+**Status:** Done | **Priority:** P2 - Medium
+**Created:** 2023-07-25
+
+**Description:**
+As an Operations (OP) Manager responsible for overseeing enterprise accounts on the Yassir for Business Admin Panel, I want to be able to set conditions for budget refunds for each enterprise based on their budget consumption levels or Finished Number of trips.
+
+**Acceptance Criteria:**
+- Access to Refund Conditions: As an OP Manager, I should have access to a user-friendly interface on the B2B Admin Panel where I can define refund conditions for each enterprise.
+- Configurable Conditions: I should be able to configure the refund conditions for each enterprise based on criteria such as budget consumption (e.g., if they have spent more than 200,000 DZ in a month) and trip count (e.g., if they have made more than 100 trips in a month).
+- Refund Percentage: I should be able to specify the percentage of the consumed budget that will be refunded to the enterprise if they meet the defined conditions. For example, if they consumed 200,000 DZ, and I set a 10% refund condition, they should receive a 20,000 DZ refund.
+- Automatic Calculation: The system should automatically calculate the refund amount for each enterprise based on their monthly consumption and the defined conditions.
+- Refund Mentioned on Invoice: The refund amount should be clearly mentioned on the invoice sent to the enterprise at the end of the month.
+- Refund Mentioned on Invoice with quarterly, and half annually: The refund amount should be clearly mentioned on the invoice sent to the enterprise at the end of the duration I’ll get an invoice containing all the discounted values, percentages, and the corresponding month
+- The Discounts will be calculated after calculating the VAT Taxes
+- Scenarios:
+- Scenario 1: Accessing Refund Conditions Interface
+- Given: I am an OP Manager.
+- When: I access the B2B Admin Panel.
+- Then: I should see a user-friendly interface where I can define refund conditions for enterprises.
+- Scenario 2: Configuring Refund Conditions
+- Given: I have accessed the refund conditions interface for an enterprise.
+- When: I configure the conditions based on criteria like budget consumption and trip count.
+- Then: The system should allow me to set specific conditions.
+- Scenario 3: Specifying Refund Percentage
+- Given: I have configured refund conditions for an enterprise.
+- When: I specify the refund percentage, e.g., 10%.
+- Then: The system should accept the percentage and apply it to calculate refunds.
+- Scenario 4: Automatic Calculation of Refund
+- Given: An enterprise meets the defined refund conditions.
+- When: The end of the month approaches.
+- Then: The system should automatically calculate the refund amount based on their consumption and conditions.
+- Scenario 5: Invoice Refund Mention
+- Given: An enterprise is eligible for a refund.
+- When: I view the invoice for the enterprise.
+- Then: The invoice should clearly mention the refund amount in a dedicated section.
+- Scenario 6: Entering Spent Amount Value
+- Given: I’m the ops manager entering the spending amount threshold
+- When: I can’t enter a value less than 0, or more than 10,000,000
+- Then: the fields will not accept any values other than that or return an error message
+- Scenario 7: Entering Number of trips
+- Given: I’m the ops manager entering the number of trips threshold
+- When: I can’t enter a value less than 0, or more than 1,000,000
+- Scenario 8: Entering Discount Amount
+- Given: I’m the ops manager entering the Discount Amount
+- When: I can’t enter a value less than 0, or more than 50%
+- Access to Extra Commissions: As an OP Manager, I should have access to a user-friendly interface on the enterprise Admin panel where I can enter the number of extra commissions to be added to each trip.
+- Input Field for Extra Commissions: On the enterprise Admin panel, there should be a clearly labeled input field where I can enter the number of extra commissions as a number. The field should have clear instructions indicating that this number will be added as commissions on each trip taken.
+- Trip Cost Adjustment: I should be able to specify the percentage of extra commissions to be added to the base cost of each Business trip. For example, if the base cost of a trip is 1000 DZ, we have also an inflation factor of 10%, and I enter 5% as extra commissions, the total trip cost should be 1000 DZ + 100 DZ +50 DZ = 1150 DZ.
+- Reflecting Commissions on Invoice: The extra commissions added to each trip should be reflected in the invoice sent to the business. The invoice should include a clear breakdown of the base cost, service inflation, and added commissions for each trip.
+- Trip Estimation Cost = Added Commission + Original Price and it will be visible for the Business Rider
+- Export to CSV: The information about the extra commissions for each trip should be exportable as part of the trip data in CSV format. This will facilitate transparent financial reporting and auditing.
+- The Added Commission Value will be included on the trip Estimation Level when we are listing services on the BAM Dashboard
+- By default, the value of the Added Commission in Algeria is 19%, MA, TN, and Senegal is 0%
+- Driver Earnings Aren’t impacted by the added Commissions DriverComisisons = 80% * Base Cost
+- Scenario 1: Accessing Extra Commissions Input Field
+- When: I access the enterprise Admin panel.
+- Then: I should see a clearly labeled input field for entering extra commissions.
+- And: There should be clear instructions indicating the purpose of this field.
+- Scenario 2: Specifying Extra Commissions Amount
+- Given: I have accessed the input field for extra commissions.
+- When: I enter an amount, e.g., 5%
+- Then: The system should accept the input as the amount of extra commissions to be added.
+- Scenario 3: Calculating Total Trip Cost
+- Given: I have entered extra commissions for a trip.
+- When: I calculate the total trip cost.
+- Then: The total cost should include the base cost, service inflation, and extra commissions.
+- Scenario 4: Invoice Breakdown
+- Given: The trip has extra commissions.
+- When: I view the invoice for the business.
+- Then: The invoice should clearly show the breakdown of the trip cost, including the added commissions.
+- Scenario 5: Exporting Trip Data
+- Given: Extra commissions have been added to trips.
+- When: I export trip data to a CSV file.
+- Then: The CSV file should include information about the extra commissions for each trip.
+- Scenario 6: The driver can’t see the added comission
+- Given: The Enterprise has an extra comission applied
+- When: The B2B ride is performed
+- Then: The driver can see only base cost without extra comission applied
+
+---
+
+### CMB-9248: Amount to be paid for different businesses on different payment plans 
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2023-09-25
+
+**Description:**
+As a Business Account Manager, when I receive an invoice, I want to find the "Amount to be Paid" field reflecting the appropriate value based on the business plan type.
+
+**Acceptance Criteria:**
+- When I access an invoice, I can easily locate the "Amount to be Paid" field.
+- If the business is on a prepaid plan, the "Amount to be Paid" field should display 0.
+- If the business is on a post-paid plan, the "Amount to be Paid" field should display the due amount.
+- The displayed amount should be accurate and correspond to the business plan type.
+- The "Amount to be Paid" field should be clearly labeled for easy identification.
+- Given-When-Then Scenarios:
+- Scenario 1: Accessing Invoice Details
+- Given: I am logged into the Yassir platform as a Business Account Manager.
+- When: I access the invoice details for a specific period.
+- Then: I should be able to locate and identify the "Amount to be Paid" field.
+- Scenario 2: Prepaid Plan - Amount to be Paid is 0
+- Given: I am viewing the invoice details for a business on a prepaid plan.
+- When: I look at the "Amount to be Paid" field.
+- Then: The "Amount to be Paid" field displays 0, indicating that there is no payment required for prepaid plans.
+- Scenario 3: Post-Paid Plan - Amount to be Paid Equals Due Amount
+- Given: I am reviewing the invoice details for a business on a post-paid plan.
+- When: I examine the "Amount to be Paid" field.
+- Then: The "Amount to be Paid" field displays the due amount, indicating the amount that needs to be paid for post-paid plans.
+- Scenario 4: Clear Labeling
+- Given: I am examining the invoice details.
+- When: I locate the "Amount to be Paid" field.
+- Then: The field is clearly labeled for easy identification.
+- Scenario 5: Changing from Post Paid to Pre-paid
+- Given: BAM on the Postpaid, and changed on Prepaid
+- When: I settle all of my due budget
+- Then: The amount to be paid will be 0
+- Scenario 6: Changing from Pre-paid to Post Paid
+- Given: BAM on the Prepaid, and changed to postpaid
+- When: I have a due budget
+- Then: The amount to be paid will be = due Budget
+
+---
+
+### CMB-9247: Invoices Shown Costs Edits 
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2023-09-25
+
+**Description:**
+As a Business Account Manager, I need support in documenting various attributes related to trip costs and prices on trip documents. We are uncertain about the different attributes that need to be documented.
+
+**Acceptance Criteria:**
+- When I receive an invoice, I can easily locate and identify two specific values: one for the total Drivers' Commissions and the other for Yassir Commissions, including any modifications or additional costs made through the Business Admin Panel.
+- The displayed value for Drivers' Commissions accurately reflects the total commissions paid to drivers for the specified period.
+- I can find a separate value for Yassir Commissions within the invoice details.
+- The Yassir Commissions value should include any inflation rates or additional costs that have been modified or added through the Business Admin Panel during the specified period.
+- Both the Drivers' Commissions and Yassir Commissions values should be clearly labeled and easily distinguishable within the invoice.
+- The values should be presented in a clear and understandable format for easy reference and financial reporting.
+- Given-When-Then Scenarios:
+- Scenario 1: Accessing Invoice Details
+- Given: I am logged into the Yassir platform as a Business Account Manager.
+- When: I access the invoice details for a specific period.
+- Then: I should be able to locate and identify the values for both Drivers' Commissions and Yassir Commissions.
+- Scenario 2: Total Drivers' Commissions
+- Given: I am viewing the invoice details.
+- When: I look for the value representing the total Drivers' Commissions.
+- Then: The displayed value accurately represents the total commissions paid to drivers during the specified period.
+- Scenario 3: Yassir Commissions with Modifications
+- Given: I am reviewing the invoice details.
+- When: I search for the Yassir Commissions value.
+- Then: The Yassir Commissions value includes any inflation rates or additional costs that have been modified or added through the Business Admin Panel during the specified period.
+- Scenario 4: Clear Labeling
+- Given: I am examining the invoice details.
+- When: I locate the values for Drivers' Commissions and Yassir Commissions.
+- Then: Both values are clearly labeled and distinguishable within the invoice.
+- Scenario 5: Presentation Format
+- Given: I am reviewing the invoice details.
+- When: I find the values for Drivers' Commissions and Yassir Commissions.
+- Then: The values are presented in a clear and understandable format for easy reference and financial reporting.
+
+---
+
+### CMB-6453: Budget Refund 
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2023-06-06
+
+**Description:**
+As a B2B user who has booked a b2b trip from the Web App, or the Mobile App. and the budget is deducted, then the trip ended with one of the two statuses:
+
+**Acceptance Criteria:**
+- Driving Coming Canceled
+- No Driver Available
+- Trip Status [No Driver Available - Driver Coming Canceled]
+- Refunded_Status: (Enum): [Refunded - not_Refunded]
+- Refunded Amount = Trip Cost if Refunded = True
+- Trip ID
+
+---
+
+### CMB-10058: Book B2B Trips from Dashops
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2023-10-26
+
+**Description:**
+As an Operations (OP) Manager using the DashOps platform, I want to ensure that any trip I book for a B2B Rider complies with the business parameters, including allowed time, date, budget spending allowance, location, and the assigned service.
+
+**Acceptance Criteria:**
+- Absolutely, let's break down each scenario into multiple scenarios:
+- Scenario 1: Time and Date Validation
+- Given: I am logged into the DashOps platform as an OP Manager.
+- When: I initiate the process of booking a trip for a B2B Rider.
+- Then: The system should display an error that you are booking outside the allowed time and date parameters set by the business for this Rider.
+- Scenario 2: Spending Allowance Validation
+- Given: I am logged into the DashOps platform as an OP Manager. and The business has defined a  spending allowance for the B2B Rider.
+- When: I attempt to proceed with the booking. And: The cost of the trip exceeds the  Spending allowance.
+- Then: The system should provide a clear error message.
+- And: The trip booking process should not proceed until the Spending issue is resolved.
+- Scenario 3: Limited Number of trips per day
+- Given: I am logged into the DashOps platform as an OP Manager. and The business has defined a  Limited number of trips per day
+- When: I attempt to proceed with the booking. And: The number of trips booked that day exceeds the user limit
+- Then: The system should provide a clear error message.
+- And: The trip booking process should not proceed until the Booking limit issue is resolved.
+- Scenario 4: insufficient remaining budget
+- Given: I am logged into the DashOps platform as an OP Manager. and The business has an insufficient budget
+- When: I attempt to proceed with the booking. And: The trip cost can’t be covered by the budget
+- Then: The system should provide a clear error message.
+- And: The trip booking process should not proceed until the Budget is updated
+- Scenario 5: Error for Invalid Location
+- Given: I am logged into the DashOps platform as an OP Manager. And: I have initiated the process of booking a trip for a B2B Rider. I have selected  pickup or destination locations that aren’t aligned with the program parameters
+- When: I attempt to proceed with the booking.
+- Then: The system should provide a clear error message. And: The trip booking process should not proceed until a valid location is selected.
+
+---
+
+### CMB-6551: Finding Yassir Bank Information 
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2023-06-09
+
+**Description:**
+As a business account manager (BAM) on the prepaid plan, I want to be able to add funds to my account easily from the Payment Overview screen, so that I can find the Bank information of Yassir based on the country where I’m operating.
+
+**Acceptance Criteria:**
+- The BAM is logged into the system and navigates to the Payment Overview screen.
+- On the Payment Overview screen, if the BAM is on the prepaid plan:
+- a. The BAM can see the "Add Funds" button prominently displayed
+- b. When the BAM clicks on the "Add Funds" button, they are redirected to a page that provides bank information for Yassir.
+- c. The displayed bank information is specific to the country where the business is operating.
+- On the Payment Overview screen, if the BAM is on the postpaid plan and has a due budget:
+- a. The BAM can see the "Pay Due Budget" button prominently displayed instead of the "Add Funds" button.
+- b. When the BAM clicks on the "Pay Due Budget" button, they are redirected to a page that provides bank information of Yassir.
+- c. The displayed bank information is specific to the country where the business is operating.
+- Scenarios:
+- Scenario 1: BAM on Prepaid Plan Clicks "Add Funds" Button
+- Given a business account manager logged into the system
+- And BAM is on the prepaid plan
+- When the BAM navigates to the Payment Overview screen
+- Then the BAM can see the "Add Funds" button displayed
+- And when the BAM clicks on the "Add Funds" button
+- Then the BAM is redirected to a page with Yassir's bank information for the country of operation
+- Scenario 2: BAM on Postpaid Plan with Due Budget Clicks "Pay Due Budget" Button
+- Given a business account manager logged into the system
+- And the BAM is on the postpaid plan
+- And the BAM has a due budget
+- When the BAM navigates to the Payment Overview screen
+- Then the BAM can see the "Pay Due Budget" button displayed instead of "Add Funds"
+- And when the BAM clicks on the "Pay Due Budget" button
+- Then the BAM is redirected to a page with Yassir's bank information for the country of operation
+- Algeria Bank Information:
+- Account Name: EURL Yassir
+- Bank Names:  AGB _ Arab Gulf Bank
+- Accounts IBAN Numbers:  03200001268443120885
+- Tunisia Bank Information:
+- Account's name: Yassir Transport
+- Bank Names BIAT
+- Accounts IBAN Numbers IBAN TN5908008000671002266478
+- Senegal Bank Information:
+- Account's name: Yassir Sénégal Suarl
+- Bank Names: Banque Islamique du Sénégal
+- Accounts IBAN Numbers: SN079 01104 251145829001 29
+- Morocco Bank Details:
+- Account Name: Yassir Maroc
+- Bank Name: Banque centrale populaire - Agence Moussa Bnou Noussair
+- IBAN: MA1907802121113961530004 34
+
+---
+
+### CMB-13790: Detailed FAQ on Payment Page
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2024-04-12
+
+---
+
+### CMB-15065: Download invoices for business with no trips
+
+**Status:** Done | **Priority:** P3 - Low
+**Created:** 2024-05-29
+
+**Description:**
+As an Admin on the Admin Panel,
+
+**Acceptance Criteria:**
+- Given that I am logged in as an Admin on the platform,
+- When I navigate to the invoice section,
+- Then I should find an option to locate invoices by month and year.
+- Given that a business did not make any trips during the selected month,
+- When I view the invoices for that month,
+- Then I should see invoices with a 0 value.
+- Given that I need to download an invoice with a 0 value,
+- When I select the desired invoice,
+- Then I should be able to download it in the same format as other invoices.
+- Given that, a business is migrated, with 0 trips for many months on the old platform
+- When I check their invoice section
+- Then I should see invoices with a 0 value.
+- Given that, a business was inactive for a certain duration
+- When I view the invoice list
+- Then I should be able to download the invoices and find them with 0 value for any month this business was inactive
+- Given that, we have generated a new invoice for the previous month with 0 trip
+- When I download the invoice
+- Then I should find the invoice reference number generated should be:
+- Contain the right month and year of the invoice
+- and the counter will be starting at V.2.x - Timestamp - Date
+
+---
+
+### CMB-13101: Payment Screen Events
+
+**Status:** Done | **Priority:** No Priority
+**Created:** 2024-03-12
+
+**Description:**
+B2B_SC_BookRidesScreenSessions
+
+---
+
+### CMB-13588: Update old B2B invoice, and regenerate it
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2024-04-03
+
+**Description:**
+We need to apply the following edits to the old B2B invoices:
+
+**Acceptance Criteria:**
+- for Prepaid invoices → Reste a payer field = 0, we will write in text the Reste a payer
+- for postpaid → we remove the Reste a payer, we write the total TTC in Letters
+- for postpaid companies + Remaining Budgets → Reste a payer = 0 or remaining amount to be paid(Total Consumed - Remaining Budget > 0), we write in text the Reste a payer
+
+---
+
+### CMB-11902: Update invoice legal information
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2024-01-19
+
+**Description:**
+As an Admin on the Yassir Admin panel for business, I want the ability to generate invoices for businesses that have migrated from Business V1 to Business V2 with updated legal information, while retaining unchanged bank details, budget information, and invoice serial numbers.
+
+**Acceptance Criteria:**
+- Scenario 1: Generating Invoices with Updated Legal Information
+- Given: I am logged into the Yassir Admin Panel.
+- When: I select a business that has migrated from Business V1 to Business V2, and I update their legal information, such as company name, registration number, or address.
+- Then: I should have the option to generate invoices for this business.
+- And: The generated invoices should reflect the updated legal information as per Business V2.
+- And: Any bank details, budget information, and invoice serial numbers associated with this business should remain unaltered, exactly as they were in Business V1.
+- Scenario 2: Generating Invoices for Non-Migrated Businesses
+- When: I select a business that has not undergone migration from V1 to V2.
+- And: The generated invoices should contain the current legal information, as there was no migration involved.
+- Scenario 3: Validation for Incomplete Legal Information Update
+- Given: I am updating the legal information for a business that has migrated from V1 to V2.
+- When: I attempt to generate invoices without completing all the required legal information fields.
+- Then: The system should provide a clear error message indicating that the legal information update is incomplete.
+- And: The invoice generation process should not proceed until all necessary legal information is provided for Business V2.
+- Scenario 4: Confirmation of Unchanged Bank Details, Budget, and Serial Numbers
+- Given: I have generated invoices for a business that has migrated from V1 to V2 with updated legal information.
+- When: I review the generated invoices.
+- Then: I should confirm that the bank details, budget information, and invoice serial numbers remain exactly the same as they were in Business V1, with no changes applied.
+
+---
+
+### CMB-14583: Changing Wording on the invoice
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2024-05-14
+
+**Description:**
+As a user receving the invoice starting from the end of May
+
+---
+
+### CMB-13145: Invoice Fixes
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2024-03-14
+
+**Description:**
+We need to apply the following adjustments to the invoices:
+
+**Acceptance Criteria:**
+- Change the word net a payer to Reste a Payer
+- Change the amount written in letters to be equal to TTC, instead of net a payer
+- Write (LF 2024) next to TVA
+- Move the Box to the left as in the  attached invoice
+- Order the legal details as:
+
+---
+
+### CMB-13479: Generate invoices on the old BtoB
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2024-03-28
+
+**Description:**
+As a Business Account Manager (BAM) on the old BtoB platform, I need to receive an Email in French that contains a PDF of my monthly invoice for March.
+
+**Acceptance Criteria:**
+- Scenario 1: Email Notification
+- Given: I am a Business Account Manager (BAM) registered on the old BtoB platform.
+- When: The billing cycle for March ends. on the 1st of April
+- Then: I should receive an email notification in French informing me that my monthly invoice for March is ready.
+- Scenario 2: PDF Attachment
+- Given: I receive the email notification for my March invoice.
+- When: I open the email.
+- Then: I should find a PDF attachment containing my monthly invoice for March.
+- Scenario 3: Invoice Details
+- Given: I open the PDF attachment containing my March invoice.
+- Then: The invoice should include detailed information such as:
+- Legal Company Information
+- The Trip Costs
+- The taxes if any applied
+- the amount to be paid
+- And follows the latest invoices format
+
+---
+
+### CMB-12297: Accept fractions in Commissions percentage
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2024-02-06
+
+**Description:**
+As an Admin on the Admin Panel of the business platform, I need to be able to enter a decimal value, such as 1.25, as a commission value. This allows for flexibility in setting commission rates, which will impact the prices of trips on invoices, trip estimations, and the amount deducted from the budget.
+
+**Acceptance Criteria:**
+- Scenario 1: Entering Positive Float Value for Commission
+- Given: I am logged into the Admin Panel of the business platform.
+- When: I navigate to the commission settings section.
+- And When: I enter a positive float value, such as 1.25, in the commission field.
+- Then: The system should accept the input without errors.
+- Then: The commission value should be saved successfully.
+- Then: The entered commission value should be applied to trip prices on invoices, trip estimations, and budget deductions.
+- Scenario 2: Entering Negative Float Value for Commission
+- Given: I am logged into the Admin Panel of the business platform.
+- When: I navigate to the commission settings section.
+- And When: I enter a negative float value, such as -0.5, in the commission field.
+- Then: The system should accept the input without errors.
+- Then: The commission value should be saved successfully.
+- Then: The entered commission value should be applied to trip prices on invoices, trip estimations, and budget deductions.
+- Scenario 3: Viewing the Impact of Commission Value
+- Given: I am logged into the Admin Panel of the business platform.
+- When: I enter and save a commission value, either positive or negative.
+- And When: I view a trip invoice, estimation, or budget details.
+- Then: The trip prices should reflect the impact of the entered commission value.
+- Then: The invoice, estimation, or budget should accurately display the calculated amounts based on the commission value entered.
+
+---
+
+### CMB-16390: Managing Invoice Payment Status
+
+**Status:** Done | **Priority:** P1 - High
+**Created:** 2024-07-22
+
+**Description:**
+As an Admin on the Admin Panel,
+
+**Acceptance Criteria:**
+- Scenario 1: Navigating to Company Details
+- Given that I am logged into the Admin Panel,
+- When I navigate to the company details section,
+- Then I should be able to access the invoices section for that company.
+- Scenario 2: Viewing Invoices
+- Given that I am in the invoices section of a company's details,
+- When I view the list of invoices,
+- Then each invoice should display its current payment status as either "paid" or "non-paid."
+- Scenario 3: Marking an Invoice as Paid
+- Given that I am viewing an invoice marked as "non-paid,"
+- When I select the option to mark it as "paid,"
+- Then the invoice's status should update to "paid" and reflect this change in the system. and the date of updating the status should be saved
+- Scenario 4: Marking an Invoice as Non-Paid
+- Given that I am viewing an invoice marked as "paid,"
+- When I select the option to mark it as "non-paid,"
+- Then the invoice's status should be updated to "non-paid" and reflect this change in the system.
+- Scenario 5: New Invoice Default Status
+- Given that a new invoice is generated for a company,
+- When the invoice is created,
+- Then it should be automatically marked as "non-paid" by default.
+- Scenario 6: Download the invoice
+- Given that as an Admin when I’m downloading an invoice
+- When the invoice file is created
+- Then the invoice file name should be as follows (Company name - Month/ Year - Paid/ unpaid)
+- Scenario 7: Filters  paid, invoices only
+- Given that as an Admin on the invoice
+- When I choose to filter only by paid invoices
+- Then the paid invoices are only displayed
+- Scenario 8: Filters  unpaid, invoices only
+- When I choose to filter only by unpaid invoices
+- Then the unpaid invoices are only displayed
+- Note: All previously generated invoices should be marked as unpaid
+- Scenario 1: Attaching a Payment Statement as a Link
+- Given: I am logged in as an Admin on the Admin Panel.
+- When: I update the status of an invoice to "Paid,"
+- Then: I should see an option to attach a payment statement as a URL link.
+- And When: I provide the link and confirm the status update,
+- Then: The transaction table should display the link to the payment statement along with the details of who marked it as paid.
+- Scenario 2: Attaching a Payment Statement as an Uploaded File
+- Then: I should see an option to upload a file as the payment statement.
+- And When: I upload the file and confirm the status update,
+- Then: The transaction table should display a link to download the attached file along with the details of who marked it as paid.
+- Scenario 3: Reflecting Payment Details in the Transaction Table
+- Given: An invoice status is updated to "Paid" with an attached payment statement.
+- When: I view the transaction table of the associated business,
+- Then: I should see the following details:
+- Name of the admin who updated the status
+- The date and time of the status update
+- A clickable link to the attached payment statement (either the uploaded file or URL)
+- Scenario 4: Validation for Attaching Payment Statement
+- Given: I am updating an invoice status to "Paid,"
+- When: I do not attach a payment statement or fail to provide a valid link/file,
+- Then: The system should prevent the status update button is disabled
+
+---
+
+## Consolidated Acceptance Criteria
+
+- Scenario 01 : List B2B Giftcard Trips on The Trips History Section
+- Given A rider used a coupon for a giftcard that have been purchased
+- When The trip is completed
+- Then it should be listed on the trips history section on webApp
+- Details:
+- Trip appears in gift card trips list endpoint: GET /api/b2b/giftcards/:giftcardId/trips
+- Only confirmed trips (status = CONFIRMED) are shown
+- List includes: trip ID, date, time, amount, cardValueUsed, pickup/destination, Rider Info
+- Scenario 02 : Trips Details Screen
+- Given A trip have been payed using the giftcard coupon
+- When I open the trip details screen
+- Then I should see
+- the amount of the coupon which was business paid
+- amount that was paid cash displayed
+- the ID of the giftcard
+- Rider Info
+- Driver Info
+- Display cardValueUsed (gift card amount)
+- Display amount - cardValueUsed (cash amount)
+- Display voucherCode (gift card identifier)
+- Display rider fullName and phone
+- Display driver information (if available)
+- Scenario 03 : Check Remaining Value Before Coupon Selection
+- Given A user is requesting a trip and has available gift cards
+- When The user views available coupons
+- Then The system should check remaining value via CHECK API
+- And Only coupons with sufficient remaining value should be shown as available
+- Private Backend calls an API
+- B2B Backend returns canUse: true/false and sufficient: true/false
+- UI displays coupon availability based on response
+- Scenario 04: Reserve Amount When Trip is Confirmed
+- Given A user has selected a gift card coupon for a trip
+- When The user request the trip
+- Then Private Backend should call RESERVE API atomically
+- And The amount should be reserved from remaining value
+- And If insufficient balance, trip creation should fail
+- Private Backend calls an api with voucherCode, amount, externalTripId
+- B2B Backend performs atomic update: remainingValue = remainingValue - amount, reservedValue = reservedValue + amount
+- If remainingValue < amount, return 422 error,
+- If duplicate externalTripId, return 409 error
+- Reservation status set to RESERVED
+- Scenario 05: Confirm Reservation When Trip is finished
+- Given A trip was created with a reserved gift card amount
+- When The trip status changes to "finished"
+- Then Private Backend should call CONFIRM API
+- And The reserved amount should be permanently deducted
+- And The trip should be added to gift card usage history
+- Private Backend calls an api with voucherCode, externalTripId, actualAmountUsed
+- B2B Backend updates: reservedValue = reservedValue - reservedAmount
+- If actualAmountUsed differs, adjust remainingValue accordingly
+- Reservation status set to CONFIRMED
+- Trip ObjectId added to usedInTrips array
+- If remainingValue == 0 && reservedValue == 0, gift card status set to EXPIRED
+- Scenario 06: Revert Reservation When Trip is Cancelled
+- When The trip is cancelled or fails
+- Then Private Backend should call REVERT API
+- And The reserved amount should be restored to remaining value
+- And The reservation should be marked as CANCELLED
+- Private Backend calls an api with voucherCode, externalTripId
+- B2B Backend updates: remainingValue = remainingValue + reservedAmount, reservedValue = reservedValue - reservedAmount
+- Reservation status set to CANCELLED
+- Trip is NOT added to usedInTrips array
+- Scenario 07: Handle Concurrent Reservation Requests
+- Given Multiple trips attempt to reserve from the same gift card simultaneously
+- When The total requested amount exceeds remaining value
+- Then Only one reservation should succeed
+- And Other reservations should fail with 422 (Insufficient Balance)
+- And No overspending should occur
+- Atomic database update ensures only one succeeds
+- Example: remainingValue = 1000, Trip A reserves 800, Trip B reserves 800
+- Only Trip A succeeds, Trip B fails
+- No negative balances possible
+- Scenario 08: Handle Duplicate Reservation Requests
+- Given A reservation request was sent but network timeout occurred
+- When Private Backend retries the same reservation request
+- Then B2B Backend should return existing reservation details
+- And No duplicate reservation should be created
+- Same externalTripId used in retry
+- B2B Backend checks if reservation already exists
+- If exists, return 409 Conflict with existing reservation details
+- If not exists, create new reservation
+- Scenario 09: Handle Insufficient Remaining Value
+- Given A gift card has remainingValue = 400
+- When Private Backend attempts to reserve amount = 600
+- Then B2B Backend should return 422
+- And Trip creation should be prevented
+- Atomic check: remainingValue >= amount fails
+- Error response includes current remainingValue
+- Scenario 01: Payment Section Structure
+- As an admin
+- When I access the Admin Panel
+- Then I should see a new centralized section called Payments
+- And the Payments section should contain two sub-sections:
+- Online Payments
+- Cheque / Bank Transfers
+- Scenario 02: Common table Online and Bank / Cheque Payments Screen
+- When I open the Online Payments section
+- Then I should see a list/table displaying the following columns:
+- Month (displayed in letters)
+- Transfer Date (Online payment Date when the business does an online payment, for bank transfers it should be the date of uploading bank payment receipt on webApp)
+- Amount (Amount topped up by the business)
+- Business Name (Name of the business that made the top-up)
+- Budget Top-up Status, with the following states:
+- In progress
+- Done
+- Action Column
+- Create pre-payment invoice
+- See all details
+- Scenario 03: Accessing Online payment details screen
+- Transfer Date
+- Value Date (Date when the company receives the funds should be filled manually by the admins)
+- Code 1 (Reference code identifying the payment source – e.g. YC3539332)
+- Code 2 (Secondary reference code identifying the payment source – e.g. 21f98b20425d76e5c81f)
+- Attachments, including:
+- Pre-payment invoice (Facture d’avance)
+- Payment receipt
+- Create Pre-payment Invoice button (should be disabled in case a pre-payment invoice is attached to the payment)
+- Scenario 03: Accessing Bank / Cheque Transfers Details Screen
+- Scenario 04: File Upload on Attachments
+- When I visit a payment details screen (either online or bank/cheque transfers)
+- Then I should be able to upload files in the Attachments section if they were empty
+- And uploaded files should be linked to the corresponding payment entry
+- Scenario 05: Admin Comments
+- Then I should be able to add comments
+- And comments should be added to the activity log
+- And each comment should include:
+- Date
+- Editor
+- Value
+- Scenario 06: Notification on File Upload by Business
+- When a business uploads a cheque or payment receipt (on bank transfers section on webApp)
+- Then a notification should be sent to admins
+- And the notification message should indicate: “Business X has uploaded a cheque / payment receipt for a completed bank Transfer”
+- And when I click on the notification I should be redirected to the corresponding bank transfer details screen
+- Scenario 07: Notification on Pre-payment Invoice Creation
+- When a pre-payment invoice is created
+- Then a notification should be sent to relevant admins
+- And the notification message should indicate: “Admin A has created a pre-payment invoice for Business X”
+- Once the notification is clicked, admin is redirected to the details screen of the corresponding payment
+- Scenario 08: Notification on Admin Comment
+- When another admin adds a comment on a pre-payment invoice
+- And the notification message should indicate: “Admin A has added a comment on Business X’s pre-payment invoice”
+- and when the notification is clicked I should be redirected to the payment details screen for the corresponding comment
+- Scenario 09: Admin Permissions & Access Control
+- As a superAdmin on adminPanel
+- When I access the Admin Permissions / Accesses screen
+- Then I should be able to enable or disable access to the Payments section
+- Scenario 10: Pre-payment Invoice Template
+- When I create a pre-payment invoice
+- Then the invoice should follow the following template : Factures d'avance sur consommation 2025 - Google Sheets
+- Scenario 11 : Budget topup status update
+- When I click on the status of the topup on 'budget topup' column
+- Then I should be able to change the status manually from in progress to done or vice versa
+- Scenario 12 : Activity logs Records
+- When I access the activity log section
+- Then the following records should be listed there
+- updating status of the budget topup,
+- creation of a pre-payment invoice,
+- the date when was the line added to the table (the date of the online topup or the date of uploading the bank payment receipt on webApp
+- Scenario : Viewing Comments
+- When I access the payment details screen and I click on a comment
+- Then I should be able to see an overlay screen displaying the comment and it should not be an editable field
+- Scenario : Online Payment Notification Redirection
+- When A user have done a successful online topup for their budget
+- Then I should receive a notification that the business have done a successfull online payment (which we already have implemented) and Once the notification is clicked then I should be redirected to the payment details screen for the corresponding online payment
+- Scenario 1: User wants to add a new credit/debit card.
+- Given I am logged into the Yassir web app.
+- And I am on the payment methods section
+- When I click on "Add payment method"
+- Then a form should appear, prompting me to enter:
+- Email address
+- Card number
+- MM/YY (expiration date)
+- Country (e.g., Algeria)
+- Postal code
+- When I fill my card details
+- And I click on “Add card”
+- Then a confirmation message message should appear “New payment method added succesfully”
+- Then I should be able to submit the form to securely save my card details
+- And the newly added card should be displayed as an available payment option.
+- Scenario 2: Payment method on Pre-ride
+- Given I am logged into the Yassir ride on web
+- When I select my pick-up and destination to search for a driver
+- Then on the bottom of the price estimation screen, “Payment method” button is displayed to either select:
+- Cash by default
+- Payment method (Choose card, or add a new one)
+- Scenario 1: Accessing Online Payment
+- Given I am a Moroccan BAM or Business Admin,
+- When I navigate to the Payment section on the Yassir for Business platform,
+- Then I should see an option labeled “Online Payment” among the available payment methods.
+- Google Analytics Event:
+- Event Name:
+- Event Trigger: When the user views the Online Payment option in the Payment section.
+- Scenario 2: Selecting Payment Gateway
+- Given I have chosen the “Online Payment” method,
+- When I click on “Proceed to Pay” or an equivalent button,
+- Then I should see a selection of payment gateway options suitable for Morocco (e.g., local or international card processing).
+- Event Trigger: When the user opens the gateway selection interface.
+- Scenario 3: Entering Card Details
+- Given I am on the payment gateway interface,
+- When I enter my card details (card number, expiry date, CVV, etc.),
+- Then the system should securely capture and process this information to complete the payment.
+- Scenario 4: Confirming Payment
+- Given I have submitted valid card information,
+- When the payment gateway processes my transaction successfully,
+- Then I should see a confirmation screen indicating the payment has been completed,
+- And my budget or due balance should be updated accordingly.
+- Event Trigger: When the payment gateway returns a success response, and the user sees a confirmation screen.
+- Scenario 5: Payment Failure Handling
+- Given I have submitted card information,
+- When the payment fails or is declined,
+- Then I should receive an error message explaining the issue,
+- And I should have the option to retry or select a different payment method.
+- Event Trigger: When the payment gateway returns a failure response.
+- update payment recipt footer to the legal information of yassir (identical footer for invoices)
+- format the payment receipt to be visually identical to invoices
+- Email Must Contain the:
+- user first name
+- Amount of Budget Left
+- Total number of trips since the last transaction
+- Date of the last transaction
+- Budget Alert must be instant, once they are booking the trip
+- This Email Must be sent on Post paid and Prepaid
+- Scenarios:
+- Given: A business account manager on a prepaid payment plan
+- When: I made a top-up budget, and the amount left from my last top-up is only 10%
+- Then:  I need to get an email, informing me about the amount left in my budget
+- Given: A business account manager on a PostPaid payment plan, and I have consumed 90% of my budget allowance
+- When: I have a certain spending limit, and I consumed 90%
+- Then:  I need to get an email, informing me about the amount left in my spending allowance
+- Given: A business account manager on a PostPaid payment plan, and I have consumed 90% of my budget allowance after the limit was updated
+- When: I have a certain spending limit, and I consumed 90% of the total updated budget limit
+- Email Template:
+- Dear [First Name],
+- hope this email finds you well. I am writing to inform you that the budget remaining in your account is less than [budget left] which is less than 10% of your total budget. we want to ensure that you are aware of this so that you can plan accordingly.
+- We understand the importance of budgeting and its impact on your business goals. As a result, we strongly recommend that you review your current budget and make the necessary adjustments to ensure that your account remains active.
+- If you need any assistance with budgeting or have any questions, please do not hesitate to contact me or our support team at [insert support email address]. We are always here to help you and your business succeed.
+- Thank you for your attention to this matter.
+- Best regards,
+- Cher/Chère [Prénom],
+- J'espère que vous vous portez bien. Je vous écris pour vous informer que le budget restant dans votre compte est inférieur à 10% de votre budget total. En tant que responsable de votre compte, je tiens à vous en informer afin que vous puissiez planifier en conséquence.
+- Nous comprenons l'importance de la budgétisation et de son impact sur vos objectifs commerciaux. Par conséquent, nous vous recommandons vivement de revoir votre budget actuel et d'apporter les ajustements nécessaires pour garantir que votre compte reste actif.
+- Si vous avez besoin d'aide pour la budgétisation ou si vous avez des questions, n'hésitez pas à me contacter ou à contacter notre équipe de support à l'adresse [insérer l'adresse e-mail de support]. Nous sommes toujours là pour vous aider et pour aider votre entreprise à réussir.
+- Je vous remercie de votre attention à cette question.
+- Cordialement,
+- [Votre nom] [Nom de l'entreprise]
+- Scenario 01: Accessing Contracts Section
+- Given I am an admin on adminPanel,
+- When I access adminPanel,
+- Then I should see a new section on adminPanel dedicated for contracts
+- Scenario 02: Adding a New Contract on the Contracts Table with Pending Status
+- Given that I am an Admin and I have have approved legal information of a client,
+- When I access the contract section,
+- Then I should be able to see a new contract line on the table with pending status
+- Scenario 03: Contracts Table
+- Given that I am on adminPanel,
+- Then I should be able to view all the businesses in which the legal information have been approved in a table :
+- company (business name)
+- Contract Status
+- pending : Default value, waiting for the contract creation
+- created : once create contract button is clicked,
+- In Review : manual update (will allow us to display the contract for the client on webApp)
+- Signed = manual update business activated,
+- Ongoing = after signed manual update,
+- Terminated = after the contract duration is over
+- Duration : Default Value = 2 years
+- start date : The day of the activation of the account
+- end date : after 2 years of the start date
+- Comment : we need to display an overlay screen to allow the admins to add comments, which will be displayed on the activity log
+- Actions :
+- Send contract (allows to send an email to the BAM with the unsigned contract template Email Template)
+- Create contract
+- See Details (on click admin is redirected to the contract details screen)
+- Scenario 04: Contracts Details Screen
+- Given that I have have approved legal information of a client,
+- Then I should be able to view al the businesses in which the legal information have been approved in a table :
+- Update Status
+- update the contract status according to this flow
+- start date
+- end date
+- renewal type (manual, once the user clicks on renew contract)
+- termination date
+- Renew
+- Comment
+- Attachement files
+- Unsigned contract
+- Signed contract
+- Avenant
+- Actions : Send contract (allows to send an email to the BAM with the unsigned contract attached Email Template)
+- logs section (Scenario 14)
+- Scenario 05: Contract Templates
+- Given that I am an admin on the contracts section on adminPanel,
+- When I click on create contract button
+- Then I need to be able to click between two templates attached to this user story
+- pre-paid
+- post-paid
+- Scenario 06: Creating a Contract
+- When I choose a template from pre-paid/post-paid and I confirm the creation of the contract
+- Then a notification should be added to the notification section (A pre-paid/ post-paid contract Have been created for business X) and the contract status should update from 'Pending' to 'Created'
+- Scenario 07: Changement of Payment Plan of the Business
+- When I attempt to change the payment status of the business from post-paid to pre-paid or vice versa,
+- Then
+- a duplicate of the existing contract is created with a new page (avenant) added
+- legal information attached to the duplicated contract should be updated to the new ones which were approved
+- the rest of the data except legal information should remain unchanged
+- Scenario 08: Legal Information Update
+- Given the legal information of the client have been updated (either from adminPanel or from webApp),
+- When Changements are approved,
+- Then I should be able to
+- add a new page to the contract (avenant) on the approval averlay screen (to attach avenant to the contract)
+- and avenant should reflect on the contract section and on the profile of the client on webApp
+- the rest of the data (previously created contract) should remain unchanged
+- Scenario 09: Delete Contract
+- When the contract status = created
+- Then I am able to see a button to delete the contract created in case of mistakes of choosing the wrong template and if the contract status has changed to 'In Review' I no longer can delete the contract
+- Scenario 10: Contract Renewal (client account should remain active)
+- When the contract status=Terminated
+- Then I should see a button to allow me to renew the contract, once the button is clicked a then I should be able to choose from contract template (either pre-paid or post-paid)
+- Scenario 11: Upload Signed Contract on AdminPanel
+- When the contract status=In Review
+- Then I should see a button which allows me upload the signed contract (in case the client did not upload it on webApp)
+- Scenario 12: History Logs
+- When any actions of the following is performed on the contract :
+- creation
+- deletion
+- termination
+- renew
+- legal information update/ or changement of payment plan (adding a new page on the contract)
+- Comments
+- Avenant added
+- Then It should be saved on the activity logs with the following information
+- Action
+- contract creation
+- renewal
+- contract update (l’ajout d'avenant)
+- Scenario 13: Adding Comment
+- When I click on add comment
+- Then I should see an overlay screen allowing me to add a comment which will be added on the history log
+- Scenario 14: Viewing Comment
+- When I click on a comment on the history log
+- Then I should see an overlay screen allowing me to see the comment dropped by other admins, and it should not be editable
+- if the business have a due budget, then the step should highlight the pay due budget button with the correct description
+- if the business does not have any due budget to pay (and have budget instead), the step should be skipped
+- Scenario: Accessing the legal information section
+- Given I am on the Admin Panel.
+- Then a new menu item titled "Yassir's Legal Information" should be displayed in the menu box.
+- When I click on this menu item.
+- Then a new screen should be displayed showing the legal information.
+- Scenario: Viewing and editing legal information
+- Given I am on the Yassir's Legal Information screen.
+- Then the following fields should be displayed and pre-populated with the current values:
+- Enterprise Name
+- Address
+- RC Number
+- Bank
+- Agency
+- Capital Social
+- Bank Number
+- Support Phone Number
+- And the fields should be in a non-editable state.
+- When I click an "Edit" button.
+- Then all legal information fields should become editable.
+- Scenario: Updating legal information and invoices
+- Given I have edited and saved the legal information.
+- When an invoice  is generated or viewed.
+- Then the updated legal information should be displayed on both past and future invoices and receipts.
+- Scenario: Managing permissions for the new section
+- Given I am a Super Admin.
+- When I access the permissions table.
+- Then I should see a new entry for "Yassir's Legal Information" that I can assign to other admins.
+- And only admins with this permission should be able to view and access this section.
+- Scenario 1: Sending an invoice to a business labeled 'Individual'
+- Given the admin is on the trip details screen on dashops,
+- And the business is labeled as "individual" on the admin panel,
+- When the admin clicks the "Send Invoice" button,
+- Then the invoice is sent successfully to the rider’s inbox.
+- Scenario 1: Sending an invoice confirmation
+- Given the admin has clicked the "Send Invoice" button,
+- When the invoice is sent successfully,
+- Then a success notification should be displayed
+- Scenario 2: Disabling invoice sending for a businesses labeled 'company'
+- Given the admin is on the trip details screen,
+- When the business is labeled as a "company" on the admin panel,
+- Then the "Send Invoice" button should be disabled.
+- Scenario 1: Navigating to the Edit Legal Information section
+- Given the admin is logged into the admin panel,
+- When I navigate to the "Enterprises" section, select an enterprise, and go to "Enterprise Information" → "Edit Legal Information,"
+- Then I should see a dropdown list to select the frequency of invoice emails (quarterly, monthly, yearly)
+- Scenario 2: Frequency selection
+- Given selects a frequency from the dropdown,
+- When I save the changes,
+- Then the system should automatically start sending emails to the BAM of that enterprise according to the selected frequency
+- Scenario 3: Updating frequency
+- Given that the admin has updated the email frequency,
+- When the new period (quarterly, monthly, yearly) is due,
+- Then the BAM of that enterprise should receive the invoices in their email inbox as per the updated schedule
+- Scenario 4: Default frequency
+- Given the admin has not selected any frequency for an enterprise,
+- When the default frequency should be set to ‘Monthly’
+- Scenario 5: Generating Invoices for monthly invoices
+- Given that, a company account is created on the platform and have created trips for a month
+- When I go to the invoices section
+- Then the Admin Should see the monthly invoices for all months since the company account setup listed
+- Scenario 6: Generating Invoices for Quarltery invoices
+- Given that, a company account is created on the platform, and have created trips for a quarter
+- When I go to the invoices section and then move to the quarterly section
+- Then the Admin Should see the monthly invoices for all quarterly since the company account setup is listed
+- Scenario 7: Generating Invoices for  yearly
+- Given that, a company account is created on the platform and I have created trips for a year
+- Then the Admin Should see the yearly invoices for all years since the company account setup is listed
+- & businesses which have made trips during the month selected only (TTC =/= 0)
+- invoice link provided should be clickable
+- Update Yassir account number in invoices footer from AGB N° 032 00001 2684431208 85 to AGB N° 032 00028 2684431208 93.
+- Change Baba Hassen, Algérie --> SIDI YAHIA, Algérie in invoice footer.
+- For all 2025 invoices have new footer.
+- Invoice Serial Number Feature:
+- On the B2B platform, there should be a dedicated section invoice serial numbers.
+- Sequential Numbering:
+- When I access the invoice serial number feature, it should display the current serial number.
+- The serial number should start from 001 and incrementally increase with each use. for all companies, every month, per country
+- Scenario 1: Attaching a Payment Statement as a Link
+- Given: I am logged in as an Admin on the Admin Panel.
+- When: I update the status of an invoice to "Paid,"
+- Then: I should see an option to attach a payment statement as a URL link.
+- And When: I provide the link and confirm the status update,
+- Then: The transaction table should display the link to the payment statement along with the details of who marked it as paid.
+- Scenario 2: Attaching a Payment Statement as an Uploaded File
+- Then: I should see an option to upload a file as the payment statement.
+- And When: I upload the file and confirm the status update,
+- Then: The transaction table should display a link to download the attached file along with the details of who marked it as paid.
+- Scenario 3: Reflecting Payment Details in the Transaction Table
+- Given: An invoice status is updated to "Paid" with an attached payment statement.
+- When: I view the transaction table of the associated business,
+- Then: I should see the following details:
+- Name of the admin who updated the status
+- The date and time of the status update
+- A clickable link to the attached payment statement (either the uploaded file or URL)
+- Scenario 4: Validation for Attaching Payment Statement
+- Given: I am updating an invoice status to "Paid,"
+- When: I do not attach a payment statement or fail to provide a valid link/file,
+- Then: The system should prevent the status update button is disabled
+- Scenario 1: Generating Invoices for Business V2 Platform
+- Given: I am logged into the Yassir Admin Panel.
+- When: I select a business that is operating on the Business V2 platform and proceed to generate an invoice for them.
+- Then: The serial number of the generated invoice should start with "B V.2" followed by a counter that begins at 1.
+- And: This counter should be unique for each business on the Business V2 platform.
+- Scenario 2: Multiple Invoices for the Same Business on V2 Platform
+- When: I generate multiple invoices for the same business on the Business V2 platform.
+- Then: Each invoice should have a distinct serial number that starts with "B V.2" followed by an incrementing counter.
+- And: The counter should start from 1 for the first invoice and increment sequentially for subsequent invoices for the same business.
+- Scenario 3: Invoices for Business on V1 Platform
+- When: I select a business that is still operating on the Business V1 platform.
+- Then: The serial number of the generated invoice for this business should follow the existing format without the "B V.2" symbol.
+- And: The counter for this invoice should follow the sequential numbering system used for V1 platform invoices.
+- Given that I am generating an invoice in Tunisia,
+- When the invoice is generated, a stamp must be automatically attached at the end of the document.
+- The stamp must be positioned at the bottom-right corner of the invoice.
+- All other data on the invoice, such as billing details, line items, and totals, must remain unchanged.
+- The stamp should be clearly visible and legible, without obstructing any other information on the invoice.
+- Scenario 01: Eligibility Criteria for The Challenge
+- As an admin on AdminPanel,
+- When I create a challenge,
+- Then the businesses that are eligible to join the challenge their status should be Active (either created manually from adminPanel or not)
+- Scenario 02: Company Deletion Impact
+- As a business,
+- When my company is deleted,
+- Then any associated challenges cashbacks should not be processed.
+- Scenario 03: Company status change to inactive
+- When my company status is changed from active to inactive,
+- Then the progress of the challenge should be set ON-HOLD until business is active by then the progress is resumed only if by the date of activating the business the challenge is still on-going.
+- Scenario 04: Individual Discount + Challenge Cash-back
+- When an individual company discount was applied for the company and there is an ongoing challenge,
+- Then the business redeems individual discount+challenge cash-back and the notifications should be sent seperately for traceability. and the sum of discounts should be applied on the HT of the invoice
+- Scenario 05: Discount Reflection on Invoice
+- When a challenge is finished,
+- Then my earned discount should be reflected on the invoice within T2 (Type 2).
+- Scenario 06: Finance Report Update
+- As a finance department user,
+- When a challenge cash-back is applied to a business's invoice,
+- Then the discount amount should be reflected in the finance report (country settings>Payment>finance report) on a new columns which covers (the percentage of the challenge cash-back along with the amount of money earned).
+- Challenge cash-back %
+- Challenge Cash-back Value
+- Scenario 07: Cash-back Timing (within the billing cycle of the challenge's validity end date)
+- When I complete a challenge,
+- Then the challenge cash-back is processed within the billing cycle of the challenge's validity end date, even if the challenge started in a previous month.
+- Scenario 08: Finished Trip Cancellation
+- When a finished trip is cancelled from the dashops,
+- Then finished trips counter should not be impacted.
+- Scenario 09: Payment Plan Change
+- When the payment plan is changed,
+- Then the progress of the finished trips counter should not be impacted.
+- Scenario 10: Newly Created Businesses Active Business Joining Active Challenge (or created manually and activated)
+- As a BAM or admin on adminPanel,
+- When the business account creation has been completed, and there is an ongoing challenge which includes all active businesses,
+- Then I should be elligible to join the challenge.
+- Scenario 01: Generation of Two Monthly Invoices
+- As a system,
+- When invoices are generated by the end of each month,
+- Then two separate invoices should be created: one specifically for finished trips and another exclusively for adjusted trips.
+- Scenario 02: Content of Finished Trips Invoice (Main Page)
+- When the invoice for finished trips is generated,
+- Then it should include all the usual invoice data, specifically covering only the finished trips And Discount line would have all the amount of discounts T1 (Individual discounts)+T2(referrals discount)+T3 (challenge discount)
+- Scenario 03: Finished Trips Invoice Annexes Page
+- Then a second page, should be included, detailing discount types in a table format with the following four columns: "Discount Type," "Description," "Discount Percentage," and "Discount Amount (in Dinars)."
+- T1 (remises),
+- T2 (remises de parrainage),
+- T3 (Challenge cash-backs)
+- Scenario 04: Content of Adjusted Trips Invoice
+- When the invoice for adjusted trips is generated (Facture d’avoir),
+- Then it should include all the usual invoice data, specifically covering only the adjusted trips.
+- Scenario 05: Adjusted Trips Invoice Header Details
+- When the invoice for adjusted trips is generated,
+- Then its header should include
+- Adjusted trips invoice date
+- Avoir n : Adjusted trips invoice reference.
+- Facture n : finished trips invoice reference for the same month.
+- Scenario 06: Adjusted Trips Invoice Reference
+- Then the adjusted trips invoice reference (Avoir n ) should start from 0
+- Scenario 07: Adjusted Trips Invoice Generation
+- When there is no adjusted trips done for a specific month
+- Then the invoice should not be generated
+- Scenario 08: Invoice Naming Convention
+- When both invoices are generated,
+- Then the one for finished trips should follow the usual naming convention NomEntreprise Mois_Année - Statut.pdf and the one for adjusted should should follow the convention: NomEntreprise Mois Année - Avoir - Statut (Payée/NonPayée).pdf.
+- Note : Find below the adjusted trips template that we should follow (taking into consideration the monthly invoices update issue link)
+- Scenario 01: Notification Icon Display
+- As an admin,
+- When I login on adminPanel,
+- Then I should see a notification icon.
+- Scenario 02: Admin Notification of Online Topup
+- As an admin on adminPanel,
+- When a client completes a successful online top-up on the WebApp,
+- Then I should receive an instant notification on the AdminPanel which includes :
+- Business's budget top-up amount
+- Business name
+- Date and time of the topUp
+- Full name of the user who made the topup
+- Scenario 03: Accessing Transaction Table and Payment Receipt
+- When I click on the business's budget top-up notification on the AdminPanel,
+- Then I should be directed to the transaction table for that specific business, and the payment receipt tshould be opened automatically (if the admin had access to the transaction table).
+- Scenario 04: Notification Sent Per Country
+- When a notification is sent to the adminPanel,
+- Then I should be able to see the notifications for the countries I have access to.
+- Scenario 05: Notification Feature Permission
+- As a superAdmin on AdminPanel,
+- Then I should be able to set the permission for different admins (to have access to the notification section or not).
+- Scenario 06: Access granted for notification but not for transaction table
+- As an admin who has access for notification but not for transaction table,
+- Then I should be able to see it but on clicki the user should not be redirected to the transaction table (since admin does not have access).
+- Scenario 1: Insufficient Budget for Booking
+- Given I am a Business Rider using Yassir for Business,
+- When I try to book a trip, and my business profile has insufficient budget to cover the cost,
+- Then I should receive a message stating that I cannot proceed with the trip request due to low budget.
+- Scenario 2: Different Services of the User Programs
+- Given that I have two services within my program
+- When one of the services cost is more than the available budget, and the other is within the available budget
+- Then I can only see the service that is within the available budget
+- Scenario 3: I have enough budget
+- When I try to book a trip, and my business profile has sufficient budget to cover the cost,
+- Then I should be able to book the trip directly
+- Scenario 1: Exporting the Finance Report
+- Given that I have chosen to export the finance report,
+- When I initiate the export process,
+- Then the exported report should include UPDATED REPORT LINK
+- For postpaid payment plans :
+- A column for T1 Discount % which reflects the traditional discount (set per company) applied on the invoice
+- A column for T2 Discount Value which reflects the amount of money gained from referrals discount
+- For pre-paid payment plans :
+- A column for Free trips counts which reflects how many free trips have been rewarded
+- A column for Total amount of free trips which reflects the sum of the estimated cost rewarded
+- DISCOUNT APPLIED column should be renamed to T1 DISCOUNT VALUE
+- DISCOUNT APPLIED % column should be renamed to T1 DISCOUNT %
+- Scenario 3: Adding Type2 Discount on the invoice
+- Given I am on admin panel
+- When I download the invoice of any company
+- Then I need to see two Discount types T1 & T2
+- T1 would reflect regular discounts values
+- T2 would reflect the value earned from the referrals (for pre-paid acounts it should be the sum of the values of the estimation of free trips)
+- Scenario 4: Reflecting free trips on WebApp/AdminPanel/Dashops for pre-paid companies
+- Given I am an admin,
+- When I access webApp/adminPanel/Dashops on the free trips for pre-paid companies,
+- Then I should see the estimated price Strikethrough and a 0 is displayed instead, and the estimated price should not be deducted from the budget (either for instant or booked for later trips)
+- Scenario 4: Reflecting free trips on the export file of WebApp/ AdminPanel/ Dashops for pre-paid companies
+- When I download the trips export file on webApp/adminPanel/Dashops,
+- a column that reflects the estimated price
+- a new column FREE TRIP with two possible values YES/NO
+- Scenario 1: Access Business Referrals Section on AdminPanel
+- Given I am an admin who has access to the business referrals tab on the adminPanel,
+- When I navigate to the "Country Settings" section,
+- Then I should see a new tab “Business Referrals" where I can
+- see and set both rules for pre-paid and post-paid businesses
+- A referrals links history list for both pre-paid and post-paid businesses
+- Scenario 2: Create Reward Rule
+- Given I am superAdmin on the Business Referrals tab,
+- When I choose the payment plan and click on "Create Rule,"
+- Then I should see a screen with the following options for
+- required actions :
+- for pre-paid : Budget Top-up, Users Onboarded, Trips Completion
+- for Pot-paid : Amount Spent, Users Onboarded, Trips Completion
+- And input fields for :
+- reward :
+- discount percentage for applied on the monthly spending amount for business X for Post-paid accounts
+- A number of free trips for pre-paid accounts
+- Completion threshold : minimum value for required actions to reach
+- Reward price limit : limit for the price that the reward earned gained by business X should not exceed
+- Reward Validity date : can be unlimited / or limited by time
+- Scenario 3: View and Edit Existing Rule
+- Given I have previously created reward rule,
+- When I view the Business Referral section,
+- Then I should see a list of existing rule for each payment plans with details such as:
+- Required action
+- completion threshold
+- reward
+- Creation Date
+- Amount of discount applied
+- Number of free trips
+- Reward Validity date
+- And I should have the option to edit or delete existing rule for each payment plan.
+- Scenario 4: Edit Existing Rule
+- Given a reward rule exists for the country for each payment plan,
+- When I click "Edit Rule,"
+- Then I should be able to modify the existing rule parameters (e.g., required actions, discount percentage, thresholds) and the edits should apply for businesses that are under the chosen payment plan.
+- Scenario 5: Delete Existing Rule
+- When I click "Delete,"
+- Then the rule should be deleted for the chosen payment plan and the create rule button should be enabled again
+- Scenario 6: Validation for Rule Creation
+- Given I am creating a new reward rule,
+- When I attempt to save the rule without specifying all required fields (action, threshold, or reward),
+- Then I should see an error message prompting me to complete the missing fields.
+- Scenario 7: No Existing Rules
+- Given there are no reward rules created yet,
+- When I view the "Reward Rules" section,
+- Then I should see an empty state screen with a prompt to create the first reward rule.
+- Scenario 8: Referral Link Shared with No Reward Rule Set
+- Given no reward rule has been set on the adminPanel,
+- When a BAM accesses the referral link sharing section on the webApp,
+- Then sharing link are disabled.
+- note :
+- the percentage of the reward should be from 0 to 100 %
+- the reward should be applied per country
+- only one rule should be configured per country for each payment plan
+- Scenario 1: Payment receipt email from webapp
+- Given I am on the yassir for business webapp
+- When I click payments section
+- Then “Pay now” button
+- Then if I select “Online Payment”
+- And I do my payment
+- Then I should get the payment receipt of the amount I topped up to my email inbox
+- Scenario 2: Tracking the actions on the transaction table_Admin Panel
+- Given I am an admin on the admin panel
+- When I click on transactions
+- Then I should see this action listed “User X, topped budget, X amount,)
+- And the payment receipt should be attached as well and could be downloaded
+- NOTE:
+- We need to log the receipt in the transaction table.
+- we need to include the company name in the receipt as well.
+- When I receive the invoice from Yassir, it should contain the following legal information,
+- when operating in Tunisia:
+- Address: 1 rue Monastir, 2045 l'Aouina, Tunis L'aouina, 2045
+- Company Legal Name: YASSIR SARL.
+- Tax Number: MF: 1582982RAM000
+- When Operating in Morocco:
+- ICE: 002148105000084
+- IF: 26164744
+- RC: 413733
+- Address: 9 AV 2 MARS, 2ND FLOOR, CASABLANCA
+- CNSS affiliation number: 1175605
+- When Operating in Senegal:
+- Adress in Details: Lot n° A W01 Cité Keur Gorgui -  Sacré Coeur 3
+- Company Legal Name :  Yassir Sénégal Sarl
+- NINEA N°008922522D2
+- ID de la société: RCCM N° SN.DKR.2021.B36050
+- Algeria:
+- Oran Office Address: N°34 Iot 388 ilot 142 Coop ibn rochd, cité
+- point du jour, 1er étage, Oran
+- N ̊ RCS: 31/01 - 0999489 B 17
+- Constantine:
+- B, Rue Horchi Slimane centre commerciale smk supérieure ,Constantine
+- N ̊ RCS: 25/02 - 0999489 B 17
+- EURL YASSIR
+- Capital Social 747659000 DZD
+- Tél: 021 99 99 95 / Fax: 023 59 91 30
+- Adresse: Zone d'activité Said Hamdine, Lot n11,
+- Bir Mourad Rais, Alger, Algérie
+- AI: 16096247114
+- RC N ̊: 17 B 0999489-00/16
+- NIF N ̊: 001716099948978
+- NIS: 001716010111763
+- Banque : AGB GULF BANK ALGERIE
+- AGB N° 032 00004 2684431208 32
+- The system should save the last topped-up amount made by the business account manager and display it in the Enterprise Details page.
+- The system should calculate when the company has consumed 90% of the budget based on the last topped-up amount.
+- The system should send an email alert to the business account manager when the company has consumed 90% of the budget.
+- The email alert should include information on the remaining budget and any other relevant details.
+- Suggested Behaviour:
+- globalBudget at T0 = 2000 DA
+- fixedValue at T0 = 2000 DA
+- globalBudget at Tn-2 = 1300 DA
+- fixedValue at Tn-2 = 2000 DA
+- the business has been topped up with 500 DA
+- globalBudget at Tn-1 = 1800 DA
+- fixedValue at Tn-1 = 1800 DA
+- globalBudget at Tn = 180 DA
+- fixedValue at Tn = 1800 DA
+- % of 1800 DA is 180 DA, then the business should send a notification
+- Given When Then Scenarios:
+- Given *that I am a business account manager on the prepaid plan
+- When *I top up the company account with a specific amount
+- Then *the system should save the amount as (*the last topped-up+ The left budget) *amount and display it on the Enterprise Details page.
+- Given *that the system has saved the last topped-up amount
+- When *the company has consumed 90% of the budget based on the last topped-up amount
+- Then *the system should send an email alert to me as the business account manager.
+- Email must be verified
+- Email contains:
+- Sum of the total expenses in the last duration (Week, Month)
+- Total number of Trips
+- Total Number of Riders who made trips
+- A button for referring the users to the financial Dashboard
+- The PDF invoice should include the relevant company details based on the country's requirements:
+- a) For Morocco:
+- Legal Company Name
+- Legal Address (including Building Number/Apt., First Line of Address, Second Line of Address)
+- City (selected from a dropdown list)
+- Zip/Postal Code (numerical value)
+- ICE (Common Company Identifier)
+- IF (Tax Identification)
+- RC (Commercial Register)
+- TTC (Pre-tax price + tax)
+- Payment Period (Monthly, Quarterly, Yearly)
+- b) For Algeria:
+- Legal Company Address (including Building Number/Apt., First Line of Address, Second Line of Address)
+- Raison Sociale
+- c) For Senegal:
+- ID de la société
+- NINEA
+- d) For Tunisia:
+- Legal Billing Address (including Building Number/Apt., First Line of Address, and Second Line of Address)
+- Tax Number
+- Payment Terms (Transfer, Cheque)
+- The PDF invoice should be sent according to the duration specified by the ops manager for each enterprise invoice email sent to the business account manager.
+- The Invoice PDF will contain the total trip cost of all trips made in that duration. been specified by the ops manager
+- The invoice will contain the total cost which: Total Cost = Total Trip Cost * Tax (if Applied)
+- PDF Example:
+- https://docs.google.com/document/d/1IAajghEYtddaIhcz_l8Tcbs45Jkmv1K_ACzk09a74Xo/edit?usp=sharing
+- Scenario 1: Generating a PDF Invoice for a Moroccan Enterprise
+- Given: I am a business account manager for a Moroccan enterprise.
+- When: I receive the monthly invoice email.
+- Then: I open the attached PDF invoice and verify that it includes the correct company details payment information, and financial transactions according to Morocco's requirements.
+- Scenario 2: Generating a PDF Invoice for an Algerian Enterprise
+- Given: I am a business account manager for an Algerian enterprise.
+- Then: I open the attached PDF invoice and verify that it includes the accurate company details, payment information, and financial transactions based on Algeria's requirements.
+- Scenario 3: Generating a PDF Invoice for a Senegalese Enterprise
+- Given: I am a business account manager for a Senegalese enterprise.
+- Then: I open the attached PDF invoice and ensure that it contains the appropriate company details, payment information, and financial transactions as per Senegal's requirements.
+- Scenario 4: Generating a PDF Invoice for a Tunisian Enterprise
+- Given: I am a business account manager for a Tunisian enterprise.
+- Then: I open the attached PDF invoice and verify that it presents the correct company details, payment information, and financial transactions according to Tunisia's requirements.
+- Scenario 5: Generating a PDF Invoice for an Enterprise with No Legal Information Entered
+- Given: I am a business account manager for an enterprise that has not entered any legal information.
+- Then: I open the attached PDF invoice and verify that all the fields related to legal information are empty and that the invoice reflects the default setup for the respective country's requirements. as Taxes being applied by default. The invoice should accurately display the payment information, financial transactions, and other relevant details for the enterprise, even in the absence of legal information.
+- The log shall display a table of all actions made by other admins, including Budget Changes, changing payment plans, and Activating-De-Activating Businesses.
+- The table shall include the following information for each action: a. Business name b. Payment plan c. The action made d. Date and time of the action e. Admin who performed the action f. A link to the invoice/statement if attached
+- The Ops manager shall be able to filter the table by date range
+- The system shall provide search functionality for the Ops manager to quickly find specific actions based on business admin
+- Business Logs:
+- TOP_UP
+- Settlement of Budget:
+- The Admin should be able to enter the budget limit for the enterprise after switching the payment plan.
+- The Remaining Budget should be consumed before using the due budget.
+- The Admin should be able to provide relevant invoices or supporting documents for the settled budget.
+- The Admin should be able to attach the invoice link for the paid amount, which can include both the budget settlement, and it should reflect on the transactions table
+- Scenario 1: Settling the Budget and Top-Up
+- Given the OPs Admin is logged into the Admin Panel,
+- When they navigate to the enterprise details page and select the payment plan tab,
+- Then they should be able to enter the budget limit for the enterprise and specify the amount of the top-up, after clicking on changing plan button
+- And they should be able to provide relevant invoices or supporting documents for the settled budget.
+- Scenario 2: Attaching Invoice Link
+- Given the OPs Admin is on the payment plan tab of the enterprise details page,
+- When they attach the invoice link for the paid amount, which includes both the new budget agreement
+- Then the invoice link should be saved and associated with the payment plan change, and it must reflect on the transaction table
+- Scenario 3: handling the Remaining Budget
+- When the Enterprise is on the pre-paid plan, and they have a remaining budget, and they switch to the post-paid plan
+- Then The Enterprise must be able to consume the remaining budget before accumulating the due budget for the business and reaching the business limit
+- Scenario 4: Defining the Budget Limit
+- When the business has a budget left. the OPs Admin can add a budget limit bigger or smaller than the remaining budget
+- Then the enterprise can consume from the left budget first, then they can have a due budget till the reach the budget limit
+- The user needs to be able to see each business payment plan and method on the dashboard
+- The user needs to be able to change the budget left if the payment method is upfront
+- The user needs to be able to attach legal docs, bank transfer statements
+- The user needs to be able to add another card and save it
+- The user needs to be able to switch between the cards instantly
+- The user can delete one of the previously added cards it has more than one card
+- The user can't remove a card if he has one card only, and his payment plan is Instant payment
+- The user can add another card even if he has another payment plan, without withdrawing from it
+- As a BAM on the Postpaid business plan, I can access my account dashboard.
+- The dashboard displays my current budget limit and the total due budget for my business.
+- On the dashboard, there is a "Pay Due Budget" option that allows me to proceed with paying the outstanding amount.
+- If I choose the "Pay Due Budget" option, a payment screen should appear.
+- When I select the online payment method, I can see an input field to enter the amount I want to pay. in my local currency
+- The input field should not allow me to enter an amount greater than the total due budget.
+- After entering the desired payment amount, I can review the payment details before confirming the transaction.
+- After successful payment, my due budget should be updated, and the due budget should be reduced by the paid amount.
+- If the payment amount exceeds the total due budget, the user should get an error
+- The payment transaction must reflect on the enterprise transaction table, saying how much the BAM added, and what’s his due budget
+- Given-When-Then Scenarios:
+- Scenario 1:
+- Given that I am a Business Account Manager on the Postpaid business plan,
+- When I log in to the dashboard,
+- Then I can see my budget limit and the total due budget displayed on the dashboard.
+- Scenario 2:
+- Given that I am on the dashboard and I have an outstanding due budget,
+- When I click on the "Pay Due Budget" option,
+- Then I am redirected to the payment popup.
+- Scenario 3:
+- Given that I am on the payment screen and I choose the online payment method,
+- When I enter the desired payment amount,
+- Then the input field should not allow me to exceed the total due budget.
+- Scenario 4:
+- Given that I am on the payment screen and I have chosen the online payment method,
+- When I enter an amount within the total due budget and click "Confirm Payment",
+- Then I should be directed to the payment screen
+- The Business Account Manager can access the "Add Budget" feature on the Payment Tab in the Web App
+- Upon clicking the "Add Budget" button, the manager is redirected to a screen with various payment options. [Offline Payment and Online Payment]
+- The manager can choose the online payment option from the available payment methods.
+- The manager can enter the desired amount of budget to top up.
+- After entering the amount, the manager is taken to a secure screen where they can enter their card information for payment processing.
+- The system processes the payment securely and updates the budget on the manager's account accordingly.
+- The manager receives a confirmation of the successful payment along with the updated budget amount. (Your Budget is updated)
+- Review the payment’s success or failure.
+- The Budget Needs to be updated instantly
+- The payment transaction must reflect on the enterprise transaction table, saying how much the BAM added, and what’s his payment plan
+- Given that I am a Business Account Manager on a prepaid plan,
+- When I access the payment tab on the dashboard and click on the "Add Budget" button,
+- Then I should be redirected to the payment options screen.
+- Given that I am on the payment options screen,
+- When I choose the online payment option,
+- Then the online payment option should be selected.
+- Given that I am on the payment screen and have selected the online payment option,
+- When I enter the desired amount to top up, in my local currency
+- Then the entered amount should be displayed and ready for payment processing. and a confirmation  message shows for the BAM
+- Given that I have entered the desired amount for the budget top-up,
+- When I click on the "Proceed with Payment" button,
+- Then I should be redirected to a secure payment information screen.
+- Scenario 5:
+- Given that I am on the secure payment information screen,
+- When I enter my card details, including card number, expiry date, CVV,
+- And I confirm the card information,
+- Then the payment should be securely processed.
+- Scenario 6:
+- Given that the payment was successfully processed,
+- When the system confirms the payment,
+- Then I should receive a payment confirmation message on the web app,
+- And the budget on my account should be updated with the new amount.
+- Scenario 7:
+- Given that the payment was failure processed,
+- When the system denies the payment,
+- Then I should receive a payment error message on the web app,
+- And the budget on my account should not be updated with the new amount.
+- Scenario 8:
+- Given the Ops Manager on the enterprise transaction table
+- When the payment was successfully processed,
+- Then I should see the log updated, with the payment process made, and the amount been deposited
+- The system processes the payment securely and updates the budget on the manager's account accordingly. using satim
+- We need to have a Field on the Settings pages
+- Change the contact support details from the default main phone number and email of the country to the dedicated account manager's information using input fields.
+- the changes should Reflect on the updated contact support details in the Payment and Support sections of the BAM's web app.
+- Listed Admins will be the only eligible admins, they have access to this country’s enterprises, and they have phone numbers assigned
+- If Admin is de-activated then the support information will be the main support email and phone number by default
+- Scenario 1: Access Enterprise Page in Admin Panel
+- Given: I am an Admin
+- When: I access the Admin Panel and navigate to each Enterprise page
+- Then: I can view and manage the contact support details for each Enterprise
+- Scenario 2: Change Contact Support Details to Dedicated Account Manager
+- Given: I am an Admin accessing the Enterprise details page and choosing the support info page in the Admin Panel
+- When: I change the contact support details from the default main phone number and email of the country to the dedicated account manager's information using input fields
+- Then: I ensure that I provide the correct contact details for the dedicated account manager
+- And: The updated contact support details are saved
+- Scenario 3: Reflect Updated Contact Support Details for BAM
+- Given: I am an Admin who has changed the contact support details for an Enterprise in the Admin Panel
+- When: A BAM accesses the Payment and Support sections in their web app
+- Then: The updated contact support details, including the dedicated account manager's information, are displayed, providing the BAM with the correct contact information for support and payment-related inquiries
+- For All businesses, we need to be able to filter them based on country
+- Super Admins need to be able to change the Admin access from the configuration, so they can give them access to a certain set of countries, or remove it
+- If an Admin lost access to one of the Country lists, all of the changes he made, must not be affected
+- If an Admin lost access to one of the Country lists, all of the changes he made, must not be effected
+- When I log into the system, I should see a list of countries where I have access to businesses.
+- When I choose a country, I should be able to see all the businesses in that country only
+- When I switch to a different country, the list of businesses should update to only show businesses that are in that country only.
+- I should not be able to see or access businesses that I do not have permission to access, even if they are located in a country where I have access to other businesses.
+- OPs Manager Can list businesses of two or more countries if he has access to those two or more countries
+- Given that I am an Ops Manager with access to multiple countries' businesses,
+- _*When *_I log into the system and select a country,
+- _*Then *_I should be able to see a list of all the businesses I have permission to access in that country.
+- Given *that I am an Ops Manager with access to multiple countries' businesses,
+- When *I switch to a different country,
+- Then *the list of businesses displayed on the system should update to only show businesses that I have permission to access in that country.
+- When *I try to access a business that I do not have permission to access,
+- Then *the system should display an error message indicating that I do not have permission to access that business.
+- Scenario 1: Uploading Payment Proof Document
+- Given I am logged into the Admin Panel,
+- When I navigate to the payment transaction details, and I click on pay due budget or top up payment
+- Then I should find an option to upload a payment proof document or attach a file link on the pop-up
+- Scenario 2: Attaching Document to Payment Transaction Table
+- Given I am viewing a specific  transaction table
+- When I upload or attach a document as payment proof,
+- Then the document link should appear on the transaction table.
+- Scenario 3: Attaching the Document and checking its format
+- Given I am uploading a document for the payment
+- When I upload or attach a document I need its type to be checked
+- Then the document format needs to be one of the following:
+- .docx
+- The max size should be 10MB
+- Additional Information:
+- Users Can still attach links
+- Invoices language should be in French for all business in Algeria
+- Remove the Word: Rasion Social
+- Remove Discount Filed if there are no discounts applied
+- Update AGB N° to 032 00001 2684431208 85
+- The invoice header, including the logo and company name, should be updated to the new brand colors as specified in the attached ticket.
+- The table colors within the invoice, including rows, columns, and borders, should be adjusted to match the designated colors in the rebranding guidelines.
+- The font styles and sizes used in the invoice should remain consistent with the new brand guidelines.
+- The layout and formatting of the invoice should not be compromised during the color adjustments.
+- The changes should be applied to all types of invoices, including monthly statements, transaction summaries, and any other relevant invoice types.
+- The rebranded invoices should be visually reviewed and approved by the design team to ensure they accurately represent the new brand identity.
+- Given that I am a logged-in Business Account Manager
+- When I access my account's invoices section
+- Then I should see the monthly statement invoice with the updated rebranded colors on the header and the table.
+- Scenario 2: BAM Views Rebranded Transaction Summary Invoice
+- When I navigate to the transactions history and view a specific transaction's details
+- Then I should see the transaction summary invoice with the rebranded colors, ensuring consistency across all types of invoices.
+- Scenario 3: Design Team Approval
+- Given that the rebranded invoices have been updated as per the new brand guidelines
+- When the design team reviews the invoices
+- Then they should approve the changes, ensuring that the invoices accurately represent the new brand identity.
+- Scenario 4: Colors Matching Rebranding Guidelines
+- Given the attached ticket containing the new brand color specifications
+- When the colors on the rebranded invoices are compared to the guidelines
+- Then they should match the specified colors, providing a cohesive and aligned look with the updated brand.
+- The business account manager is logged into the system and navigates to the Payment Overview screen.
+- On the Payment Overview screen, the manager can see the following information:
+- Payment Plan Type: The type of payment plan associated with the business account (e.g., Prepaid or Postpaid).
+- Payment Method: The default payment method for the account, which is Bank Transfer.
+- If on Prepaid Plan:
+- Remaining Budget: The remaining budget amount is available for usage within the current payment cycle.
+- If on Postpaid Plan:
+- Due Budget: The amount of budget that is due and pending payment.
+- Budget Limit: The predefined limit of budget for the postpaid plan.
+- The information is up-to-date, reflecting the latest payment plan, payment method, and budget status.
+- Scenario 1: Viewing Payment Overview on Prepaid Plan
+- Given a business account manager logged into the system
+- When the manager navigates to the Payment Overview screen
+- Then the manager can see the Payment Plan Type as Prepaid
+- And the manager can see the Payment Method as Bank Transfer (default)
+- And the manager can see the Remaining Budget amount displayed
+- Scenario 2: Viewing Payment Overview on Postpaid Plan
+- Then the manager can see the Payment Plan Type as Postpaid
+- And the manager can see the Due Budget amount displayed
+- And the manager can see the Budget Limit amount displayed
+- Given that I am a logged-in business account manager on monthly invoices when I navigate to the payment screen, then I should find a widget labeled "Previous Monthly Invoices".
+- Given that I am a logged-in business account manager on quarterly invoices when I navigate to the payment screen, then I should find a widget labeled "Previous quarters Invoices".
+- Given that I am a logged-in business account manager on Bi-Annual invoices when I navigate to the payment screen, then I should find a widget labeled "Previous half Invoices".
+- Given that I am on the payment screen, when I click on the "Previous Monthly Invoices" widget, then I should be presented with a list of invoices available for download.
+- Given that there are available invoices for previous months, when I select an invoice, then it should be downloaded as a PDF file.
+- Given that there are no invoices available for the  [month, quarter - half]. when my business was operating, when I view the "Previous  [month, quarter - half]. Invoices" widget, I should see a message indicating that no invoices are available for download.
+- Given that I have invoices for specific months, when I click on the "Previous Monthly Invoices" widget, then the list of available invoices should only include months when my business was operating.
+- Let’s assume that once a company is created it doesn’t change the gets invoices
+- If a business on monthly invoices it should be written as: [September 2023, and its correspondence in a different language]
+- If a business on Quarterly invoices it should be written as: [Quarter 1, 2023, and its correspondence in a different language]
+- If a business on monthly invoices it should be written as [Half 1st, 2023, its correspondence in a different language]
+- Scenario 1: Downloading an Available Invoice
+- Given: I am on the payment screen
+- When: I click on the "Previous Monthly Invoices" widget and select an available invoice
+- Then: The invoice for the selected month is downloaded as a PDF file, clearly indicating the corresponding month.
+- Scenario 2: No Invoices Available
+- Given: There are no invoices available for the months when my business was operating
+- When: I view the "Previous Monthly Invoices" widget
+- Then: I see a message stating that there are no invoices available for download.
+- Scenario 3: Selecting Invoices for Operating Months Only
+- Given: I have invoices for specific operating months
+- When: I click on the "Previous Monthly Invoices" widget
+- Then: The list of available invoices only includes months when my business was operating.
+- Given that I am logged in as an operations manager when I navigate to the admin panel and access the details of a specific enterprise, then I should find an option to download invoices.
+- Given that I am viewing the details of an enterprise, when I click on the "Review Invoices" option, then a list of available invoices corresponding to the months when the business was operating should be displayed.
+- Given that there are available invoices for the operating months of the enterprise, when I select an invoice, then it should be downloaded as a PDF file.
+- Given that I have downloaded an invoice, when I open the PDF file, then the invoice should clearly indicate the month to which it belongs (e.g., "Invoice for May 2023").
+- Given that there are no invoices available for the operating months of the enterprise, when I click on the "Review Invoices" option, then I should see a message indicating that there are no invoices available for download.
+- Given that I have invoices available for specific operating months, when I click on the "Review Invoices" option, then the list of available invoices should only include months when the enterprise was operating.
+- If a business on monthly invoices it should be written as: [Feb 2023, and its correspondence in a different language]
+- If a business on Quarterly invoices it should be written as: [Q1, 2023, and its correspondence in a different language]
+- Scenario 1: Downloading an Available Invoice for an Enterprise
+- Given: I am viewing the details of a specific enterprise on the admin panel
+- When: I click on the "Review Invoices" option and select an available invoice
+- Scenario 2: No Invoices Available for an Enterprise
+- Given: There are no invoices available for the operating months of the enterprise
+- When: I click on the "Review Invoices" option
+- Given: I have invoices available for specific operating months of the enterprise
+- Then: The list of available invoices only includes months when the enterprise was operating.
+- Scenario 1: Accessing the Payment Screen
+- Given I am logged into the Admin panel as an Admin,
+- When I navigate to the "Country Configuration" tab and move to the "Payment" screen,
+- Then I should see options to export both the finance report file and the invoices file.
+- Scenario 2: Exporting the Finance Report and Invoices File
+- Given I am on the "Payment" screen,
+- When I select the option to export either the finance report or the invoices file,
+- Then the system should generate the respective file containing the required data without altering any of the information.
+- Scenario 3: Receiving the Exported Files on Slack
+- Given I have successfully requested the export of the finance report or invoices file,
+- When the export process is completed,
+- Then the respective file should be sent directly to a pre-configured Slack channel or direct message for easy access.
+- Scenario 4: Slack Notification for Export Failure
+- Given there is an issue with exporting the finance report or invoices file,
+- When I click on the export button,
+- Then I should receive an error message on Slack notifying me of the failure (e.g., "Export Failed: File generation error").
+- Scenario 5: No Email Notification on Export Completion
+- Given the finance report or invoices file has been successfully exported,
+- When the file is sent to Slack,
+- Then I should not receive an email containing the exported file.
+- Scenario 6: File Format and Content Integrity
+- Given the export is completed successfully,
+- When I receive the finance report or invoices file on Slack,
+- Then the file should be properly formatted (e.g., as a CSV, and Excel File Fotmat ) and contain all relevant financial details, including invoice numbers, amounts, payment statuses, and any other required data, without any alterations.
+- Access to Refund Conditions: As an OP Manager, I should have access to a user-friendly interface on the B2B Admin Panel where I can define refund conditions for each enterprise.
+- Configurable Conditions: I should be able to configure the refund conditions for each enterprise based on criteria such as budget consumption (e.g., if they have spent more than 200,000 DZ in a month) and trip count (e.g., if they have made more than 100 trips in a month).
+- Refund Percentage: I should be able to specify the percentage of the consumed budget that will be refunded to the enterprise if they meet the defined conditions. For example, if they consumed 200,000 DZ, and I set a 10% refund condition, they should receive a 20,000 DZ refund.
+- Automatic Calculation: The system should automatically calculate the refund amount for each enterprise based on their monthly consumption and the defined conditions.
+- Refund Mentioned on Invoice: The refund amount should be clearly mentioned on the invoice sent to the enterprise at the end of the month.
+- Refund Mentioned on Invoice with quarterly, and half annually: The refund amount should be clearly mentioned on the invoice sent to the enterprise at the end of the duration I’ll get an invoice containing all the discounted values, percentages, and the corresponding month
+- The Discounts will be calculated after calculating the VAT Taxes
+- Scenario 1: Accessing Refund Conditions Interface
+- Given: I am an OP Manager.
+- When: I access the B2B Admin Panel.
+- Then: I should see a user-friendly interface where I can define refund conditions for enterprises.
+- Scenario 2: Configuring Refund Conditions
+- Given: I have accessed the refund conditions interface for an enterprise.
+- When: I configure the conditions based on criteria like budget consumption and trip count.
+- Then: The system should allow me to set specific conditions.
+- Scenario 3: Specifying Refund Percentage
+- Given: I have configured refund conditions for an enterprise.
+- When: I specify the refund percentage, e.g., 10%.
+- Then: The system should accept the percentage and apply it to calculate refunds.
+- Scenario 4: Automatic Calculation of Refund
+- Given: An enterprise meets the defined refund conditions.
+- When: The end of the month approaches.
+- Then: The system should automatically calculate the refund amount based on their consumption and conditions.
+- Scenario 5: Invoice Refund Mention
+- Given: An enterprise is eligible for a refund.
+- When: I view the invoice for the enterprise.
+- Then: The invoice should clearly mention the refund amount in a dedicated section.
+- Scenario 6: Entering Spent Amount Value
+- Given: I’m the ops manager entering the spending amount threshold
+- When: I can’t enter a value less than 0, or more than 10,000,000
+- Then: the fields will not accept any values other than that or return an error message
+- Scenario 7: Entering Number of trips
+- Given: I’m the ops manager entering the number of trips threshold
+- When: I can’t enter a value less than 0, or more than 1,000,000
+- Scenario 8: Entering Discount Amount
+- Given: I’m the ops manager entering the Discount Amount
+- When: I can’t enter a value less than 0, or more than 50%
+- Access to Extra Commissions: As an OP Manager, I should have access to a user-friendly interface on the enterprise Admin panel where I can enter the number of extra commissions to be added to each trip.
+- Input Field for Extra Commissions: On the enterprise Admin panel, there should be a clearly labeled input field where I can enter the number of extra commissions as a number. The field should have clear instructions indicating that this number will be added as commissions on each trip taken.
+- Trip Cost Adjustment: I should be able to specify the percentage of extra commissions to be added to the base cost of each Business trip. For example, if the base cost of a trip is 1000 DZ, we have also an inflation factor of 10%, and I enter 5% as extra commissions, the total trip cost should be 1000 DZ + 100 DZ +50 DZ = 1150 DZ.
+- Reflecting Commissions on Invoice: The extra commissions added to each trip should be reflected in the invoice sent to the business. The invoice should include a clear breakdown of the base cost, service inflation, and added commissions for each trip.
+- Trip Estimation Cost = Added Commission + Original Price and it will be visible for the Business Rider
+- Export to CSV: The information about the extra commissions for each trip should be exportable as part of the trip data in CSV format. This will facilitate transparent financial reporting and auditing.
+- The Added Commission Value will be included on the trip Estimation Level when we are listing services on the BAM Dashboard
+- By default, the value of the Added Commission in Algeria is 19%, MA, TN, and Senegal is 0%
+- Driver Earnings Aren’t impacted by the added Commissions DriverComisisons = 80% * Base Cost
+- Scenario 1: Accessing Extra Commissions Input Field
+- When: I access the enterprise Admin panel.
+- Then: I should see a clearly labeled input field for entering extra commissions.
+- And: There should be clear instructions indicating the purpose of this field.
+- Scenario 2: Specifying Extra Commissions Amount
+- Given: I have accessed the input field for extra commissions.
+- When: I enter an amount, e.g., 5%
+- Then: The system should accept the input as the amount of extra commissions to be added.
+- Scenario 3: Calculating Total Trip Cost
+- Given: I have entered extra commissions for a trip.
+- When: I calculate the total trip cost.
+- Then: The total cost should include the base cost, service inflation, and extra commissions.
+- Scenario 4: Invoice Breakdown
+- Given: The trip has extra commissions.
+- When: I view the invoice for the business.
+- Then: The invoice should clearly show the breakdown of the trip cost, including the added commissions.
+- Scenario 5: Exporting Trip Data
+- Given: Extra commissions have been added to trips.
+- When: I export trip data to a CSV file.
+- Then: The CSV file should include information about the extra commissions for each trip.
+- Scenario 6: The driver can’t see the added comission
+- Given: The Enterprise has an extra comission applied
+- When: The B2B ride is performed
+- Then: The driver can see only base cost without extra comission applied
+- When I access an invoice, I can easily locate the "Amount to be Paid" field.
+- If the business is on a prepaid plan, the "Amount to be Paid" field should display 0.
+- If the business is on a post-paid plan, the "Amount to be Paid" field should display the due amount.
+- The displayed amount should be accurate and correspond to the business plan type.
+- The "Amount to be Paid" field should be clearly labeled for easy identification.
+- Scenario 1: Accessing Invoice Details
+- Given: I am logged into the Yassir platform as a Business Account Manager.
+- When: I access the invoice details for a specific period.
+- Then: I should be able to locate and identify the "Amount to be Paid" field.
+- Scenario 2: Prepaid Plan - Amount to be Paid is 0
+- Given: I am viewing the invoice details for a business on a prepaid plan.
+- When: I look at the "Amount to be Paid" field.
+- Then: The "Amount to be Paid" field displays 0, indicating that there is no payment required for prepaid plans.
+- Scenario 3: Post-Paid Plan - Amount to be Paid Equals Due Amount
+- Given: I am reviewing the invoice details for a business on a post-paid plan.
+- When: I examine the "Amount to be Paid" field.
+- Then: The "Amount to be Paid" field displays the due amount, indicating the amount that needs to be paid for post-paid plans.
+- Scenario 4: Clear Labeling
+- Given: I am examining the invoice details.
+- When: I locate the "Amount to be Paid" field.
+- Then: The field is clearly labeled for easy identification.
+- Scenario 5: Changing from Post Paid to Pre-paid
+- Given: BAM on the Postpaid, and changed on Prepaid
+- When: I settle all of my due budget
+- Then: The amount to be paid will be 0
+- Scenario 6: Changing from Pre-paid to Post Paid
+- Given: BAM on the Prepaid, and changed to postpaid
+- When: I have a due budget
+- Then: The amount to be paid will be = due Budget
+- When I receive an invoice, I can easily locate and identify two specific values: one for the total Drivers' Commissions and the other for Yassir Commissions, including any modifications or additional costs made through the Business Admin Panel.
+- The displayed value for Drivers' Commissions accurately reflects the total commissions paid to drivers for the specified period.
+- I can find a separate value for Yassir Commissions within the invoice details.
+- The Yassir Commissions value should include any inflation rates or additional costs that have been modified or added through the Business Admin Panel during the specified period.
+- Both the Drivers' Commissions and Yassir Commissions values should be clearly labeled and easily distinguishable within the invoice.
+- The values should be presented in a clear and understandable format for easy reference and financial reporting.
+- Then: I should be able to locate and identify the values for both Drivers' Commissions and Yassir Commissions.
+- Scenario 2: Total Drivers' Commissions
+- Given: I am viewing the invoice details.
+- When: I look for the value representing the total Drivers' Commissions.
+- Then: The displayed value accurately represents the total commissions paid to drivers during the specified period.
+- Scenario 3: Yassir Commissions with Modifications
+- Given: I am reviewing the invoice details.
+- When: I search for the Yassir Commissions value.
+- Then: The Yassir Commissions value includes any inflation rates or additional costs that have been modified or added through the Business Admin Panel during the specified period.
+- When: I locate the values for Drivers' Commissions and Yassir Commissions.
+- Then: Both values are clearly labeled and distinguishable within the invoice.
+- Scenario 5: Presentation Format
+- When: I find the values for Drivers' Commissions and Yassir Commissions.
+- Then: The values are presented in a clear and understandable format for easy reference and financial reporting.
+- Driving Coming Canceled
+- No Driver Available
+- Trip Status [No Driver Available - Driver Coming Canceled]
+- Refunded_Status: (Enum): [Refunded - not_Refunded]
+- Refunded Amount = Trip Cost if Refunded = True
+- Trip ID
+- Absolutely, let's break down each scenario into multiple scenarios:
+- Scenario 1: Time and Date Validation
+- Given: I am logged into the DashOps platform as an OP Manager.
+- When: I initiate the process of booking a trip for a B2B Rider.
+- Then: The system should display an error that you are booking outside the allowed time and date parameters set by the business for this Rider.
+- Scenario 2: Spending Allowance Validation
+- Given: I am logged into the DashOps platform as an OP Manager. and The business has defined a  spending allowance for the B2B Rider.
+- When: I attempt to proceed with the booking. And: The cost of the trip exceeds the  Spending allowance.
+- Then: The system should provide a clear error message.
+- And: The trip booking process should not proceed until the Spending issue is resolved.
+- Scenario 3: Limited Number of trips per day
+- Given: I am logged into the DashOps platform as an OP Manager. and The business has defined a  Limited number of trips per day
+- When: I attempt to proceed with the booking. And: The number of trips booked that day exceeds the user limit
+- And: The trip booking process should not proceed until the Booking limit issue is resolved.
+- Scenario 4: insufficient remaining budget
+- Given: I am logged into the DashOps platform as an OP Manager. and The business has an insufficient budget
+- When: I attempt to proceed with the booking. And: The trip cost can’t be covered by the budget
+- And: The trip booking process should not proceed until the Budget is updated
+- Scenario 5: Error for Invalid Location
+- Given: I am logged into the DashOps platform as an OP Manager. And: I have initiated the process of booking a trip for a B2B Rider. I have selected  pickup or destination locations that aren’t aligned with the program parameters
+- When: I attempt to proceed with the booking.
+- Then: The system should provide a clear error message. And: The trip booking process should not proceed until a valid location is selected.
+- The BAM is logged into the system and navigates to the Payment Overview screen.
+- On the Payment Overview screen, if the BAM is on the prepaid plan:
+- a. The BAM can see the "Add Funds" button prominently displayed
+- b. When the BAM clicks on the "Add Funds" button, they are redirected to a page that provides bank information for Yassir.
+- c. The displayed bank information is specific to the country where the business is operating.
+- On the Payment Overview screen, if the BAM is on the postpaid plan and has a due budget:
+- a. The BAM can see the "Pay Due Budget" button prominently displayed instead of the "Add Funds" button.
+- b. When the BAM clicks on the "Pay Due Budget" button, they are redirected to a page that provides bank information of Yassir.
+- Scenario 1: BAM on Prepaid Plan Clicks "Add Funds" Button
+- And BAM is on the prepaid plan
+- When the BAM navigates to the Payment Overview screen
+- Then the BAM can see the "Add Funds" button displayed
+- And when the BAM clicks on the "Add Funds" button
+- Then the BAM is redirected to a page with Yassir's bank information for the country of operation
+- Scenario 2: BAM on Postpaid Plan with Due Budget Clicks "Pay Due Budget" Button
+- And the BAM is on the postpaid plan
+- And the BAM has a due budget
+- Then the BAM can see the "Pay Due Budget" button displayed instead of "Add Funds"
+- And when the BAM clicks on the "Pay Due Budget" button
+- Algeria Bank Information:
+- Account Name: EURL Yassir
+- Bank Names:  AGB _ Arab Gulf Bank
+- Accounts IBAN Numbers:  03200001268443120885
+- Tunisia Bank Information:
+- Account's name: Yassir Transport
+- Bank Names BIAT
+- Accounts IBAN Numbers IBAN TN5908008000671002266478
+- Senegal Bank Information:
+- Account's name: Yassir Sénégal Suarl
+- Bank Names: Banque Islamique du Sénégal
+- Accounts IBAN Numbers: SN079 01104 251145829001 29
+- Morocco Bank Details:
+- Account Name: Yassir Maroc
+- Bank Name: Banque centrale populaire - Agence Moussa Bnou Noussair
+- IBAN: MA1907802121113961530004 34
+- Given that I am logged in as an Admin on the platform,
+- When I navigate to the invoice section,
+- Then I should find an option to locate invoices by month and year.
+- Given that a business did not make any trips during the selected month,
+- When I view the invoices for that month,
+- Then I should see invoices with a 0 value.
+- Given that I need to download an invoice with a 0 value,
+- When I select the desired invoice,
+- Then I should be able to download it in the same format as other invoices.
+- Given that, a business is migrated, with 0 trips for many months on the old platform
+- When I check their invoice section
+- Given that, a business was inactive for a certain duration
+- When I view the invoice list
+- Then I should be able to download the invoices and find them with 0 value for any month this business was inactive
+- Given that, we have generated a new invoice for the previous month with 0 trip
+- When I download the invoice
+- Then I should find the invoice reference number generated should be:
+- Contain the right month and year of the invoice
+- and the counter will be starting at V.2.x - Timestamp - Date
+- for Prepaid invoices → Reste a payer field = 0, we will write in text the Reste a payer
+- for postpaid → we remove the Reste a payer, we write the total TTC in Letters
+- for postpaid companies + Remaining Budgets → Reste a payer = 0 or remaining amount to be paid(Total Consumed - Remaining Budget > 0), we write in text the Reste a payer
+- Scenario 1: Generating Invoices with Updated Legal Information
+- When: I select a business that has migrated from Business V1 to Business V2, and I update their legal information, such as company name, registration number, or address.
+- Then: I should have the option to generate invoices for this business.
+- And: The generated invoices should reflect the updated legal information as per Business V2.
+- And: Any bank details, budget information, and invoice serial numbers associated with this business should remain unaltered, exactly as they were in Business V1.
+- Scenario 2: Generating Invoices for Non-Migrated Businesses
+- When: I select a business that has not undergone migration from V1 to V2.
+- And: The generated invoices should contain the current legal information, as there was no migration involved.
+- Scenario 3: Validation for Incomplete Legal Information Update
+- Given: I am updating the legal information for a business that has migrated from V1 to V2.
+- When: I attempt to generate invoices without completing all the required legal information fields.
+- Then: The system should provide a clear error message indicating that the legal information update is incomplete.
+- And: The invoice generation process should not proceed until all necessary legal information is provided for Business V2.
+- Scenario 4: Confirmation of Unchanged Bank Details, Budget, and Serial Numbers
+- Given: I have generated invoices for a business that has migrated from V1 to V2 with updated legal information.
+- When: I review the generated invoices.
+- Then: I should confirm that the bank details, budget information, and invoice serial numbers remain exactly the same as they were in Business V1, with no changes applied.
+- Change the word net a payer to Reste a Payer
+- Change the amount written in letters to be equal to TTC, instead of net a payer
+- Write (LF 2024) next to TVA
+- Move the Box to the left as in the  attached invoice
+- Order the legal details as:
+- Scenario 1: Email Notification
+- Given: I am a Business Account Manager (BAM) registered on the old BtoB platform.
+- When: The billing cycle for March ends. on the 1st of April
+- Then: I should receive an email notification in French informing me that my monthly invoice for March is ready.
+- Scenario 2: PDF Attachment
+- Given: I receive the email notification for my March invoice.
+- When: I open the email.
+- Then: I should find a PDF attachment containing my monthly invoice for March.
+- Scenario 3: Invoice Details
+- Given: I open the PDF attachment containing my March invoice.
+- Then: The invoice should include detailed information such as:
+- Legal Company Information
+- The Trip Costs
+- The taxes if any applied
+- the amount to be paid
+- And follows the latest invoices format
+- Scenario 1: Entering Positive Float Value for Commission
+- Given: I am logged into the Admin Panel of the business platform.
+- When: I navigate to the commission settings section.
+- And When: I enter a positive float value, such as 1.25, in the commission field.
+- Then: The system should accept the input without errors.
+- Then: The commission value should be saved successfully.
+- Then: The entered commission value should be applied to trip prices on invoices, trip estimations, and budget deductions.
+- Scenario 2: Entering Negative Float Value for Commission
+- And When: I enter a negative float value, such as -0.5, in the commission field.
+- Scenario 3: Viewing the Impact of Commission Value
+- When: I enter and save a commission value, either positive or negative.
+- And When: I view a trip invoice, estimation, or budget details.
+- Then: The trip prices should reflect the impact of the entered commission value.
+- Then: The invoice, estimation, or budget should accurately display the calculated amounts based on the commission value entered.
+- Scenario 1: Navigating to Company Details
+- Given that I am logged into the Admin Panel,
+- When I navigate to the company details section,
+- Then I should be able to access the invoices section for that company.
+- Scenario 2: Viewing Invoices
+- Given that I am in the invoices section of a company's details,
+- When I view the list of invoices,
+- Then each invoice should display its current payment status as either "paid" or "non-paid."
+- Scenario 3: Marking an Invoice as Paid
+- Given that I am viewing an invoice marked as "non-paid,"
+- When I select the option to mark it as "paid,"
+- Then the invoice's status should update to "paid" and reflect this change in the system. and the date of updating the status should be saved
+- Scenario 4: Marking an Invoice as Non-Paid
+- Given that I am viewing an invoice marked as "paid,"
+- When I select the option to mark it as "non-paid,"
+- Then the invoice's status should be updated to "non-paid" and reflect this change in the system.
+- Scenario 5: New Invoice Default Status
+- Given that a new invoice is generated for a company,
+- When the invoice is created,
+- Then it should be automatically marked as "non-paid" by default.
+- Scenario 6: Download the invoice
+- Given that as an Admin when I’m downloading an invoice
+- When the invoice file is created
+- Then the invoice file name should be as follows (Company name - Month/ Year - Paid/ unpaid)
+- Scenario 7: Filters  paid, invoices only
+- Given that as an Admin on the invoice
+- When I choose to filter only by paid invoices
+- Then the paid invoices are only displayed
+- Scenario 8: Filters  unpaid, invoices only
+- When I choose to filter only by unpaid invoices
+- Then the unpaid invoices are only displayed
+- Note: All previously generated invoices should be marked as unpaid
+
+## Superseded Features
+
+> These features were overridden by newer tickets.
+
+- ~~CMB-13300: Enable Payment in Morocco ~~ → Replaced by CMB-13299
+- ~~CMB-35046: Enhancements on Tunisian Invoices~~ → Replaced by CMB-35047
+- ~~CMB-27108:  Admin Panel - Monthly Invoice email should be instantly downloadable when clicking "Request Invoice".~~ → Replaced by CMB-18460
+- ~~CMB-13284: Disable Sending the individuals invoice ~~ → Replaced by CMB-13283
+- ~~CMB-3875: Budget Alert~~ → Replaced by CMB-17995
+- ~~CMB-5008: BAM Paying with Online Card  in Algeria ~~ → Replaced by CMB-5011
+- ~~CMB-2953: Updating the Invoice Number~~ → Replaced by CMB-28804
+- ~~CMB-2758: Dev BE: Listing Business~~ → Replaced by CMB-2757
+- ~~CMB-3932: Listing Business~~ → Replaced by CMB-2757
+- ~~CMB-7752: Adding Comissions on a Business~~ → Replaced by CMB-7753
+- ~~CMB-9193: BAM Paying Due Budget with Online Card / Tunisia~~ → Replaced by CMB-5011
+- ~~CMB-11022: Invoice Serial Number fix~~ → Replaced by CMB-28804
+- ~~CMB-8102: Export Invoices from Admin Panel ~~ → Replaced by CMB-7749
+- ~~CMB-11903: Update invoices Serial Number~~ → Replaced by CMB-28599
+- ~~CMB-14882: Add Stamp to the invoices in Tunisia~~ → Replaced by CMB-28599
+- ~~CMB-13416: B2B: Upload Business Documents on Business Payments ~~ → Replaced by CMB-2757
+- ~~CMB-20026: Attaching Payment Statement When Updating Invoice Status~~ → Replaced by CMB-16390
+- ~~CMB-19502: Export Finance Report and Invoices File via Slack~~ → Replaced by CMB-7749
+- ~~CMB-16380: Update Legal Address of Yassir on the invoice~~ → Replaced by CMB-28804

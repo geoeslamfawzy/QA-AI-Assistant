@@ -1,0 +1,153 @@
+[
+  {
+    "key": "TEST-100",
+    "title": "[B2B] Login with Email and Password",
+    "type": "Story",
+    "status": "Done",
+    "module": "B2B Portal — Login & Registration",
+    "description": "As a user, I want to login using my email and password so I can access the B2B portal.\n\nThe login page has two fields: Email and Password. User enters credentials and clicks Login button.",
+    "acceptanceCriteria": [
+      "Login page shows Email and Password fields",
+      "User enters email and password to login",
+      "Invalid credentials show error message",
+      "Successful login redirects to Dashboard"
+    ],
+    "labels": [
+      "b2b",
+      "login"
+    ],
+    "components": [
+      "B2B"
+    ],
+    "created": "2024-01-15T10:00:00.000Z",
+    "updated": "2024-01-20T10:00:00.000Z",
+    "priority": "P1 - High"
+  },
+  {
+    "key": "TEST-500",
+    "title": "[B2B] Login with Phone Number and OTP",
+    "type": "Improvement",
+    "status": "Done",
+    "module": "B2B Portal — Login & Registration",
+    "description": "As a user, I want to login using my phone number and OTP so I can access the B2B portal securely without remembering a password.\n\nThe login flow is:\n1. User enters phone number\n2. System sends OTP via SMS\n3. User enters OTP\n4. User is logged in\n\nThe old email+password login is removed and replaced with phone+OTP.",
+    "acceptanceCriteria": [
+      "Login page shows Phone Number field only (no email/password)",
+      "User enters phone number and receives OTP via SMS",
+      "OTP is valid for 5 minutes",
+      "After 3 failed OTP attempts, user is locked for 15 minutes",
+      "Successful OTP verification logs the user in"
+    ],
+    "labels": [
+      "b2b",
+      "login",
+      "revamp"
+    ],
+    "components": [
+      "B2B"
+    ],
+    "created": "2025-06-01T10:00:00.000Z",
+    "updated": "2025-06-15T10:00:00.000Z",
+    "priority": "P0 - Critical"
+  },
+  {
+    "key": "TEST-200",
+    "title": "[B2B] Prepaid Only Payment",
+    "type": "Story",
+    "status": "Done",
+    "module": "B2B Portal — Payments",
+    "description": "The B2B payment system supports prepaid only. Companies must top up their wallet before booking rides. No credit or postpaid option is available.",
+    "acceptanceCriteria": [
+      "Company must have sufficient wallet balance to book rides",
+      "Top-up button allows adding funds to wallet",
+      "No postpaid or credit option exists",
+      "Rides are blocked when wallet balance is zero"
+    ],
+    "labels": [
+      "b2b",
+      "payments"
+    ],
+    "components": [
+      "B2B"
+    ],
+    "created": "2024-03-01T10:00:00.000Z",
+    "updated": "2024-03-10T10:00:00.000Z",
+    "priority": "P1 - High"
+  },
+  {
+    "key": "TEST-600",
+    "title": "[B2B] Add Postpaid Payment Plan",
+    "type": "Improvement",
+    "status": "Done",
+    "module": "B2B Portal — Payments",
+    "description": "Add postpaid (Pay Later) payment plan alongside the existing prepaid plan. Companies can now choose between prepaid and postpaid.\n\nPostpaid: Company gets a monthly budget limit. Rides are deducted from this limit. Invoice is sent at end of month.\nPrepaid: Works the same as before (wallet top-up).\n\nAdmin can switch a company between prepaid and postpaid.",
+    "acceptanceCriteria": [
+      "Company can be configured as Prepaid OR Postpaid",
+      "Postpaid companies have a monthly budget limit",
+      "Postpaid rides deduct from budget limit, not wallet",
+      "Monthly invoice is generated for postpaid companies",
+      "Admin can switch company between Prepaid and Postpaid",
+      "When switching from prepaid to postpaid, remaining wallet balance is credited to first invoice"
+    ],
+    "labels": [
+      "b2b",
+      "payments",
+      "enhancement"
+    ],
+    "components": [
+      "B2B"
+    ],
+    "created": "2025-08-01T10:00:00.000Z",
+    "updated": "2025-08-20T10:00:00.000Z",
+    "priority": "P0 - Critical"
+  },
+  {
+    "key": "TEST-300",
+    "title": "[B2B] Book Ride with Single Destination",
+    "type": "Story",
+    "status": "Done",
+    "module": "B2B Portal — Book Rides",
+    "description": "Users can book rides with a single pickup and single destination. No intermediate stops are supported.",
+    "acceptanceCriteria": [
+      "Booking form has Pickup and Destination fields only",
+      "No option to add intermediate stops",
+      "Map shows direct route from pickup to destination"
+    ],
+    "labels": [
+      "b2b",
+      "booking"
+    ],
+    "components": [
+      "B2B"
+    ],
+    "created": "2024-02-01T10:00:00.000Z",
+    "updated": "2024-02-10T10:00:00.000Z",
+    "priority": "P1 - High"
+  },
+  {
+    "key": "TEST-700",
+    "title": "[B2B] Multi-Stop Ride Booking",
+    "type": "Improvement",
+    "status": "Done",
+    "module": "B2B Portal — Book Rides",
+    "description": "Enhancement: Users can now book rides with up to 3 intermediate stops in addition to pickup and destination.\n\nThe booking form now has:\n- Pickup location\n- Stop 1 (optional)\n- Stop 2 (optional)\n- Stop 3 (optional)\n- Destination\n\nThe \"Add Stop\" button appears after the pickup field. Maximum 3 stops allowed.",
+    "acceptanceCriteria": [
+      "Booking form has Pickup, up to 3 optional Stops, and Destination",
+      "Add Stop button adds a new stop field (max 3)",
+      "Remove Stop button removes a stop",
+      "Price updates when stops are added or removed",
+      "Map shows route through all stops",
+      "Total maximum of 5 points (1 pickup + 3 stops + 1 destination)"
+    ],
+    "labels": [
+      "b2b",
+      "booking",
+      "enhancement"
+    ],
+    "components": [
+      "B2B"
+    ],
+    "created": "2025-09-01T10:00:00.000Z",
+    "updated": "2025-09-15T10:00:00.000Z",
+    "priority": "P1 - High"
+  }
+]
