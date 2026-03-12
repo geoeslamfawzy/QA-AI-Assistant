@@ -4,7 +4,7 @@
   "totalModules": 20,
   "percentComplete": 100,
   "errors": [],
-  "startedAt": "2026-03-07T23:13:34.634Z",
+  "startedAt": "2026-03-12T11:54:17.256Z",
   "usedAI": true,
   "modules": [
     {
@@ -13,7 +13,7 @@
       "ticketCount": 26,
       "activeTicketCount": 20,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:35.225Z",
+      "completedAt": "2026-03-12T11:54:17.686Z",
       "generatedContentPreview": "---\nid: \"jira-admin-panel-enterprises\"\ntitle: \"Admin Panel — Enterprises\"\nsystem: \"Admin Panel\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"admin-panel\",\"b2b\""
     },
     {
@@ -22,7 +22,7 @@
       "ticketCount": 3,
       "activeTicketCount": 3,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:37.468Z",
+      "completedAt": "2026-03-12T11:54:19.859Z",
       "generatedContentPreview": "---\nid: \"jira-admin-panel-legal\"\ntitle: \"Admin Panel — Legal\"\nsystem: \"Admin Panel\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"admin-panel\"]\nlast_synced: \"20"
     },
     {
@@ -31,16 +31,16 @@
       "ticketCount": 1,
       "activeTicketCount": 1,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:39.754Z",
+      "completedAt": "2026-03-12T11:54:22.228Z",
       "generatedContentPreview": "---\nid: \"jira-admin-panel-settings\"\ntitle: \"Admin Panel — Settings\"\nsystem: \"Admin Panel\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"admin-panel\"]\nlast_synce"
     },
     {
       "moduleName": "B2B Portal — Account",
       "moduleSlug": "b2b-portal-account",
-      "ticketCount": 51,
-      "activeTicketCount": 45,
+      "ticketCount": 52,
+      "activeTicketCount": 46,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:42.046Z",
+      "completedAt": "2026-03-12T11:54:24.459Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-account\"\ntitle: \"B2B Portal — Account\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate-porta"
     },
     {
@@ -49,7 +49,7 @@
       "ticketCount": 35,
       "activeTicketCount": 31,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:44.328Z",
+      "completedAt": "2026-03-12T11:54:26.645Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-book-rides\"\ntitle: \"B2B Portal — Book Rides\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate"
     },
     {
@@ -58,7 +58,7 @@
       "ticketCount": 3,
       "activeTicketCount": 3,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:46.564Z",
+      "completedAt": "2026-03-12T11:54:28.953Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-challenge\"\ntitle: \"B2B Portal — Business Challenge\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-co"
     },
     {
@@ -67,7 +67,7 @@
       "ticketCount": 40,
       "activeTicketCount": 37,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:48.821Z",
+      "completedAt": "2026-03-12T11:54:31.171Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-dashboard\"\ntitle: \"B2B Portal — Dashboard\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate-p"
     },
     {
@@ -76,7 +76,7 @@
       "ticketCount": 2,
       "activeTicketCount": 2,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:51.056Z",
+      "completedAt": "2026-03-12T11:54:33.337Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-gift-cards\"\ntitle: \"B2B Portal — Gift Cards\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate"
     },
     {
@@ -85,7 +85,7 @@
       "ticketCount": 71,
       "activeTicketCount": 54,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:53.334Z",
+      "completedAt": "2026-03-12T11:54:35.544Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-login\"\ntitle: \"B2B Portal — Login & Registration\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corp"
     },
     {
@@ -94,7 +94,7 @@
       "ticketCount": 87,
       "activeTicketCount": 68,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:55.607Z",
+      "completedAt": "2026-03-12T11:54:37.802Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-payments\"\ntitle: \"B2B Portal — Payments\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate-por"
     },
     {
@@ -103,7 +103,7 @@
       "ticketCount": 55,
       "activeTicketCount": 44,
       "status": "completed",
-      "completedAt": "2026-03-07T23:13:57.854Z",
+      "completedAt": "2026-03-12T11:54:40.030Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-programs\"\ntitle: \"B2B Portal — Programs\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate-por"
     },
     {
@@ -112,7 +112,7 @@
       "ticketCount": 7,
       "activeTicketCount": 5,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:00.084Z",
+      "completedAt": "2026-03-12T11:54:42.232Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-referrals\"\ntitle: \"B2B Portal — Referrals\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate-p"
     },
     {
@@ -121,7 +121,7 @@
       "ticketCount": 9,
       "activeTicketCount": 6,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:02.320Z",
+      "completedAt": "2026-03-12T11:54:44.408Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-support\"\ntitle: \"B2B Portal — Support\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate-porta"
     },
     {
@@ -130,7 +130,7 @@
       "ticketCount": 34,
       "activeTicketCount": 26,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:04.658Z",
+      "completedAt": "2026-03-12T11:54:46.600Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-trips\"\ntitle: \"B2B Portal — Trips\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-corporate-portal\",\""
     },
     {
@@ -139,7 +139,7 @@
       "ticketCount": 104,
       "activeTicketCount": 74,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:06.930Z",
+      "completedAt": "2026-03-12T11:54:48.963Z",
       "generatedContentPreview": "---\nid: \"jira-b2b-portal-users-groups\"\ntitle: \"B2B Portal — Users & Groups\"\nsystem: \"B2B Corporate Portal\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2b-cor"
     },
     {
@@ -148,7 +148,7 @@
       "ticketCount": 4,
       "activeTicketCount": 4,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:09.161Z",
+      "completedAt": "2026-03-12T11:54:51.138Z",
       "generatedContentPreview": "---\nid: \"jira-b2c-webapp-promotions\"\ntitle: \"B2C WebApp — Promotions\"\nsystem: \"B2C WebApp\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"b2c-webapp\"]\nlast_synce"
     },
     {
@@ -157,7 +157,7 @@
       "ticketCount": 6,
       "activeTicketCount": 6,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:11.388Z",
+      "completedAt": "2026-03-12T11:54:53.308Z",
       "generatedContentPreview": "---\nid: \"jira-dashops\"\ntitle: \"DashOps\"\nsystem: \"DashOps\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"dashops\"]\nlast_synced: \"2025-08-27T12:40:28.202Z\"\nticket"
     },
     {
@@ -166,7 +166,7 @@
       "ticketCount": 8,
       "activeTicketCount": 8,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:13.622Z",
+      "completedAt": "2026-03-12T11:54:55.478Z",
       "generatedContentPreview": "---\nid: \"jira-driver-app\"\ntitle: \"Driver App\"\nsystem: \"Driver App\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"driver-app\",\"beta-release\",\"driver-app-android\""
     },
     {
@@ -175,7 +175,7 @@
       "ticketCount": 5,
       "activeTicketCount": 3,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:15.858Z",
+      "completedAt": "2026-03-12T11:54:57.645Z",
       "generatedContentPreview": "---\nid: \"jira-pricing-engine\"\ntitle: \"Pricing & Promotions Engine\"\nsystem: \"Pricing Engine\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"pricing-engine\",\"craft"
     },
     {
@@ -184,7 +184,7 @@
       "ticketCount": 120,
       "activeTicketCount": 97,
       "status": "completed",
-      "completedAt": "2026-03-07T23:14:18.103Z",
+      "completedAt": "2026-03-12T11:54:59.837Z",
       "generatedContentPreview": "---\nid: \"jira-uncategorized\"\ntitle: \"Uncategorized\"\nsystem: \"Unknown\"\ntype: \"jira_context\"\nsource: \"auto-generated\"\ntags: [\"jira-context\",\"auto-generated\",\"unknown\",\"b2b_webapp\",\"b2b-admin-panel\"]\nlas"
     }
   ]

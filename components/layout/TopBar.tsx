@@ -20,12 +20,20 @@ export interface FigmaStatus {
   loading?: boolean;
 }
 
+export interface GeminiStatus {
+  connected: boolean;
+  loading?: boolean;
+  model?: string;
+  error?: string;
+}
+
 interface TopBarProps {
   jiraStatus?: JiraStatus;
   figmaStatus?: FigmaStatus;
+  geminiStatus?: GeminiStatus;
 }
 
-export function TopBar({ jiraStatus, figmaStatus }: TopBarProps) {
+export function TopBar({ jiraStatus, figmaStatus, geminiStatus }: TopBarProps) {
   return (
     <header className="h-14 border-b border-border bg-secondary flex items-center justify-between px-6">
       {/* Left side - Logo and brand */}
@@ -73,6 +81,19 @@ export function TopBar({ jiraStatus, figmaStatus }: TopBarProps) {
             connected={figmaStatus?.connected ?? false}
             isMock={figmaStatus?.isMock ?? true}
             loading={figmaStatus?.loading ?? false}
+          />
+
+          {/* Separator */}
+          <span className="text-muted-foreground text-xs">•</span>
+
+          <ConnectionStatus
+            service="gemini"
+            connected={geminiStatus?.connected ?? false}
+            loading={geminiStatus?.loading ?? false}
+            details={{
+              model: geminiStatus?.model,
+              error: geminiStatus?.error,
+            }}
           />
         </div>
       </TooltipProvider>

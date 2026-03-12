@@ -24,6 +24,7 @@ import {
   Clock,
   Play,
   RotateCcw,
+  Sparkles,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -119,6 +120,10 @@ export default function SettingsPage() {
   const [figmaConnected, setFigmaConnected] = useState(false);
   const [isCheckingConnections, setIsCheckingConnections] = useState(false);
 
+  // Gemini AI status
+  const [geminiConnected, setGeminiConnected] = useState(false);
+  const [isCheckingGemini, setIsCheckingGemini] = useState(true);
+
   // Jira credentials
   const [jiraDomain, setJiraDomain] = useState('');
   const [jiraApiToken, setJiraApiToken] = useState('');
@@ -182,6 +187,25 @@ export default function SettingsPage() {
     };
 
     fetchSyncStatus();
+  }, []);
+
+  // Fetch Gemini AI status on mount
+  useEffect(() => {
+    const fetchGeminiStatus = async () => {
+      try {
+        const response = await fetch('/api/ai/status');
+        const data = await response.json();
+        if (data.providers?.gemini) {
+          setGeminiConnected(data.providers.gemini.connected ?? false);
+        }
+      } catch (error) {
+        console.error('Failed to fetch Gemini status:', error);
+      } finally {
+        setIsCheckingGemini(false);
+      }
+    };
+
+    fetchGeminiStatus();
   }, []);
 
   // Poll progress while syncing
@@ -423,6 +447,13 @@ export default function SettingsPage() {
                 name="Claude (Manual)"
                 description="Copy-paste workflow"
                 connected={true}
+              />
+              <IntegrationStatusRow
+                icon={Sparkles}
+                name="Google Gemini"
+                description="Automatic context generation"
+                connected={geminiConnected}
+                isLoading={isCheckingGemini}
               />
             </div>
 

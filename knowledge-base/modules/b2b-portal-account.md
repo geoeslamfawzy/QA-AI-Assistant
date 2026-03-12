@@ -5,23 +5,23 @@ system: "B2B Corporate Portal"
 type: "jira_context"
 source: "auto-generated"
 tags: ["jira-context","auto-generated","b2b-corporate-portal","beta-release","super-app-android","super-app-ios","b2b","crafttheme_mobility"]
-last_synced: "2026-03-06T08:54:20.195Z"
-ticket_count: 51
-active_ticket_count: 45
+last_synced: "2026-03-12T11:38:57.113Z"
+ticket_count: 52
+active_ticket_count: 46
 ---
 
 # B2B Portal — Account
 
-> Auto-generated from 51 Jira tickets.
-> Last synced: 2026-03-06T08:54:20.195Z
-> Active features: 45
+> Auto-generated from 52 Jira tickets.
+> Last synced: 2026-03-12T11:38:57.113Z
+> Active features: 46
 > Superseded: 6
 
 ## User Stories
 
 ### CMB-33310: [WEBAPP] Favorite Addresses Sub-Menu
 
-**Status:** To Do | **Priority:** P2 - Medium
+**Status:** In Test | **Priority:** P2 - Medium
 **Created:** 2025-12-29
 
 **Description:**
@@ -74,6 +74,51 @@ As a user, I want to manage and edit my saved addresses in the "My Account" sect
 - Then I should be able to see it when using my rider profile on riderApp (superApp), or B2C webApp
 - Note : Following events should be added on this notion page
 - Event
+
+---
+
+### CMB-36000: [ADMINPANEL] Business Account Labeling for Reporting
+
+**Status:** To Do | **Priority:** P2 - Medium
+**Created:** 2026-03-09
+
+**Description:**
+As an operations user, I want to classify business accounts into specific types, So that country export reports reflect accurate operational data and distinguish special accounts such as test accounts and media partners.
+
+**Acceptance Criteria:**
+- Scenario 01 : Accessing Entreprise Information Section
+- As an admin on Admin
+- When I access entreprise information section
+- Then on the account type part I should see three types of accounts
+- Entreprise
+- Test Account
+- Media
+- note : this logic should be applied also for business created manually on adminPanel, or businesses which are migrated from the leads section to businesses list
+- Scenario 02 : Default Account Type
+- As a user of webApp
+- When I create an account
+- Then the default Value for my account type should be = Entreprise
+- Scenario 03 : Changing Account Type to Test Accounts
+- Given A business Account is already existing
+- When an admin changes its account type to test accounts
+- Then the logic should be as follows
+- Test Account excluded from the monthly finance reports (not listed)
+- Test Account trips excluded from the country trip export files
+- Scenario 04 : Changing Account Type to Media
+- When an admin changes its account type to Media
+- Media Account SHOULD NOT BE excluded from the monthly finance reports and country trip export file (they need to remain listed)
+- A new column should be added on the monthly finance reports and country trip export file
+- Column title : Account Type
+- Column Values :
+- The user needs to be able to change:
+- Business Email
+- Password
+- Phone Number
+- Name
+- Company Name
+- This data can’t be changed or saved unless the user would submit and confirm on submitting
+- For changing email address, we need to verify the new email the user entered
+- For Changing Password we need to ask the user to enter his old password and to confirm on the new password
 
 ---
 
@@ -568,27 +613,6 @@ As a Rider who have signed in using the link been sent to my email, I need to be
 
 ---
 
-### CMB-189: As a business account manager I need to be able to access my profile setting so that I can edit my name, phone number, business email, and company name
-
-**Status:** Done | **Priority:** P2 - Medium
-**Created:** 2022-07-29
-
-**Description:**
-Acceptance Criteria:
-
-**Acceptance Criteria:**
-- The user needs to be able to change:
-- Business Email
-- Password
-- Phone Number
-- Name
-- Company Name
-- This data can’t be changed or saved unless the user would submit and confirm on submitting
-- For changing email address, we need to verify the new email the user entered
-- For Changing Password we need to ask the user to enter his old password and to confirm on the new password
-
----
-
 ### CMB-5283: Cancel Pending Trip 
 
 **Status:** Done | **Priority:** P1 - High
@@ -999,6 +1023,16 @@ As an Operations (OP) Manager using the Admin Panel, I want the ability to acces
 
 ---
 
+### CMB-11587: Choosing A business Profile on the Web App
+
+**Status:** Done | **Priority:** P0 - Critical
+**Created:** 2024-01-04
+
+**Description:**
+As a Business User accessing the Web App, I want to be able to log in using my email and password, or through my Google account.
+
+---
+
 ### CMB-11736: Track Password Screen
 
 **Status:** Done | **Priority:** No Priority
@@ -1291,6 +1325,39 @@ As a Business Account Manager in Tunisia, Morocco, or Algeria,
 - Then I should be able to see it when using my rider profile on riderApp (superApp), or B2C webApp
 - Note : Following events should be added on this notion page
 - Event
+- Scenario 01 : Accessing Entreprise Information Section
+- As an admin on Admin
+- When I access entreprise information section
+- Then on the account type part I should see three types of accounts
+- Entreprise
+- Test Account
+- Media
+- note : this logic should be applied also for business created manually on adminPanel, or businesses which are migrated from the leads section to businesses list
+- Scenario 02 : Default Account Type
+- As a user of webApp
+- When I create an account
+- Then the default Value for my account type should be = Entreprise
+- Scenario 03 : Changing Account Type to Test Accounts
+- Given A business Account is already existing
+- When an admin changes its account type to test accounts
+- Then the logic should be as follows
+- Test Account excluded from the monthly finance reports (not listed)
+- Test Account trips excluded from the country trip export files
+- Scenario 04 : Changing Account Type to Media
+- When an admin changes its account type to Media
+- Media Account SHOULD NOT BE excluded from the monthly finance reports and country trip export file (they need to remain listed)
+- A new column should be added on the monthly finance reports and country trip export file
+- Column title : Account Type
+- Column Values :
+- The user needs to be able to change:
+- Business Email
+- Password
+- Phone Number
+- Name
+- Company Name
+- This data can’t be changed or saved unless the user would submit and confirm on submitting
+- For changing email address, we need to verify the new email the user entered
+- For Changing Password we need to ask the user to enter his old password and to confirm on the new password
 - Scenario 01: Profile screen structure
 - Given I am logged into the B2B platform
 - When I navigate to Account > Profile
@@ -1652,15 +1719,6 @@ As a Business Account Manager in Tunisia, Morocco, or Algeria,
 - Given *the user has entered pickup and destination points for a trip and selected a service option,
 - When *entered locations aren't according to the program rules
 - Then *the app should block him from booking the trip
-- The user needs to be able to change:
-- Business Email
-- Password
-- Phone Number
-- Name
-- Company Name
-- This data can’t be changed or saved unless the user would submit and confirm on submitting
-- For changing email address, we need to verify the new email the user entered
-- For Changing Password we need to ask the user to enter his old password and to confirm on the new password
 - The trip can be canceled if it's in one of the following statuses for instant bookings: PENDING, ACCEPTED, DRIVER_COMING, DRIVER_ARRIVED.
 - When the trip is canceled, the app should stop searching for a driver.
 - The trip can be canceled if it's in one of the following statuses for scheduled trips: BOOK_ACCEPTED, BOOK_ASSIGNED, BOOK_CONFIRMED.
@@ -2023,7 +2081,7 @@ As a Business Account Manager in Tunisia, Morocco, or Algeria,
 > These features were overridden by newer tickets.
 
 - ~~CMB-23856: Manage saved addresses~~ → Replaced by CMB-26661
-- ~~CMB-11587: Choosing A business Profile on the Web App~~ → Replaced by CMB-189
+- ~~CMB-189: As a business account manager I need to be able to access my profile setting so that I can edit my name, phone number, business email, and company name~~ → Replaced by CMB-36000
 - ~~CMB-10338: Resend a Business Rider invitation~~ → Replaced by CMB-1519
 - ~~CMB-9892: Inviting to group from the main invitation screen ~~ → Replaced by CMB-9735
 - ~~CMB-11737: Track Company Creation Screen~~ → Replaced by CMB-11736

@@ -13,6 +13,7 @@ import {
   FileText,
   Settings,
   BookOpen,
+  Sparkles,
 } from 'lucide-react';
 
 const workflowNavigation = [
@@ -54,6 +55,11 @@ const managementNavigation = [
     name: 'Project Context',
     href: '/project-context',
     icon: BookOpen,
+  },
+  {
+    name: 'Context Generation',
+    href: '/context-generation',
+    icon: Sparkles,
   },
   {
     name: 'Settings',

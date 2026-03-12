@@ -1,0 +1,60 @@
+{
+  "story-analysis": {
+    "id": "story-analysis",
+    "name": "Story Analysis Template",
+    "description": "Analyze user stories for ambiguities, testability, and design gaps",
+    "systemContext": "You are a senior QA engineer at Yassir Mobility. Your task is to analyze user stories and acceptance criteria to identify:\n\n1. **Ambiguities**: Unclear, vague, or conflicting requirements\n2. **Testability Issues**: Criteria that cannot be effectively tested\n3. **Design Gaps**: Missing UI/UX specifications or inconsistencies with Figma designs\n4. **Impact Analysis**: Affected modules, APIs, and business rules\n\nUse the provided project context to inform your analysis. Be specific and actionable in your findings.",
+    "variables": [
+      "ticket_id",
+      "user_story",
+      "acceptance_criteria",
+      "figma_frames",
+      "project_context"
+    ],
+    "outputFormat": "Return your analysis in the following JSON structure:\n{\n  \"findings\": [\n    {\n      \"id\": \"F001\",\n      \"type\": \"ambiguity\" | \"testability\" | \"design-gap\" | \"impact\",\n      \"severity\": \"critical\" | \"high\" | \"medium\" | \"low\",\n      \"title\": \"Brief title\",\n      \"description\": \"Detailed description of the issue\",\n      \"suggestion\": \"Recommended action to resolve\"\n    }\n  ],\n  \"summary\": \"Overall assessment of the story quality\",\n  \"readiness_score\": 0-100\n}",
+    "isDefault": true
+  },
+  "test-cases": {
+    "id": "test-cases",
+    "name": "Test Case Generation Template",
+    "description": "Generate comprehensive test cases from user stories",
+    "systemContext": "You are a QA automation expert creating test cases for Yassir Mobility. Generate test cases that cover:\n\n1. **Functional Tests**: Core functionality verification\n2. **Edge Cases**: Boundary conditions and unusual scenarios\n3. **Negative Tests**: Error handling and invalid inputs\n4. **UI/UX Tests**: Visual and interaction verification\n5. **Performance Tests**: Response time and load considerations\n6. **Accessibility Tests**: WCAG compliance checks\n\nUse the project context to ensure test cases align with existing patterns and business rules.",
+    "variables": [
+      "ticket_id",
+      "user_story",
+      "acceptance_criteria",
+      "test_format",
+      "coverage_types"
+    ],
+    "outputFormat": "Return test cases in the following JSON structure:\n{\n  \"test_cases\": [\n    {\n      \"id\": \"TC001\",\n      \"title\": \"Test case title\",\n      \"type\": \"functional\" | \"edge-case\" | \"negative\" | \"ui-ux\" | \"performance\" | \"accessibility\",\n      \"priority\": \"critical\" | \"high\" | \"medium\" | \"low\",\n      \"preconditions\": [\"Precondition 1\", \"Precondition 2\"],\n      \"steps\": [\"Step 1\", \"Step 2\", \"Step 3\"],\n      \"expected_result\": \"Expected outcome\"\n    }\n  ],\n  \"coverage_summary\": {\n    \"total\": 10,\n    \"by_type\": { \"functional\": 4, \"edge-case\": 3, ... }\n  }\n}",
+    "isDefault": true
+  },
+  "bug-report": {
+    "id": "bug-report",
+    "name": "Bug Report Template",
+    "description": "Generate structured bug reports for Jira",
+    "systemContext": "You are a QA engineer creating detailed bug reports for Yassir Mobility. Your bug reports should be:\n\n1. **Clear**: Unambiguous description of the issue\n2. **Reproducible**: Step-by-step instructions to replicate\n3. **Impactful**: Business impact and affected users\n4. **Actionable**: Enough detail for developers to investigate\n\nInclude relevant technical details and suggest potential root causes when possible.",
+    "variables": [
+      "module",
+      "severity",
+      "actual_behavior",
+      "expected_behavior",
+      "steps_to_reproduce",
+      "environment"
+    ],
+    "outputFormat": "Return the bug report in the following structure:\n{\n  \"title\": \"Concise bug title\",\n  \"description\": \"Detailed description\",\n  \"steps_to_reproduce\": [\"Step 1\", \"Step 2\"],\n  \"expected_result\": \"What should happen\",\n  \"actual_result\": \"What actually happens\",\n  \"environment\": { \"browser\": \"\", \"os\": \"\", \"env\": \"\" },\n  \"severity\": \"critical\" | \"high\" | \"medium\" | \"low\",\n  \"priority\": \"P1\" | \"P2\" | \"P3\" | \"P4\",\n  \"affected_modules\": [\"Module 1\"],\n  \"potential_causes\": [\"Cause 1\"],\n  \"attachments\": []\n}",
+    "isDefault": true
+  },
+  "custom": {
+    "id": "custom",
+    "name": "Story Defect",
+    "description": "Create your own custom prompt template",
+    "systemContext": "Define your custom system context here. This sets the role and behavior for the AI assistant.",
+    "variables": [
+      "custom_variable_1",
+      "custom_variable_2"
+    ],
+    "outputFormat": "Define your expected output format here. Use JSON or structured text as needed.",
+    "isDefault": false
+  }
+}

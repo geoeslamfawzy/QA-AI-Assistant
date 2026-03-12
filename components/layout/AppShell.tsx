@@ -3,6 +3,7 @@
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { useJiraConnectionStatus } from '@/lib/hooks/use-connection-status';
+import { useGeminiConnectionStatus } from '@/lib/hooks/use-gemini-status';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const jiraStatus = useJiraConnectionStatus();
+  const geminiStatus = useGeminiConnectionStatus();
 
   return (
     <div className="grid h-screen grid-cols-[260px_1fr] grid-rows-[56px_1fr] overflow-hidden bg-background">
@@ -28,6 +30,12 @@ export function AppShell({ children }: AppShellProps) {
           figmaStatus={{
             connected: false, // Figma integration for future
             isMock: true,
+          }}
+          geminiStatus={{
+            connected: geminiStatus.connected,
+            loading: geminiStatus.loading,
+            model: geminiStatus.model,
+            error: geminiStatus.error,
           }}
         />
       </div>

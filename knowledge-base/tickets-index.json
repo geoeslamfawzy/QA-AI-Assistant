@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-03-07T23:03:33.369Z",
-  "totalTickets": 671,
+  "lastUpdated": "2026-03-12T11:53:37.146Z",
+  "totalTickets": 672,
   "modules": [
     "Admin Panel — Enterprises",
     "Admin Panel — Legal",
@@ -22467,7 +22467,7 @@
       "priority": "P2 - Medium",
       "type": "Story",
       "created": "2025-12-14T09:14:45.075Z",
-      "updated": "2026-03-04T09:18:06.040Z",
+      "updated": "2026-03-12T10:36:54.861Z",
       "labels": [],
       "components": [
         "B2B"
@@ -22663,11 +22663,11 @@
       "title": "[WEBAPP] Favorite Addresses Sub-Menu",
       "module": "B2B Portal — Account",
       "moduleSlug": "b2b-portal-account",
-      "status": "To Do",
+      "status": "In Test",
       "priority": "P2 - Medium",
       "type": "Story",
       "created": "2025-12-29T13:33:29.016Z",
-      "updated": "2026-03-06T08:54:20.195Z",
+      "updated": "2026-03-12T11:38:57.113Z",
       "labels": [],
       "components": [
         "B2B"
@@ -23268,11 +23268,11 @@
       "title": "[ALG] [CHROME] [WEBAPP] [PROD]: ' refferal has been expired ' should be display instead of ' country refferal rule has been expired ' ",
       "module": "Uncategorized",
       "moduleSlug": "uncategorized",
-      "status": "In Review",
+      "status": "Done",
       "priority": "P3 - Low",
       "type": "Improvement",
       "created": "2026-02-11T14:12:54.903Z",
-      "updated": "2026-03-04T23:07:39.481Z",
+      "updated": "2026-03-12T10:36:53.069Z",
       "labels": [
         "B2B_WebApp"
       ],
@@ -23375,7 +23375,7 @@
       "priority": "P1 - High",
       "type": "Improvement",
       "created": "2026-02-17T09:24:27.746Z",
-      "updated": "2026-03-04T08:10:35.477Z",
+      "updated": "2026-03-12T10:36:51.790Z",
       "labels": [],
       "components": [
         "B2B 2.0"
@@ -23413,7 +23413,7 @@
       "priority": "P2 - Medium",
       "type": "Improvement",
       "created": "2026-02-26T10:38:37.921Z",
-      "updated": "2026-03-07T21:12:27.276Z",
+      "updated": "2026-03-12T10:10:48.859Z",
       "labels": [],
       "components": [
         "B2B"
@@ -23426,6 +23426,59 @@
         "input notification details and click next",
         "on the companies dropdown list check one of the companies",
         "now try to uncheck it"
+      ],
+      "figmaLinks": []
+    },
+    {
+      "ticketId": "CMB-36000",
+      "title": "[ADMINPANEL] Business Account Labeling for Reporting",
+      "module": "B2B Portal — Account",
+      "moduleSlug": "b2b-portal-account",
+      "status": "To Do",
+      "priority": "P2 - Medium",
+      "type": "Story",
+      "created": "2026-03-09T12:03:17.133Z",
+      "updated": "2026-03-09T12:04:27.430Z",
+      "labels": [],
+      "components": [
+        "B2B"
+      ],
+      "userStory": "As an operations user, I want to classify business accounts into specific types, So that country export reports reflect accurate operational data and distinguish special accounts such as test accounts and media partners.",
+      "description": "As an operations user, I want to classify business accounts into specific types, So that country export reports reflect accurate operational data and distinguish special accounts such as test accounts and media partners.",
+      "acceptanceCriteria": [
+        "Scenario 01 : Accessing Entreprise Information Section",
+        "As an admin on Admin",
+        "When I access entreprise information section",
+        "Then on the account type part I should see three types of accounts",
+        "Entreprise",
+        "Test Account",
+        "Media",
+        "note : this logic should be applied also for business created manually on adminPanel, or businesses which are migrated from the leads section to businesses list",
+        "Scenario 02 : Default Account Type",
+        "As a user of webApp",
+        "When I create an account",
+        "Then the default Value for my account type should be = Entreprise",
+        "Scenario 03 : Changing Account Type to Test Accounts",
+        "Given A business Account is already existing",
+        "When an admin changes its account type to test accounts",
+        "Then the logic should be as follows",
+        "Test Account excluded from the monthly finance reports (not listed)",
+        "Test Account trips excluded from the country trip export files",
+        "Scenario 04 : Changing Account Type to Media",
+        "When an admin changes its account type to Media",
+        "Media Account SHOULD NOT BE excluded from the monthly finance reports and country trip export file (they need to remain listed)",
+        "A new column should be added on the monthly finance reports and country trip export file",
+        "Column title : Account Type",
+        "Column Values :",
+        "The user needs to be able to change:",
+        "Business Email",
+        "Password",
+        "Phone Number",
+        "Name",
+        "Company Name",
+        "This data can’t be changed or saved unless the user would submit and confirm on submitting",
+        "For changing email address, we need to verify the new email the user entered",
+        "For Changing Password we need to ask the user to enter his old password and to confirm on the new password"
       ],
       "figmaLinks": []
     }

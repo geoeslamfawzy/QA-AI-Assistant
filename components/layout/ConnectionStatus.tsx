@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
 export interface ConnectionStatusProps {
-  service: 'jira' | 'figma';
+  service: 'jira' | 'figma' | 'gemini';
   connected: boolean;
   isMock?: boolean;
   loading?: boolean;
@@ -17,6 +17,7 @@ export interface ConnectionStatusProps {
     domain?: string;
     projectKey?: string;
     user?: string;
+    model?: string;
     error?: string;
   };
 }
@@ -28,7 +29,12 @@ export function ConnectionStatus({
   loading = false,
   details,
 }: ConnectionStatusProps) {
-  const label = service === 'jira' ? 'Jira' : 'Figma';
+  const labels: Record<string, string> = {
+    jira: 'Jira',
+    figma: 'Figma',
+    gemini: 'Gemini',
+  };
+  const label = labels[service] || service;
 
   // Determine status color and text
   let statusColor = 'bg-muted-foreground';
@@ -90,6 +96,9 @@ export function ConnectionStatus({
               )}
               {details?.user && (
                 <p className="text-muted-foreground">User: {details.user}</p>
+              )}
+              {details?.model && (
+                <p className="text-muted-foreground">Model: {details.model}</p>
               )}
             </>
           ) : isMock ? (
