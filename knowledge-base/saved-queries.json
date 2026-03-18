@@ -1,0 +1,11 @@
+git[
+  {
+    "id": "query-1773861284401",
+    "name": "Invoice Module",
+    "jql": "project = CMB AND \"squad[dropdown]\" = \"B2B & B2C WebApp\" AND description ~ \"invoice\"\nORDER BY updated DESC",
+    "slug": "invoice-module",
+    "lastRun": "2026-03-18T19:26:57.638Z",
+    "ticketCount": 106,
+    "hasDocument": false
+  }
+]

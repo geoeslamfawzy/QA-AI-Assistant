@@ -51,6 +51,12 @@ export function buildModuleMarkdown(context: ModuleContext): string {
   }
   lines.push('');
 
+  // Reading guide for non-AI generated context
+  lines.push('> **Reading Guide:** Tickets are shown oldest to newest.');
+  lines.push('> If two tickets describe the same feature differently,');
+  lines.push('> the LATER ticket (further down) is the current truth.');
+  lines.push('');
+
   // Group active tickets by type
   const stories = context.activeTickets.filter((t) => t.type === 'Story');
   const tasks = context.activeTickets.filter((t) => t.type === 'Task');

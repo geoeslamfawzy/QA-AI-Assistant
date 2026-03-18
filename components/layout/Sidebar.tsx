@@ -9,6 +9,7 @@ import {
   Search,
   TestTubes,
   Bug,
+  FolderSearch,
   History,
   FileText,
   Settings,
@@ -37,6 +38,11 @@ const workflowNavigation = [
     name: 'Report Defect',
     href: '/defects',
     icon: Bug,
+  },
+  {
+    name: 'Module Explorer',
+    href: '/module-explorer',
+    icon: FolderSearch,
   },
 ];
 

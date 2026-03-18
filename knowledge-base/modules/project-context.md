@@ -2,7 +2,7 @@
 id: "project-context"
 title: "Yassir Mobility — Project Context"
 type: "index"
-last_generated: "2026-03-12T11:54:59.839Z"
+last_generated: "2026-03-13T09:17:20.110Z"
 total_tickets: 672
 total_modules: 20
 ---
@@ -10,7 +10,7 @@ total_modules: 20
 # Yassir Mobility — Project Context
 
 > Auto-generated from Jira tickets using AI analysis
-> Last generated: 2026-03-12T11:54:59.839Z
+> Last generated: 2026-03-13T09:17:20.110Z
 > Total tickets analyzed: 672
 > Active features: 538
 > Modules: 20
