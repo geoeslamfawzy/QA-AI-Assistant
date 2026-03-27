@@ -14,7 +14,9 @@ import {
   type AnalysisOptions,
 } from '@/components/analyze/AnalysisOptionsCard';
 import { FindingCard, type Finding } from '@/components/analyze/FindingCard';
-import { Database, FileText, Send, CheckCircle, Loader2 } from 'lucide-react';
+import AIModeSelector, { type AIModeConfig } from '@/components/ai/AIModeSelector';
+import ClaudeCliProgress from '@/components/ai/ClaudeCliProgress';
+import { Database, FileText, Send, CheckCircle, Loader2, Bot, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 
 const steps: Step[] = [
@@ -54,6 +56,10 @@ export default function AnalyzePage() {
   const [isGeneratingPrompt, setIsGeneratingPrompt] = useState(false);
   const [claudeResponse, setClaudeResponse] = useState('');
   const [isParsingResponse, setIsParsingResponse] = useState(false);
+
+  // AI mode state
+  const [aiConfig, setAiConfig] = useState<AIModeConfig>({ mode: 'claude-cli' });
+  const [isAIProcessing, setIsAIProcessing] = useState(false);
 
   // Step 3: Review & Post state
   const [findings, setFindings] = useState<Finding[]>([]);
@@ -147,6 +153,68 @@ export default function AnalyzePage() {
       setIsParsingResponse(false);
     }
   }, [claudeResponse]);
+
+  // Run AI analysis (Gemini or Claude CLI)
+  const handleAIAnalyze = useCallback(async () => {
+    if (!generatedPrompt || aiConfig.mode === 'manual') return;
+
+    setIsAIProcessing(true);
+
+    try {
+      if (aiConfig.mode === 'claude-cli') {
+        const res = await fetch('/api/ai/claude-cli', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: generatedPrompt,
+            model: aiConfig.model || 'claude-sonnet-4-6',
+            feature: 'analyze-story',
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        // ClaudeCliProgress component handles polling and calls onComplete
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      toast.error(message);
+      setIsAIProcessing(false);
+    }
+  }, [generatedPrompt, aiConfig]);
+
+  // Handle AI completion — set the response and auto-parse
+  const handleAIComplete = useCallback(
+    async (output: string) => {
+      setClaudeResponse(output);
+      setIsAIProcessing(false);
+
+      // Auto-parse the response
+      try {
+        const response = await fetch('/api/prompts/parse-response', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'story-analysis',
+            response: output,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setFindings(data.findings);
+          setSelectedFindings(new Set(data.findings.map((f: Finding) => f.id)));
+          setCurrentStep(2);
+          toast.success(`Found ${data.findings.length} findings`);
+        } else {
+          toast.error(data.error || 'Failed to parse AI response');
+        }
+      } catch {
+        toast.error('Failed to parse response. You can paste it manually.');
+      }
+    },
+    []
+  );
 
   // Toggle finding selection
   const handleToggleFinding = useCallback((id: string) => {
@@ -272,23 +340,68 @@ export default function AnalyzePage() {
             maxHeight="400px"
           />
 
+          {/* AI Mode Selector */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-dim">
                   <FileText className="h-4 w-4 text-primary" />
                 </div>
-                Claude&apos;s Response
+                Analyze with AI
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <ClaudeResponseInput
-                value={claudeResponse}
-                onChange={setClaudeResponse}
-                onParse={handleParseResponse}
-                isLoading={isParsingResponse}
-                parseButtonText="Parse Findings"
-              />
+            <CardContent className="space-y-4">
+              <AIModeSelector value={aiConfig} onChange={setAiConfig} />
+
+              {/* Auto modes: show Analyze button */}
+              {aiConfig.mode !== 'manual' && (
+                <>
+                  <Button
+                    onClick={handleAIAnalyze}
+                    disabled={isAIProcessing}
+                    className="w-full"
+                  >
+                    {isAIProcessing ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        {aiConfig.mode === 'gemini' ? (
+                          <Zap className="mr-2 h-4 w-4" />
+                        ) : (
+                          <Bot className="mr-2 h-4 w-4" />
+                        )}
+                        Analyze with {aiConfig.mode === 'gemini' ? 'Gemini' : 'Claude CLI'}
+                      </>
+                    )}
+                  </Button>
+
+                  {/* Claude CLI Progress */}
+                  {aiConfig.mode === 'claude-cli' && (
+                    <ClaudeCliProgress
+                      isActive={isAIProcessing}
+                      onComplete={handleAIComplete}
+                      onError={(error) => {
+                        toast.error(error);
+                        setIsAIProcessing(false);
+                      }}
+                    />
+                  )}
+                </>
+              )}
+
+              {/* Manual mode: show paste textarea */}
+              {aiConfig.mode === 'manual' && (
+                <ClaudeResponseInput
+                  value={claudeResponse}
+                  onChange={setClaudeResponse}
+                  onParse={handleParseResponse}
+                  isLoading={isParsingResponse}
+                  parseButtonText="Parse Findings"
+                />
+              )}
             </CardContent>
           </Card>
         </div>

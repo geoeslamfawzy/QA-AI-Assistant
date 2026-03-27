@@ -23,6 +23,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import ClaudeCliProgress from '@/components/ai/ClaudeCliProgress';
 import {
   FolderSearch,
   Search,
@@ -31,6 +32,7 @@ import {
   ChevronRight,
   Zap,
   Hand,
+  Bot,
   Copy,
   Check,
   Download,
@@ -147,11 +149,16 @@ export default function ModuleExplorerPage() {
   const [searchFilter, setSearchFilter] = useState('');
 
   // Generate state
-  const [generationMode, setGenerationMode] = useState<'auto' | 'manual'>('auto');
+  const [generationMode, setGenerationMode] = useState<'auto' | 'claude-cli' | 'manual'>('auto');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [claudeResponse, setClaudeResponse] = useState('');
   const [isSaving, setIsSaving] = useState(false);
+
+  // Claude CLI state
+  const [isClaudeCliAvailable, setIsClaudeCliAvailable] = useState<boolean | null>(null);
+  const [isClaudeCliRunning, setIsClaudeCliRunning] = useState(false);
+  const [claudeCliModel, setClaudeCliModel] = useState('claude-sonnet-4-6');
 
   // Document preview state
   const [generatedDocument, setGeneratedDocument] = useState('');
@@ -181,18 +188,20 @@ export default function ModuleExplorerPage() {
   // EFFECTS
   // ────────────────────────────────────────────────────────────────
 
-  // Check Gemini availability on mount
+  // Check AI availability on mount
   useEffect(() => {
-    const checkGemini = async () => {
+    const checkAiStatus = async () => {
       try {
         const res = await fetch('/api/ai/status');
         const data = await res.json();
         setIsGeminiAvailable(data.providers?.gemini?.configured ?? false);
+        setIsClaudeCliAvailable(data.providers?.claudeCli?.available ?? false);
       } catch {
         setIsGeminiAvailable(false);
+        setIsClaudeCliAvailable(false);
       }
     };
-    checkGemini();
+    checkAiStatus();
   }, []);
 
   // Load saved queries on mount
@@ -402,6 +411,103 @@ export default function ModuleExplorerPage() {
       toast.error('Failed to generate document');
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleClaudeCliGenerate = async () => {
+    if (tickets.length === 0) {
+      toast.error('No tickets to generate document from');
+      return;
+    }
+    if (!documentName.trim()) {
+      toast.error('Please enter a document name');
+      return;
+    }
+
+    setIsGenerating(true);
+
+    try {
+      // First, get the prompt from the generate endpoint in manual mode
+      const res = await fetch('/api/module-explorer/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: documentName,
+          slug: documentSlug,
+          tickets,
+          mode: 'manual', // Get prompt only
+        }),
+      });
+
+      const data = await res.json();
+      if (!data.success || !data.prompt) {
+        toast.error(data.error || 'Failed to generate prompt');
+        setIsGenerating(false);
+        return;
+      }
+
+      // Now send to Claude CLI
+      setIsClaudeCliRunning(true);
+      const cliRes = await fetch('/api/ai/claude-cli', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: data.prompt,
+          model: claudeCliModel,
+          feature: 'module-explorer',
+        }),
+      });
+
+      const cliData = await cliRes.json();
+      if (!cliRes.ok) {
+        throw new Error(cliData.error);
+      }
+
+      // Poll for completion
+      const pollInterval = setInterval(async () => {
+        try {
+          const progressRes = await fetch('/api/ai/claude-cli');
+          const progress = await progressRes.json();
+
+          if (progress.status === 'completed') {
+            clearInterval(pollInterval);
+            setIsClaudeCliRunning(false);
+
+            // Save the document
+            const saveRes = await fetch('/api/module-explorer/save', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                slug: documentSlug,
+                name: documentName,
+                content: progress.output,
+              }),
+            });
+
+            const saveData = await saveRes.json();
+            if (saveData.success) {
+              setGeneratedDocument(progress.output);
+              setSavedSlug(saveData.slug || documentSlug);
+              toast.success(`Document generated and saved to ${saveData.savedTo}`);
+            } else {
+              toast.error(saveData.error || 'Failed to save document');
+            }
+            setIsGenerating(false);
+          } else if (progress.status === 'failed') {
+            clearInterval(pollInterval);
+            setIsClaudeCliRunning(false);
+            setIsGenerating(false);
+            toast.error(progress.error || 'Claude CLI failed');
+          }
+        } catch {
+          // ignore poll errors
+        }
+      }, 2000);
+    } catch (err: unknown) {
+      const error = err as Error;
+      setIsClaudeCliRunning(false);
+      setIsGenerating(false);
+      toast.error(error.message || 'Failed to generate with Claude CLI');
     }
   };
 
@@ -805,8 +911,18 @@ export default function ModuleExplorerPage() {
                 className="flex-1 sm:flex-none"
               >
                 <Zap className="mr-2 h-4 w-4" />
-                Auto - Gemini
-                {!isGeminiAvailable && ' (Not configured)'}
+                Gemini
+                {!isGeminiAvailable && ' (N/A)'}
+              </Button>
+              <Button
+                variant={generationMode === 'claude-cli' ? 'default' : 'outline'}
+                onClick={() => setGenerationMode('claude-cli')}
+                disabled={!isClaudeCliAvailable}
+                className="flex-1 sm:flex-none"
+              >
+                <Bot className="mr-2 h-4 w-4" />
+                Claude CLI
+                {!isClaudeCliAvailable && ' (N/A)'}
               </Button>
               <Button
                 variant={generationMode === 'manual' ? 'default' : 'outline'}
@@ -814,7 +930,7 @@ export default function ModuleExplorerPage() {
                 className="flex-1 sm:flex-none"
               >
                 <Hand className="mr-2 h-4 w-4" />
-                Manual - Claude
+                Manual
               </Button>
             </div>
 
@@ -836,6 +952,51 @@ export default function ModuleExplorerPage() {
                   </>
                 )}
               </Button>
+            )}
+
+            {/* Claude CLI Mode */}
+            {generationMode === 'claude-cli' && (
+              <div className="space-y-4">
+                {/* Model selector */}
+                <div>
+                  <label className="text-xs text-muted-foreground mb-1 block">
+                    Claude Model
+                  </label>
+                  <select
+                    value={claudeCliModel}
+                    onChange={(e) => setClaudeCliModel(e.target.value)}
+                    className="w-full sm:w-auto px-3 py-2 bg-secondary border border-border rounded-lg text-sm text-foreground"
+                  >
+                    <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — Fastest, lightweight tasks</option>
+                    <option value="claude-sonnet-4-6">Claude Sonnet 4.6 — Fast, good quality</option>
+                    <option value="claude-opus-4-6">Claude Opus 4.6 — Best quality, slower</option>
+                  </select>
+                </div>
+
+                <Button
+                  onClick={handleClaudeCliGenerate}
+                  disabled={isGenerating || !documentName.trim()}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Bot className="mr-2 h-4 w-4" />
+                      Generate with Claude CLI
+                    </>
+                  )}
+                </Button>
+
+                {/* Claude CLI Progress */}
+                <ClaudeCliProgress
+                  isActive={isClaudeCliRunning}
+                  onComplete={() => {}}
+                  onError={(error) => toast.error(error)}
+                />
+              </div>
             )}
 
             {/* Manual Mode */}

@@ -27,13 +27,21 @@ export interface GeminiStatus {
   error?: string;
 }
 
+export interface ClaudeCliStatus {
+  connected: boolean;
+  loading?: boolean;
+  version?: string;
+  error?: string;
+}
+
 interface TopBarProps {
   jiraStatus?: JiraStatus;
   figmaStatus?: FigmaStatus;
   geminiStatus?: GeminiStatus;
+  claudeCliStatus?: ClaudeCliStatus;
 }
 
-export function TopBar({ jiraStatus, figmaStatus, geminiStatus }: TopBarProps) {
+export function TopBar({ jiraStatus, figmaStatus, geminiStatus, claudeCliStatus }: TopBarProps) {
   return (
     <header className="h-14 border-b border-border bg-secondary flex items-center justify-between px-6">
       {/* Left side - Logo and brand */}
@@ -93,6 +101,19 @@ export function TopBar({ jiraStatus, figmaStatus, geminiStatus }: TopBarProps) {
             details={{
               model: geminiStatus?.model,
               error: geminiStatus?.error,
+            }}
+          />
+
+          {/* Separator */}
+          <span className="text-muted-foreground text-xs">&bull;</span>
+
+          <ConnectionStatus
+            service="claude-cli"
+            connected={claudeCliStatus?.connected ?? false}
+            loading={claudeCliStatus?.loading ?? false}
+            details={{
+              model: claudeCliStatus?.version,
+              error: claudeCliStatus?.error,
             }}
           />
         </div>

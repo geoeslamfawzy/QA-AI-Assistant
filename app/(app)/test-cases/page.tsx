@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/dialog';
 import { PromptBlock } from '@/components/shared/PromptBlock';
 import { ClaudeResponseInput } from '@/components/shared/ClaudeResponseInput';
+import AIModeSelector, { type AIModeConfig } from '@/components/ai/AIModeSelector';
+import ClaudeCliProgress from '@/components/ai/ClaudeCliProgress';
 import {
   TestCaseConfigPanel,
   type TestCaseConfig,
@@ -33,6 +35,8 @@ import {
   XCircle,
   ExternalLink,
   AlertCircle,
+  Bot,
+  Zap,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { PushTestCasesResponse, TestCasePushResult } from '@/lib/test-cases/types';
@@ -49,6 +53,10 @@ export default function TestCasesPage() {
   // Response state
   const [claudeResponse, setClaudeResponse] = useState('');
   const [isParsing, setIsParsing] = useState(false);
+
+  // AI mode state
+  const [aiConfig, setAiConfig] = useState<AIModeConfig>({ mode: 'claude-cli' });
+  const [isAIProcessing, setIsAIProcessing] = useState(false);
 
   // Parsed results
   const [testCases, setTestCases] = useState<ParsedTestCase[]>([]);
@@ -142,6 +150,67 @@ export default function TestCasesPage() {
       setIsParsing(false);
     }
   }, [claudeResponse]);
+
+  // Run AI generation (Claude CLI)
+  const handleAIGenerate = useCallback(async () => {
+    if (!generatedPrompt || aiConfig.mode === 'manual') return;
+
+    setIsAIProcessing(true);
+
+    try {
+      if (aiConfig.mode === 'claude-cli') {
+        const res = await fetch('/api/ai/claude-cli', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: generatedPrompt,
+            model: aiConfig.model || 'claude-sonnet-4-6',
+            feature: 'test-cases',
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        // ClaudeCliProgress component handles polling and calls onComplete
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      toast.error(message);
+      setIsAIProcessing(false);
+    }
+  }, [generatedPrompt, aiConfig]);
+
+  // Handle AI completion — set response and auto-parse
+  const handleAIComplete = useCallback(
+    async (output: string) => {
+      setClaudeResponse(output);
+      setIsAIProcessing(false);
+
+      // Auto-parse the response
+      try {
+        const response = await fetch('/api/prompts/parse-response', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'test-cases',
+            response: output,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setTestCases(data.testCases);
+          setSelectedIds(data.testCases.map((tc: ParsedTestCase) => tc.id));
+          toast.success(`Parsed ${data.testCases.length} test cases`);
+        } else {
+          toast.error(data.error || 'Failed to parse AI response');
+        }
+      } catch {
+        toast.error('Failed to parse response. You can paste it manually.');
+      }
+    },
+    []
+  );
 
   // Handle selection changes
   const handleSelectionChange = useCallback((ids: string[]) => {
@@ -273,7 +342,7 @@ export default function TestCasesPage() {
             />
           )}
 
-          {/* Claude Response Input */}
+          {/* AI Mode + Response */}
           {generatedPrompt && (
             <Card>
               <CardHeader>
@@ -281,17 +350,61 @@ export default function TestCasesPage() {
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent-dim">
                     <FileText className="h-4 w-4 text-primary" />
                   </div>
-                  Claude&apos;s Response
+                  Generate with AI
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <ClaudeResponseInput
-                  value={claudeResponse}
-                  onChange={setClaudeResponse}
-                  onParse={handleParseResponse}
-                  isLoading={isParsing}
-                  parseButtonText="Parse Test Cases"
-                />
+              <CardContent className="space-y-4">
+                <AIModeSelector value={aiConfig} onChange={setAiConfig} />
+
+                {/* Auto modes: show Generate button */}
+                {aiConfig.mode !== 'manual' && (
+                  <>
+                    <Button
+                      onClick={handleAIGenerate}
+                      disabled={isAIProcessing}
+                      className="w-full"
+                    >
+                      {isAIProcessing ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          {aiConfig.mode === 'gemini' ? (
+                            <Zap className="mr-2 h-4 w-4" />
+                          ) : (
+                            <Bot className="mr-2 h-4 w-4" />
+                          )}
+                          Generate with {aiConfig.mode === 'gemini' ? 'Gemini' : 'Claude CLI'}
+                        </>
+                      )}
+                    </Button>
+
+                    {/* Claude CLI Progress */}
+                    {aiConfig.mode === 'claude-cli' && (
+                      <ClaudeCliProgress
+                        isActive={isAIProcessing}
+                        onComplete={handleAIComplete}
+                        onError={(error) => {
+                          toast.error(error);
+                          setIsAIProcessing(false);
+                        }}
+                      />
+                    )}
+                  </>
+                )}
+
+                {/* Manual mode: show paste textarea */}
+                {aiConfig.mode === 'manual' && (
+                  <ClaudeResponseInput
+                    value={claudeResponse}
+                    onChange={setClaudeResponse}
+                    onParse={handleParseResponse}
+                    isLoading={isParsing}
+                    parseButtonText="Parse Test Cases"
+                  />
+                )}
               </CardContent>
             </Card>
           )}

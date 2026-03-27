@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 
 export interface ConnectionStatusProps {
-  service: 'jira' | 'figma' | 'gemini';
+  service: 'jira' | 'figma' | 'gemini' | 'claude-cli';
   connected: boolean;
   isMock?: boolean;
   loading?: boolean;
@@ -33,6 +33,7 @@ export function ConnectionStatus({
     jira: 'Jira',
     figma: 'Figma',
     gemini: 'Gemini',
+    'claude-cli': 'Claude CLI',
   };
   const label = labels[service] || service;
 

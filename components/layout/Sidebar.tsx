@@ -10,6 +10,7 @@ import {
   TestTubes,
   Bug,
   FolderSearch,
+  MessageCircle,
   History,
   FileText,
   Settings,
@@ -43,6 +44,11 @@ const workflowNavigation = [
     name: 'Module Explorer',
     href: '/module-explorer',
     icon: FolderSearch,
+  },
+  {
+    name: 'Chatbot',
+    href: '/chatbot',
+    icon: MessageCircle,
   },
 ];
 

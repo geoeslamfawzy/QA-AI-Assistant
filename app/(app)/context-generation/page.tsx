@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/table';
 import { PromptBlock } from '@/components/shared/PromptBlock';
 import { ClaudeResponseInput } from '@/components/shared/ClaudeResponseInput';
+import AIModeSelector, { type AIModeConfig } from '@/components/ai/AIModeSelector';
+import ClaudeCliProgress from '@/components/ai/ClaudeCliProgress';
 import {
   Sparkles,
   ChevronLeft,
@@ -30,6 +32,7 @@ import {
   XCircle,
   Zap,
   Hand,
+  Bot,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -88,19 +91,28 @@ export default function ContextGenerationPage() {
   const [isAutoGenerating, setIsAutoGenerating] = useState(false);
   const [autoGenProgress, setAutoGenProgress] = useState<AutoGenProgress | null>(null);
   const [isGeminiConfigured, setIsGeminiConfigured] = useState<boolean | null>(null);
+  const [isClaudeCliAvailable, setIsClaudeCliAvailable] = useState<boolean | null>(null);
 
-  // Check Gemini status on mount
+  // Claude CLI auto-gen state
+  const [isClaudeCliGenerating, setIsClaudeCliGenerating] = useState(false);
+  const [claudeCliModuleIndex, setClaudeCliModuleIndex] = useState(0);
+  const [claudeCliModel, setClaudeCliModel] = useState('claude-sonnet-4-6');
+  const [claudeCliAutoProgress, setClaudeCliAutoProgress] = useState<AutoGenProgress | null>(null);
+
+  // Check AI status on mount
   useEffect(() => {
-    const checkGemini = async () => {
+    const checkAiStatus = async () => {
       try {
         const res = await fetch('/api/ai/status');
         const data = await res.json();
         setIsGeminiConfigured(data.providers?.gemini?.configured ?? false);
+        setIsClaudeCliAvailable(data.providers?.claudeCli?.available ?? false);
       } catch {
         setIsGeminiConfigured(false);
+        setIsClaudeCliAvailable(false);
       }
     };
-    checkGemini();
+    checkAiStatus();
   }, []);
 
   // Fetch modules on mount
@@ -280,6 +292,143 @@ export default function ContextGenerationPage() {
     }
   };
 
+  // Start Claude CLI auto-generation (processes modules one by one)
+  const handleClaudeCliAutoGenerate = async () => {
+    if (!isClaudeCliAvailable) {
+      toast.error('Claude CLI not available. Install: npm i -g @anthropic-ai/claude-code');
+      return;
+    }
+
+    const pendingModules = modules.filter((m) => m.status === 'pending');
+    if (pendingModules.length === 0) {
+      toast.info('All modules are already completed');
+      return;
+    }
+
+    setIsClaudeCliGenerating(true);
+    setClaudeCliModuleIndex(0);
+    setWorkflowMode('auto');
+
+    // Build initial progress
+    const initialProgress: AutoGenProgress = {
+      status: 'running',
+      totalModules: pendingModules.length,
+      processedModules: 0,
+      currentModule: pendingModules[0].moduleName,
+      currentModuleTickets: pendingModules[0].ticketCount,
+      modules: pendingModules.map((m) => ({
+        name: m.moduleName,
+        slug: m.slug,
+        ticketCount: m.ticketCount,
+        status: 'pending' as const,
+      })),
+      startedAt: new Date().toISOString(),
+      errors: [],
+    };
+    setClaudeCliAutoProgress(initialProgress);
+
+    // Process modules sequentially
+    for (let i = 0; i < pendingModules.length; i++) {
+      const mod = pendingModules[i];
+      setClaudeCliModuleIndex(i);
+
+      // Update progress
+      setClaudeCliAutoProgress((prev) => {
+        if (!prev) return prev;
+        const updated = { ...prev };
+        updated.currentModule = mod.moduleName;
+        updated.currentModuleTickets = mod.ticketCount;
+        updated.modules = updated.modules.map((m, idx) =>
+          idx === i ? { ...m, status: 'generating' as const } : m
+        );
+        return updated;
+      });
+
+      try {
+        // Call Claude CLI with the module's prompt
+        const res = await fetch('/api/ai/claude-cli', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: mod.prompt,
+            model: claudeCliModel,
+            feature: 'context-generation',
+          }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        // Poll for completion
+        let completed = false;
+        while (!completed) {
+          await new Promise((r) => setTimeout(r, 3000));
+          const progressRes = await fetch('/api/ai/claude-cli');
+          const progress = await progressRes.json();
+
+          if (progress.status === 'completed') {
+            completed = true;
+            // Save the result
+            await fetch('/api/context-generation/save-context', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                slug: mod.slug,
+                content: progress.output,
+              }),
+            });
+
+            setClaudeCliAutoProgress((prev) => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                processedModules: i + 1,
+                modules: prev.modules.map((m, idx) =>
+                  idx === i ? { ...m, status: 'completed' as const } : m
+                ),
+              };
+            });
+          } else if (progress.status === 'failed') {
+            completed = true;
+            setClaudeCliAutoProgress((prev) => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                processedModules: i + 1,
+                modules: prev.modules.map((m, idx) =>
+                  idx === i ? { ...m, status: 'failed' as const, error: progress.error } : m
+                ),
+                errors: [...prev.errors, `${mod.moduleName}: ${progress.error}`],
+              };
+            });
+          }
+        }
+      } catch (err: unknown) {
+        const error = err as Error;
+        setClaudeCliAutoProgress((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            processedModules: i + 1,
+            modules: prev.modules.map((m, idx) =>
+              idx === i ? { ...m, status: 'failed' as const, error: error.message } : m
+            ),
+            errors: [...prev.errors, `${mod.moduleName}: ${error.message}`],
+          };
+        });
+      }
+    }
+
+    // Complete
+    setClaudeCliAutoProgress((prev) => {
+      if (!prev) return prev;
+      return { ...prev, status: 'completed', currentModule: '' };
+    });
+    setIsClaudeCliGenerating(false);
+    toast.success('Claude CLI auto-generation completed');
+    fetchModules();
+  };
+
   // Get status icon for module in auto-gen progress
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -318,29 +467,34 @@ export default function ContextGenerationPage() {
     );
   }
 
+  // Resolve which auto-gen progress to show (Gemini or Claude CLI)
+  const activeAutoProgress = claudeCliAutoProgress || autoGenProgress;
+  const isAnyAutoGenerating = isAutoGenerating || isClaudeCliGenerating;
+  const autoGenSource = isClaudeCliGenerating || claudeCliAutoProgress ? 'Claude CLI' : 'Google Gemini';
+
   // Auto-generation progress view
-  if (workflowMode === 'auto' && (isAutoGenerating || autoGenProgress?.status === 'completed')) {
+  if (workflowMode === 'auto' && (isAnyAutoGenerating || activeAutoProgress?.status === 'completed')) {
     return (
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" onClick={handleBack} disabled={isAutoGenerating}>
+          <Button variant="ghost" size="sm" onClick={handleBack} disabled={isAnyAutoGenerating}>
             <ChevronLeft className="mr-1 h-4 w-4" />
             Back to List
           </Button>
           <div className="flex-1">
             <h1 className="text-xl font-bold text-foreground">Auto-Generating Context</h1>
             <p className="text-sm text-muted-foreground">
-              Using Google Gemini to generate context for all modules
+              Using {autoGenSource} to generate context for all modules
             </p>
           </div>
-          {isAutoGenerating && (
+          {isAnyAutoGenerating && (
             <Badge className="bg-primary/10 text-primary border-primary/30">
               <Loader2 className="mr-1 h-3 w-3 animate-spin" />
               Running
             </Badge>
           )}
-          {autoGenProgress?.status === 'completed' && (
+          {activeAutoProgress?.status === 'completed' && (
             <Badge className="bg-green-dim text-green-600 dark:text-green-400">
               <CheckCircle2 className="mr-1 h-3 w-3" />
               Completed
@@ -352,15 +506,15 @@ export default function ContextGenerationPage() {
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="py-6 space-y-4">
             {/* Current module */}
-            {autoGenProgress?.currentModule && isAutoGenerating && (
+            {activeAutoProgress?.currentModule && isAnyAutoGenerating && (
               <div className="flex items-center gap-3">
                 <Loader2 className="h-5 w-5 animate-spin text-primary" />
                 <div>
                   <p className="font-medium">
-                    Processing: {autoGenProgress.currentModule}
+                    Processing: {activeAutoProgress.currentModule}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {autoGenProgress.currentModuleTickets} tickets
+                    {activeAutoProgress.currentModuleTickets} tickets
                   </p>
                 </div>
               </div>
@@ -370,14 +524,14 @@ export default function ContextGenerationPage() {
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">
-                  Module {autoGenProgress?.processedModules || 0} of{' '}
-                  {autoGenProgress?.totalModules || 0}
+                  Module {activeAutoProgress?.processedModules || 0} of{' '}
+                  {activeAutoProgress?.totalModules || 0}
                 </span>
                 <span className="font-medium">
-                  {autoGenProgress?.totalModules
+                  {activeAutoProgress?.totalModules
                     ? Math.round(
-                        ((autoGenProgress.processedModules || 0) /
-                          autoGenProgress.totalModules) *
+                        ((activeAutoProgress.processedModules || 0) /
+                          activeAutoProgress.totalModules) *
                           100
                       )
                     : 0}
@@ -386,9 +540,9 @@ export default function ContextGenerationPage() {
               </div>
               <Progress
                 value={
-                  autoGenProgress?.totalModules
-                    ? ((autoGenProgress.processedModules || 0) /
-                        autoGenProgress.totalModules) *
+                  activeAutoProgress?.totalModules
+                    ? ((activeAutoProgress.processedModules || 0) /
+                        activeAutoProgress.totalModules) *
                       100
                     : 0
                 }
@@ -397,20 +551,20 @@ export default function ContextGenerationPage() {
             </div>
 
             {/* Time estimate */}
-            {autoGenProgress?.estimatedTimeLeft && isAutoGenerating && (
+            {activeAutoProgress?.estimatedTimeLeft && isAnyAutoGenerating && (
               <p className="text-sm text-muted-foreground">
-                Estimated time remaining: {autoGenProgress.estimatedTimeLeft}
+                Estimated time remaining: {activeAutoProgress.estimatedTimeLeft}
               </p>
             )}
 
             {/* Errors */}
-            {autoGenProgress?.errors && autoGenProgress.errors.length > 0 && (
+            {activeAutoProgress?.errors && activeAutoProgress.errors.length > 0 && (
               <div className="bg-red-500/10 border border-red-500/30 rounded-md p-3">
                 <p className="text-sm font-medium text-red-600 dark:text-red-400 mb-1">
-                  Errors ({autoGenProgress.errors.length})
+                  Errors ({activeAutoProgress.errors.length})
                 </p>
                 <ul className="text-xs text-red-500 space-y-0.5">
-                  {autoGenProgress.errors.slice(0, 5).map((err, i) => (
+                  {activeAutoProgress.errors.slice(0, 5).map((err, i) => (
                     <li key={i}>{err}</li>
                   ))}
                 </ul>
@@ -430,7 +584,7 @@ export default function ContextGenerationPage() {
           <CardContent>
             <ScrollArea className="h-[400px]">
               <div className="space-y-2">
-                {(autoGenProgress?.modules || []).map((mod) => (
+                {(activeAutoProgress?.modules || []).map((mod) => (
                   <div
                     key={mod.slug}
                     className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-muted/50 border border-transparent hover:border-border"
@@ -472,7 +626,7 @@ export default function ContextGenerationPage() {
         </Card>
 
         {/* Done button */}
-        {!isAutoGenerating && (
+        {!isAnyAutoGenerating && (
           <div className="flex justify-end">
             <Button onClick={handleBack}>
               <CheckCircle2 className="mr-2 h-4 w-4" />
@@ -634,8 +788,8 @@ export default function ContextGenerationPage() {
       </div>
 
       {/* Workflow Selection */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        {/* Auto Generate Card */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        {/* Auto Generate (Gemini) Card */}
         <Card
           className={`cursor-pointer transition-all hover:border-primary/50 ${
             !isGeminiConfigured ? 'opacity-60' : ''
@@ -649,15 +803,15 @@ export default function ContextGenerationPage() {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold flex items-center gap-2">
-                  Auto Generate
+                  Gemini
                   {isGeminiConfigured && (
                     <Badge variant="secondary" className="text-xs">
-                      Recommended
+                      Free
                     </Badge>
                   )}
                 </h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Uses Google Gemini AI (free) to automatically generate context for all modules
+                  Auto-generate using Google Gemini (free API)
                 </p>
                 {!isGeminiConfigured && isGeminiConfigured !== null && (
                   <p className="text-xs text-amber-500 mt-2">
@@ -675,7 +829,46 @@ export default function ContextGenerationPage() {
                 )}
                 {isGeminiConfigured && (
                   <p className="text-xs text-green-500 mt-2">
-                    Gemini configured • Click to start
+                    Configured • Click to start
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Claude CLI Card */}
+        <Card
+          className={`cursor-pointer transition-all hover:border-primary/50 ${
+            !isClaudeCliAvailable ? 'opacity-60' : ''
+          }`}
+          onClick={isClaudeCliAvailable ? handleClaudeCliAutoGenerate : undefined}
+        >
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-violet-500/10">
+                <Bot className="h-6 w-6 text-violet-500" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold flex items-center gap-2">
+                  Claude CLI
+                  {isClaudeCliAvailable && (
+                    <Badge variant="secondary" className="text-xs">
+                      No Extra Cost
+                    </Badge>
+                  )}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Auto-generate using your Claude subscription via CLI
+                </p>
+                {!isClaudeCliAvailable && isClaudeCliAvailable !== null && (
+                  <p className="text-xs text-amber-500 mt-2">
+                    Install: npm i -g @anthropic-ai/claude-code
+                  </p>
+                )}
+                {isClaudeCliAvailable && (
+                  <p className="text-xs text-green-500 mt-2">
+                    Available • Click to start
                   </p>
                 )}
               </div>
@@ -691,9 +884,9 @@ export default function ContextGenerationPage() {
                 <Hand className="h-6 w-6 text-cyan-500" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold">Manual (Copy/Paste)</h3>
+                <h3 className="font-semibold">Manual</h3>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Copy prompts to claude.ai and paste responses back. No API key required.
+                  Copy prompts to claude.ai and paste responses back
                 </p>
                 <p className="text-xs text-muted-foreground mt-2">
                   Use the table below to work through modules one by one

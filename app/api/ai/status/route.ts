@@ -9,6 +9,7 @@ import {
   GEMINI_MODEL,
 } from '@/lib/ai/gemini-client';
 import { isApiKeyConfigured } from '@/lib/ai/client';
+import { isClaudeCliAvailable } from '@/lib/ai/claude-cli-client';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,6 +56,9 @@ export async function GET() {
     }
   }
 
+  // Check Claude CLI availability
+  const cliStatus = await isClaudeCliAvailable();
+
   return NextResponse.json({
     providers: {
       gemini: geminiStatus,
@@ -63,6 +67,13 @@ export async function GET() {
         connected: anthropicConfigured, // Assume connected if configured
         model: 'claude-sonnet-4-20250514',
         note: 'Used for story analysis and test generation',
+      },
+      claudeCli: {
+        available: cliStatus.available,
+        version: cliStatus.version,
+        error: cliStatus.error,
+        models: ['claude-haiku-4-5-20251001', 'claude-sonnet-4-6', 'claude-opus-4-6'],
+        note: 'Uses existing Claude subscription — no extra fees',
       },
     },
   });
