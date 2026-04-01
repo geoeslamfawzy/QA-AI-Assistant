@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-12T12:01:25.706Z",
+  "lastUpdated": "2026-04-01T08:05:05.634Z",
   "modules": {
     "dashops": {
       "status": "completed",
@@ -32,6 +32,10 @@
     "b2b-portal-programs": {
       "status": "completed",
       "completedAt": "2026-03-12T12:01:25.706Z"
+    },
+    "b2b-portal-account": {
+      "status": "completed",
+      "completedAt": "2026-04-01T08:05:05.634Z"
     }
   }
 }

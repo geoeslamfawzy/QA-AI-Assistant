@@ -77,6 +77,8 @@ export interface JiraComment {
 // ────────────────────────────────────
 
 export class JiraAPIError extends Error {
+  public tokenExpired: boolean;
+
   constructor(
     message: string,
     public status: number,
@@ -84,6 +86,7 @@ export class JiraAPIError extends Error {
   ) {
     super(message);
     this.name = 'JiraAPIError';
+    this.tokenExpired = status === 401;
   }
 }
 
@@ -106,6 +109,9 @@ export async function jiraGet<T = unknown>(config: JiraConfig, path: string): Pr
 
   if (!response.ok) {
     const text = await response.text();
+    if (response.status === 401) {
+      console.error('[Jira] 401 Unauthorized — token may be expired');
+    }
     throw new JiraAPIError(`Jira ${response.status}: ${text}`, response.status, text);
   }
 
@@ -131,6 +137,9 @@ export async function jiraPost<T = unknown>(
 
   if (!response.ok) {
     const text = await response.text();
+    if (response.status === 401) {
+      console.error('[Jira] 401 Unauthorized — token may be expired');
+    }
     throw new JiraAPIError(`Jira ${response.status}: ${text}`, response.status, text);
   }
 

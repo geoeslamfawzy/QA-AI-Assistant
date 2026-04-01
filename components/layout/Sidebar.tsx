@@ -16,6 +16,8 @@ import {
   Settings,
   BookOpen,
   Sparkles,
+  BarChart3,
+  Wrench,
 } from 'lucide-react';
 
 const workflowNavigation = [
@@ -72,6 +74,16 @@ const managementNavigation = [
     name: 'Context Generation',
     href: '/context-generation',
     icon: Sparkles,
+  },
+  {
+    name: 'Automation Stats',
+    href: '/automation-stats',
+    icon: BarChart3,
+  },
+  {
+    name: 'Suite Update',
+    href: '/suite-update',
+    icon: Wrench,
   },
   {
     name: 'Settings',

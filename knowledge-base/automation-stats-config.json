@@ -1,0 +1,38 @@
+[
+  {
+    "id": "admin-panel",
+    "name": "Admin Panel",
+    "parentKey": "QATM-25917",
+    "parentUrl": "https://yassir.atlassian.net/browse/QATM-25917",
+    "color": "#7C3AED",
+    "automatedLabel": "Automated",
+    "notAutomatedLabel": "To_Be_Automated"
+  },
+  {
+    "id": "b2b-webapp",
+    "name": "B2B Web App",
+    "parentKey": "QATM-26668",
+    "parentUrl": "https://yassir.atlassian.net/browse/QATM-26668",
+    "color": "#6D28D9",
+    "automatedLabel": "Automated",
+    "notAutomatedLabel": "To_Be_Automated"
+  },
+  {
+    "id": "b2b-superapp",
+    "name": "B2B Super App",
+    "parentKey": "QATM-27731",
+    "parentUrl": "https://yassir.atlassian.net/browse/QATM-27731",
+    "color": "#5B21B6",
+    "automatedLabel": "Automated",
+    "notAutomatedLabel": "To_Be_Automated"
+  },
+  {
+    "id": "b2c-webapp",
+    "name": "B2C WebApp",
+    "parentKey": "QATM-28035",
+    "parentUrl": "https://yassir.atlassian.net/browse/QATM-28035",
+    "color": "#8B5CF6",
+    "automatedLabel": "Automated",
+    "notAutomatedLabel": "To_Be_Automated"
+  }
+]

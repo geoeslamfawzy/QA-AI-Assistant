@@ -137,14 +137,17 @@ export async function POST(request: NextRequest) {
     console.error('[Create Defect Error]', error);
 
     const message = error instanceof Error ? error.message : 'Unknown error occurred';
+    const status = (error as any)?.status === 401 ? 401 : 500;
 
     return NextResponse.json(
       {
         success: false,
-        error: message,
+        error: status === 401
+          ? 'Jira authentication failed. Your API token may have expired.'
+          : message,
         _isMock: false,
       },
-      { status: 500 }
+      { status }
     );
   }
 }
