@@ -1,0 +1,454 @@
+{
+  "suiteId": "b2c-webapp",
+  "date": "2026-03-28",
+  "total": 88,
+  "automated": 82,
+  "notAutomated": 6,
+  "unlabeled": 0,
+  "coveragePercent": 93.2,
+  "automatedTests": [
+    {
+      "key": "QATM-28036",
+      "summary": "Authentication - Phone Entry - Verify login page displays correctly on URL access",
+      "url": "https://yassir.atlassian.net/browse/QATM-28036"
+    },
+    {
+      "key": "QATM-28037",
+      "summary": "Authentication - Phone Entry - Verify country code selection for Algeria (+213)",
+      "url": "https://yassir.atlassian.net/browse/QATM-28037"
+    },
+    {
+      "key": "QATM-28038",
+      "summary": "Authentication - Phone Entry - Verify country code selection for Tunisia (+216)",
+      "url": "https://yassir.atlassian.net/browse/QATM-28038"
+    },
+    {
+      "key": "QATM-28039",
+      "summary": "Authentication - Phone Entry - Verify country code selection for Morocco (+212)",
+      "url": "https://yassir.atlassian.net/browse/QATM-28039"
+    },
+    {
+      "key": "QATM-28040",
+      "summary": "Authentication - Phone Entry - Verify country code selection for Senegal (+221)",
+      "url": "https://yassir.atlassian.net/browse/QATM-28040"
+    },
+    {
+      "key": "QATM-28041",
+      "summary": "Authentication - Phone Entry - Verify only supported country codes are available",
+      "url": "https://yassir.atlassian.net/browse/QATM-28041"
+    },
+    {
+      "key": "QATM-28042",
+      "summary": "Authentication - Phone Entry - Verify valid phone number is accepted",
+      "url": "https://yassir.atlassian.net/browse/QATM-28042"
+    },
+    {
+      "key": "QATM-28043",
+      "summary": "Authentication - Phone Entry - Verify invalid phone number is rejected",
+      "url": "https://yassir.atlassian.net/browse/QATM-28043"
+    },
+    {
+      "key": "QATM-28044",
+      "summary": "Authentication - Phone Entry - Verify phone number format matches selected country",
+      "url": "https://yassir.atlassian.net/browse/QATM-28044"
+    },
+    {
+      "key": "QATM-28045",
+      "summary": "Authentication - Terms - Verify terms must be accepted before proceeding",
+      "url": "https://yassir.atlassian.net/browse/QATM-28045"
+    },
+    {
+      "key": "QATM-28046",
+      "summary": "Authentication - Terms - Verify General Conditions link opens correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-28046"
+    },
+    {
+      "key": "QATM-28047",
+      "summary": "Authentication - Terms - Verify Privacy Policy link opens correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-28047"
+    },
+    {
+      "key": "QATM-28048",
+      "summary": "Authentication - OTP - Verify OTP is sent after clicking Continue",
+      "url": "https://yassir.atlassian.net/browse/QATM-28048"
+    },
+    {
+      "key": "QATM-28049",
+      "summary": "Authentication - OTP - Verify successful login with correct OTP",
+      "url": "https://yassir.atlassian.net/browse/QATM-28049"
+    },
+    {
+      "key": "QATM-28050",
+      "summary": "Authentication - OTP - Verify error message for incorrect OTP",
+      "url": "https://yassir.atlassian.net/browse/QATM-28050"
+    },
+    {
+      "key": "QATM-28051",
+      "summary": "Authentication - OTP - Verify error message for expired OTP",
+      "url": "https://yassir.atlassian.net/browse/QATM-28051"
+    },
+    {
+      "key": "QATM-28052",
+      "summary": "Authentication - OTP - Verify OTP retry within allowed limit",
+      "url": "https://yassir.atlassian.net/browse/QATM-28052"
+    },
+    {
+      "key": "QATM-28053",
+      "summary": "Authentication - OTP - Verify OTP resend functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-28053"
+    },
+    {
+      "key": "QATM-28054",
+      "summary": "Authentication - Account Logic - Verify new account is created for unregistered phone",
+      "url": "https://yassir.atlassian.net/browse/QATM-28054"
+    },
+    {
+      "key": "QATM-28055",
+      "summary": "Authentication - Account Logic - Verify existing account login",
+      "url": "https://yassir.atlassian.net/browse/QATM-28055"
+    },
+    {
+      "key": "QATM-28056",
+      "summary": "Authentication - Account Logic - Verify no password is required at any step",
+      "url": "https://yassir.atlassian.net/browse/QATM-28056"
+    },
+    {
+      "key": "QATM-28057",
+      "summary": "Registration - New User - Verify registration page appears for new phone number",
+      "url": "https://yassir.atlassian.net/browse/QATM-28057"
+    },
+    {
+      "key": "QATM-28058",
+      "summary": "Registration - New User - Verify Full Name is mandatory",
+      "url": "https://yassir.atlassian.net/browse/QATM-28058"
+    },
+    {
+      "key": "QATM-28059",
+      "summary": "Registration - New User - Verify Email is optional",
+      "url": "https://yassir.atlassian.net/browse/QATM-28059"
+    },
+    {
+      "key": "QATM-28060",
+      "summary": "Registration - New User - Verify successful registration with all fields",
+      "url": "https://yassir.atlassian.net/browse/QATM-28060"
+    },
+    {
+      "key": "QATM-28061",
+      "summary": "Registration - New User - Verify invalid email format is rejected",
+      "url": "https://yassir.atlassian.net/browse/QATM-28061"
+    },
+    {
+      "key": "QATM-28062",
+      "summary": "Registration - New User - Verify user can book rides after registration",
+      "url": "https://yassir.atlassian.net/browse/QATM-28062"
+    },
+    {
+      "key": "QATM-28063",
+      "summary": "Home Page - Layout - Verify Home page layout after login",
+      "url": "https://yassir.atlassian.net/browse/QATM-28063"
+    },
+    {
+      "key": "QATM-28064",
+      "summary": "Ride Booking - Trip Config - Verify pick-up location entry",
+      "url": "https://yassir.atlassian.net/browse/QATM-28064"
+    },
+    {
+      "key": "QATM-28065",
+      "summary": "Ride Booking - Trip Config - Verify destination entry",
+      "url": "https://yassir.atlassian.net/browse/QATM-28065"
+    },
+    {
+      "key": "QATM-28066",
+      "summary": "Ride Booking - Stops - Verify adding one stop",
+      "url": "https://yassir.atlassian.net/browse/QATM-28066"
+    },
+    {
+      "key": "QATM-28067",
+      "summary": "Ride Booking - Stops - Verify adding maximum 3 stops",
+      "url": "https://yassir.atlassian.net/browse/QATM-28067"
+    },
+    {
+      "key": "QATM-28068",
+      "summary": "Ride Booking - Stops - Verify cannot add more than 3 stops",
+      "url": "https://yassir.atlassian.net/browse/QATM-28068"
+    },
+    {
+      "key": "QATM-28069",
+      "summary": "Ride Booking - Stops - Verify removing a stop",
+      "url": "https://yassir.atlassian.net/browse/QATM-28069"
+    },
+    {
+      "key": "QATM-28070",
+      "summary": "Ride Booking - Service - Verify ride service options are displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-28070"
+    },
+    {
+      "key": "QATM-28071",
+      "summary": "Ride Booking - Service - Verify selecting a ride service",
+      "url": "https://yassir.atlassian.net/browse/QATM-28071"
+    },
+    {
+      "key": "QATM-28072",
+      "summary": "Ride Booking - Instant Ride - Verify instant ride booking",
+      "url": "https://yassir.atlassian.net/browse/QATM-28072"
+    },
+    {
+      "key": "QATM-28073",
+      "summary": "Ride Booking - Scheduled Ride - Verify scheduled ride booking",
+      "url": "https://yassir.atlassian.net/browse/QATM-28073"
+    },
+    {
+      "key": "QATM-28074",
+      "summary": "Ride Booking - Scheduled Ride - Verify date and time picker works correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-28074"
+    },
+    {
+      "key": "QATM-28075",
+      "summary": "Ride Booking - Rider Selection - Verify booking for self is default",
+      "url": "https://yassir.atlassian.net/browse/QATM-28075"
+    },
+    {
+      "key": "QATM-28076",
+      "summary": "Ride Booking - Rider Selection - Verify booking for someone else",
+      "url": "https://yassir.atlassian.net/browse/QATM-28076"
+    },
+    {
+      "key": "QATM-28077",
+      "summary": "Ride Booking - Rider Selection - Verify mandatory fields when adding a rider",
+      "url": "https://yassir.atlassian.net/browse/QATM-28077"
+    },
+    {
+      "key": "QATM-28078",
+      "summary": "Ride Booking - Rider Selection - Verify saved rider appears in rider list",
+      "url": "https://yassir.atlassian.net/browse/QATM-28078"
+    },
+    {
+      "key": "QATM-28079",
+      "summary": "Ride Booking - Promo Code - Verify applying a valid promo code",
+      "url": "https://yassir.atlassian.net/browse/QATM-28079"
+    },
+    {
+      "key": "QATM-28082",
+      "summary": "Ride Booking - Promo Code - Verify promo code conditions are enforced",
+      "url": "https://yassir.atlassian.net/browse/QATM-28082"
+    },
+    {
+      "key": "QATM-28083",
+      "summary": "Ride Booking - Confirmation - Verify booking confirmation after Request Now",
+      "url": "https://yassir.atlassian.net/browse/QATM-28083"
+    },
+    {
+      "key": "QATM-28084",
+      "summary": "Ride Booking - Confirmation - Verify booking confirmation for scheduled ride",
+      "url": "https://yassir.atlassian.net/browse/QATM-28084"
+    },
+    {
+      "key": "QATM-28085",
+      "summary": "Ride Booking - Trip Tracking - Verify tracking screen appears after booking",
+      "url": "https://yassir.atlassian.net/browse/QATM-28085"
+    },
+    {
+      "key": "QATM-28086",
+      "summary": "Ride Booking - Trip Tracking - Verify driver assignment tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-28086"
+    },
+    {
+      "key": "QATM-28087",
+      "summary": "Ride Booking - Trip Tracking - Verify trip progress on map",
+      "url": "https://yassir.atlassian.net/browse/QATM-28087"
+    },
+    {
+      "key": "QATM-28088",
+      "summary": "Ride Booking - Map - Verify map displays route between pick-up and destination",
+      "url": "https://yassir.atlassian.net/browse/QATM-28088"
+    },
+    {
+      "key": "QATM-28089",
+      "summary": "Ride Booking - Map - Verify map updates when stops are added",
+      "url": "https://yassir.atlassian.net/browse/QATM-28089"
+    },
+    {
+      "key": "QATM-28090",
+      "summary": "Ride History - Navigation - Verify Ride History page is accessible from top menu",
+      "url": "https://yassir.atlassian.net/browse/QATM-28090"
+    },
+    {
+      "key": "QATM-28091",
+      "summary": "Ride History - Filter - Verify All filter shows all trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-28091"
+    },
+    {
+      "key": "QATM-28092",
+      "summary": "Ride History - Filter - Verify Completed filter shows only finished trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-28092"
+    },
+    {
+      "key": "QATM-28093",
+      "summary": "Ride History - Filter - Verify Scheduled filter shows only upcoming trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-28093"
+    },
+    {
+      "key": "QATM-28094",
+      "summary": "Ride History - Trip Card - Verify trip card displays correct information",
+      "url": "https://yassir.atlassian.net/browse/QATM-28094"
+    },
+    {
+      "key": "QATM-28095",
+      "summary": "Ride History - Trip Details - Verify Details button opens Trip Details page",
+      "url": "https://yassir.atlassian.net/browse/QATM-28095"
+    },
+    {
+      "key": "QATM-28096",
+      "summary": "Ride History - Trip Details - Verify full trip information is displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-28096"
+    },
+    {
+      "key": "QATM-28097",
+      "summary": "Ride History - Empty State - Verify empty state for new user with no trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-28097"
+    },
+    {
+      "key": "QATM-28098",
+      "summary": "Promotions - Navigation - Verify Promotions page is accessible",
+      "url": "https://yassir.atlassian.net/browse/QATM-28098"
+    },
+    {
+      "key": "QATM-28099",
+      "summary": "Promotions - My Promo Codes - Verify promo codes list displays correct info",
+      "url": "https://yassir.atlassian.net/browse/QATM-28099"
+    },
+    {
+      "key": "QATM-28100",
+      "summary": "Promotions - My Promo Codes - Verify activating a promo code",
+      "url": "https://yassir.atlassian.net/browse/QATM-28100"
+    },
+    {
+      "key": "QATM-28101",
+      "summary": "Promotions - My Promo Codes - Verify deactivating a promo code",
+      "url": "https://yassir.atlassian.net/browse/QATM-28101"
+    },
+    {
+      "key": "QATM-28103",
+      "summary": "Promotions - Add Promo - Verify adding an invalid promo code",
+      "url": "https://yassir.atlassian.net/browse/QATM-28103"
+    },
+    {
+      "key": "QATM-28106",
+      "summary": "Support - Navigation - Verify Support page is accessible",
+      "url": "https://yassir.atlassian.net/browse/QATM-28106"
+    },
+    {
+      "key": "QATM-28107",
+      "summary": "Support - Helpline - Verify contact info is displayed for all supported countries",
+      "url": "https://yassir.atlassian.net/browse/QATM-28107"
+    },
+    {
+      "key": "QATM-28108",
+      "summary": "Support - Helpline - Verify phone number is displayed for each country",
+      "url": "https://yassir.atlassian.net/browse/QATM-28108"
+    },
+    {
+      "key": "QATM-28109",
+      "summary": "Support - Helpline - Verify email address is displayed for each country",
+      "url": "https://yassir.atlassian.net/browse/QATM-28109"
+    },
+    {
+      "key": "QATM-28110",
+      "summary": "Support - FAQs - Verify FAQs tab displays content",
+      "url": "https://yassir.atlassian.net/browse/QATM-28110"
+    },
+    {
+      "key": "QATM-28111",
+      "summary": "Support - FAQs - Verify country selection filters FAQ content",
+      "url": "https://yassir.atlassian.net/browse/QATM-28111"
+    },
+    {
+      "key": "QATM-28112",
+      "summary": "Support - Links - Verify official website link works",
+      "url": "https://yassir.atlassian.net/browse/QATM-28112"
+    },
+    {
+      "key": "QATM-28113",
+      "summary": "Support - Links - Verify Facebook page link works",
+      "url": "https://yassir.atlassian.net/browse/QATM-28113"
+    },
+    {
+      "key": "QATM-28114",
+      "summary": "Logout - Flow - Verify Logout option is visible in profile menu",
+      "url": "https://yassir.atlassian.net/browse/QATM-28114"
+    },
+    {
+      "key": "QATM-28115",
+      "summary": "Logout - Flow - Verify confirmation popup appears on Logout click",
+      "url": "https://yassir.atlassian.net/browse/QATM-28115"
+    },
+    {
+      "key": "QATM-28116",
+      "summary": "Logout - Flow - Verify popup message informs user about re-login",
+      "url": "https://yassir.atlassian.net/browse/QATM-28116"
+    },
+    {
+      "key": "QATM-28117",
+      "summary": "Logout - Flow - Verify successful logout on confirmation",
+      "url": "https://yassir.atlassian.net/browse/QATM-28117"
+    },
+    {
+      "key": "QATM-28118",
+      "summary": "Logout - Flow - Verify Cancel keeps user logged in",
+      "url": "https://yassir.atlassian.net/browse/QATM-28118"
+    },
+    {
+      "key": "QATM-28119",
+      "summary": "Logout - Session - Verify session is invalid after logout",
+      "url": "https://yassir.atlassian.net/browse/QATM-28119"
+    },
+    {
+      "key": "QATM-28121",
+      "summary": "E2E - Full Journey - Verify login and schedule ride flow",
+      "url": "https://yassir.atlassian.net/browse/QATM-28121"
+    },
+    {
+      "key": "QATM-28122",
+      "summary": "E2E - Full Journey - Verify login and apply promo then book ride",
+      "url": "https://yassir.atlassian.net/browse/QATM-28122"
+    },
+    {
+      "key": "QATM-28123",
+      "summary": "E2E - Full Journey - Verify booking a ride for someone else",
+      "url": "https://yassir.atlassian.net/browse/QATM-28123"
+    }
+  ],
+  "notAutomatedTests": [
+    {
+      "key": "QATM-28080",
+      "summary": "Ride Booking - Promo Code - Verify applying an invalid promo code",
+      "url": "https://yassir.atlassian.net/browse/QATM-28080"
+    },
+    {
+      "key": "QATM-28081",
+      "summary": "Ride Booking - Promo Code - Verify promo auto-removal when location changes outside promo area",
+      "url": "https://yassir.atlassian.net/browse/QATM-28081"
+    },
+    {
+      "key": "QATM-28102",
+      "summary": "Promotions - Add Promo - Verify adding a valid promo code",
+      "url": "https://yassir.atlassian.net/browse/QATM-28102"
+    },
+    {
+      "key": "QATM-28104",
+      "summary": "Promotions - Add Promo - Verify adding a duplicate promo code",
+      "url": "https://yassir.atlassian.net/browse/QATM-28104"
+    },
+    {
+      "key": "QATM-28105",
+      "summary": "Promotions - My Promo Codes - Verify expired promo code display",
+      "url": "https://yassir.atlassian.net/browse/QATM-28105"
+    },
+    {
+      "key": "QATM-28120",
+      "summary": "E2E - Full Journey - Verify complete flow from registration to ride history",
+      "url": "https://yassir.atlassian.net/browse/QATM-28120"
+    }
+  ],
+  "unlabeledTests": []
+}

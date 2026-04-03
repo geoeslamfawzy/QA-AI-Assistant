@@ -1,0 +1,208 @@
+{
+  "suiteId": "b2b-superapp",
+  "date": "2026-03-28",
+  "total": 39,
+  "automated": 0,
+  "notAutomated": 39,
+  "unlabeled": 0,
+  "coveragePercent": 0,
+  "automatedTests": [],
+  "notAutomatedTests": [
+    {
+      "key": "QATM-27813",
+      "summary": "Android/IOS - B2B - Verify B2B user can book an instant business trip successfully",
+      "url": "https://yassir.atlassian.net/browse/QATM-27813"
+    },
+    {
+      "key": "QATM-27814",
+      "summary": "Android/IOS - B2B - Verify B2B user can book a scheduled business trip successfully",
+      "url": "https://yassir.atlassian.net/browse/QATM-27814"
+    },
+    {
+      "key": "QATM-27815",
+      "summary": "Android/IOS - B2B - Verify 'Switch to Business' toggle is visible and functional",
+      "url": "https://yassir.atlassian.net/browse/QATM-27815"
+    },
+    {
+      "key": "QATM-27816",
+      "summary": "Android/IOS - B2B - Verify B2C mode remains available alongside B2B mode",
+      "url": "https://yassir.atlassian.net/browse/QATM-27816"
+    },
+    {
+      "key": "QATM-27817",
+      "summary": "Android/IOS - B2B - Verify only program-allowed services are displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-27817"
+    },
+    {
+      "key": "QATM-27818",
+      "summary": "Android/IOS - B2B - Verify all enabled program services are selectable",
+      "url": "https://yassir.atlassian.net/browse/QATM-27818"
+    },
+    {
+      "key": "QATM-27819",
+      "summary": "Android/IOS - B2B - Verify trip blocked when departure outside allowed zone",
+      "url": "https://yassir.atlassian.net/browse/QATM-27819"
+    },
+    {
+      "key": "QATM-27820",
+      "summary": "Android/IOS - B2B - Verify trip allowed when departure matches allowed zone",
+      "url": "https://yassir.atlassian.net/browse/QATM-27820"
+    },
+    {
+      "key": "QATM-27821",
+      "summary": "Android/IOS - B2B - Verify trip blocked when destination outside allowed zone",
+      "url": "https://yassir.atlassian.net/browse/QATM-27821"
+    },
+    {
+      "key": "QATM-27822",
+      "summary": "Android/IOS - B2B - Verify trip blocked on weekend when program set to Working Days",
+      "url": "https://yassir.atlassian.net/browse/QATM-27822"
+    },
+    {
+      "key": "QATM-27823",
+      "summary": "Android/IOS - B2B - Verify trip blocked on weekday when program set to Weekend",
+      "url": "https://yassir.atlassian.net/browse/QATM-27823"
+    },
+    {
+      "key": "QATM-27824",
+      "summary": "Android/IOS - B2B - Verify trip blocked outside program time range",
+      "url": "https://yassir.atlassian.net/browse/QATM-27824"
+    },
+    {
+      "key": "QATM-27825",
+      "summary": "Android/IOS - B2B - Verify trip allowed within custom time range",
+      "url": "https://yassir.atlassian.net/browse/QATM-27825"
+    },
+    {
+      "key": "QATM-27826",
+      "summary": "Android/IOS - B2B - Verify trip blocked when per-ride cost exceeds limit",
+      "url": "https://yassir.atlassian.net/browse/QATM-27826"
+    },
+    {
+      "key": "QATM-27827",
+      "summary": "Android/IOS - B2B - Verify trip allowed when per-ride cost within limit",
+      "url": "https://yassir.atlassian.net/browse/QATM-27827"
+    },
+    {
+      "key": "QATM-27828",
+      "summary": "Android/IOS - B2B - Verify trip blocked when daily member budget exhausted",
+      "url": "https://yassir.atlassian.net/browse/QATM-27828"
+    },
+    {
+      "key": "QATM-27829",
+      "summary": "Android/IOS - B2B - Verify trip blocked when daily ride limit reached",
+      "url": "https://yassir.atlassian.net/browse/QATM-27829"
+    },
+    {
+      "key": "QATM-27830",
+      "summary": "Android/IOS - B2B - Verify trip blocked when monthly ride limit reached",
+      "url": "https://yassir.atlassian.net/browse/QATM-27830"
+    },
+    {
+      "key": "QATM-27831",
+      "summary": "Android/IOS - B2B - Verify trip allowed when ride count within limit",
+      "url": "https://yassir.atlassian.net/browse/QATM-27831"
+    },
+    {
+      "key": "QATM-27832",
+      "summary": "Android/IOS - B2B - Verify trip goes to Ride Requests when auto-approval disabled",
+      "url": "https://yassir.atlassian.net/browse/QATM-27832"
+    },
+    {
+      "key": "QATM-27833",
+      "summary": "Android/IOS - B2B - Verify trip dispatched after admin approval",
+      "url": "https://yassir.atlassian.net/browse/QATM-27833"
+    },
+    {
+      "key": "QATM-27834",
+      "summary": "Android/IOS - B2B - Verify trip cancelled when admin declines",
+      "url": "https://yassir.atlassian.net/browse/QATM-27834"
+    },
+    {
+      "key": "QATM-27835",
+      "summary": "Android/IOS - B2B - Verify price visible when show price enabled",
+      "url": "https://yassir.atlassian.net/browse/QATM-27835"
+    },
+    {
+      "key": "QATM-27836",
+      "summary": "Android/IOS - B2B - Verify price hidden when show price disabled",
+      "url": "https://yassir.atlassian.net/browse/QATM-27836"
+    },
+    {
+      "key": "QATM-27837",
+      "summary": "Android/IOS - B2B - Verify corporate pricing includes commission",
+      "url": "https://yassir.atlassian.net/browse/QATM-27837"
+    },
+    {
+      "key": "QATM-27838",
+      "summary": "Android/IOS - B2B - Verify round trip available when program allows",
+      "url": "https://yassir.atlassian.net/browse/QATM-27838"
+    },
+    {
+      "key": "QATM-27839",
+      "summary": "Android/IOS - B2B - Verify round trip hidden when program disables",
+      "url": "https://yassir.atlassian.net/browse/QATM-27839"
+    },
+    {
+      "key": "QATM-27840",
+      "summary": "Android/IOS - B2B - Verify multi-stop business trip booking",
+      "url": "https://yassir.atlassian.net/browse/QATM-27840"
+    },
+    {
+      "key": "QATM-27841",
+      "summary": "Android/IOS - B2B - Verify status transition from PENDING to ACCEPTED",
+      "url": "https://yassir.atlassian.net/browse/QATM-27841"
+    },
+    {
+      "key": "QATM-27842",
+      "summary": "Android/IOS - B2B - Verify status transition to STARTED",
+      "url": "https://yassir.atlassian.net/browse/QATM-27842"
+    },
+    {
+      "key": "QATM-27843",
+      "summary": "Android/IOS - B2B - Verify status FINISHED and budget deduction",
+      "url": "https://yassir.atlassian.net/browse/QATM-27843"
+    },
+    {
+      "key": "QATM-27844",
+      "summary": "Android/IOS - B2B - Verify rider can cancel pending trip",
+      "url": "https://yassir.atlassian.net/browse/QATM-27844"
+    },
+    {
+      "key": "QATM-27845",
+      "summary": "Android/IOS - B2B - Verify message when no driver available",
+      "url": "https://yassir.atlassian.net/browse/QATM-27845"
+    },
+    {
+      "key": "QATM-27846",
+      "summary": "Android/IOS - B2B - Verify trip blocked when wallet empty",
+      "url": "https://yassir.atlassian.net/browse/QATM-27846"
+    },
+    {
+      "key": "QATM-27847",
+      "summary": "Android/IOS - B2B - Verify trip blocked when budget limit reached",
+      "url": "https://yassir.atlassian.net/browse/QATM-27847"
+    },
+    {
+      "key": "QATM-27848",
+      "summary": "Android/IOS - B2B - Verify inactive enterprise blocks business trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-27848"
+    },
+    {
+      "key": "QATM-27849",
+      "summary": "Android/IOS - B2B - Verify user without program cannot book business trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-27849"
+    },
+    {
+      "key": "QATM-27850",
+      "summary": "Android/IOS - B2B - Verify gift card discount applied to business trip (Not Implemented)",
+      "url": "https://yassir.atlassian.net/browse/QATM-27850"
+    },
+    {
+      "key": "QATM-27851",
+      "summary": "Android/IOS - B2B - Verify scheduled trip requires approval",
+      "url": "https://yassir.atlassian.net/browse/QATM-27851"
+    }
+  ],
+  "unlabeledTests": []
+}

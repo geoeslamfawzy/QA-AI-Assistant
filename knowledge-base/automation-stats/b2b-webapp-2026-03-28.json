@@ -1,0 +1,1218 @@
+{
+  "suiteId": "b2b-webapp",
+  "date": "2026-03-28",
+  "total": 241,
+  "automated": 0,
+  "notAutomated": 241,
+  "unlabeled": 0,
+  "coveragePercent": 0,
+  "automatedTests": [],
+  "notAutomatedTests": [
+    {
+      "key": "QATM-26669",
+      "summary": "Login - Authentication - Verify login page displays all authentication options",
+      "url": "https://yassir.atlassian.net/browse/QATM-26669"
+    },
+    {
+      "key": "QATM-26670",
+      "summary": "Login - Google SSO - Verify successful login with Google SSO",
+      "url": "https://yassir.atlassian.net/browse/QATM-26670"
+    },
+    {
+      "key": "QATM-26671",
+      "summary": "Login - Google SSO - Verify login with unregistered Google account",
+      "url": "https://yassir.atlassian.net/browse/QATM-26671"
+    },
+    {
+      "key": "QATM-26672",
+      "summary": "Login - Email & Password - Verify successful login with valid email and password",
+      "url": "https://yassir.atlassian.net/browse/QATM-26672"
+    },
+    {
+      "key": "QATM-26673",
+      "summary": "Login - Email & Password - Verify login fails with incorrect password",
+      "url": "https://yassir.atlassian.net/browse/QATM-26673"
+    },
+    {
+      "key": "QATM-26674",
+      "summary": "Login - Email & Password - Verify login fails with non-existent email",
+      "url": "https://yassir.atlassian.net/browse/QATM-26674"
+    },
+    {
+      "key": "QATM-26675",
+      "summary": "Login - Email & Password - Verify email format validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26675"
+    },
+    {
+      "key": "QATM-26676",
+      "summary": "Login - Phone Number - Verify successful login with phone number and OTP",
+      "url": "https://yassir.atlassian.net/browse/QATM-26676"
+    },
+    {
+      "key": "QATM-26677",
+      "summary": "Login - Phone Number - Verify login fails with incorrect OTP",
+      "url": "https://yassir.atlassian.net/browse/QATM-26677"
+    },
+    {
+      "key": "QATM-26678",
+      "summary": "Login - Phone Number - Verify OTP expiration",
+      "url": "https://yassir.atlassian.net/browse/QATM-26678"
+    },
+    {
+      "key": "QATM-26679",
+      "summary": "Login - Phone Number - Verify phone number format validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26679"
+    },
+    {
+      "key": "QATM-26680",
+      "summary": "Login - Navigation - Verify 'Create Account' button redirects to Registration",
+      "url": "https://yassir.atlassian.net/browse/QATM-26680"
+    },
+    {
+      "key": "QATM-26681",
+      "summary": "Login - Account Status - Verify Pending/Inactive account cannot login",
+      "url": "https://yassir.atlassian.net/browse/QATM-26681"
+    },
+    {
+      "key": "QATM-26682",
+      "summary": "Login - Session - Verify session timeout after inactivity",
+      "url": "https://yassir.atlassian.net/browse/QATM-26682"
+    },
+    {
+      "key": "QATM-26683",
+      "summary": "Registration - Step 1 Email - Verify email input field accepts valid business email",
+      "url": "https://yassir.atlassian.net/browse/QATM-26683"
+    },
+    {
+      "key": "QATM-26684",
+      "summary": "Registration - Step 1 Email - Verify duplicate email is rejected",
+      "url": "https://yassir.atlassian.net/browse/QATM-26684"
+    },
+    {
+      "key": "QATM-26685",
+      "summary": "Registration - Step 1 Email - Verify Magic Link is sent to provided email",
+      "url": "https://yassir.atlassian.net/browse/QATM-26685"
+    },
+    {
+      "key": "QATM-26686",
+      "summary": "Registration - Step 1 Email - Verify clicking Magic Link proceeds to Step 2",
+      "url": "https://yassir.atlassian.net/browse/QATM-26686"
+    },
+    {
+      "key": "QATM-26687",
+      "summary": "Registration - Step 1 Email - Verify expired Magic Link shows error",
+      "url": "https://yassir.atlassian.net/browse/QATM-26687"
+    },
+    {
+      "key": "QATM-26688",
+      "summary": "Registration - Step 2 Security - Verify password setup requirements",
+      "url": "https://yassir.atlassian.net/browse/QATM-26688"
+    },
+    {
+      "key": "QATM-26689",
+      "summary": "Registration - Step 2 Security - Verify password confirmation must match",
+      "url": "https://yassir.atlassian.net/browse/QATM-26689"
+    },
+    {
+      "key": "QATM-26690",
+      "summary": "Registration - Step 2 Security - Verify phone number uniqueness validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26690"
+    },
+    {
+      "key": "QATM-26691",
+      "summary": "Registration - Step 2 Security - Verify OTP is sent for phone verification",
+      "url": "https://yassir.atlassian.net/browse/QATM-26691"
+    },
+    {
+      "key": "QATM-26692",
+      "summary": "Registration - Step 2 Security - Verify correct OTP validates phone ownership",
+      "url": "https://yassir.atlassian.net/browse/QATM-26692"
+    },
+    {
+      "key": "QATM-26693",
+      "summary": "Registration - Step 3 Company Profile - Verify admin details fields are required",
+      "url": "https://yassir.atlassian.net/browse/QATM-26693"
+    },
+    {
+      "key": "QATM-26694",
+      "summary": "Registration - Step 3 Company Profile - Verify business metadata fields are required",
+      "url": "https://yassir.atlassian.net/browse/QATM-26694"
+    },
+    {
+      "key": "QATM-26695",
+      "summary": "Registration - Step 3 Company Profile - Verify Country auto-inference from phone prefix",
+      "url": "https://yassir.atlassian.net/browse/QATM-26695"
+    },
+    {
+      "key": "QATM-26696",
+      "summary": "Registration - Step 3 Company Profile - Verify City dropdown filters by inferred country",
+      "url": "https://yassir.atlassian.net/browse/QATM-26696"
+    },
+    {
+      "key": "QATM-26697",
+      "summary": "Registration - Step 4 Submission - Verify 'Get Started' creates account with Pending status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26697"
+    },
+    {
+      "key": "QATM-26698",
+      "summary": "Registration - Step 4 Submission - Verify notification is sent to Admin Panel for review",
+      "url": "https://yassir.atlassian.net/browse/QATM-26698"
+    },
+    {
+      "key": "QATM-26699",
+      "summary": "Registration - Step 4 Submission - Verify user is blocked from dashboard until activation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26699"
+    },
+    {
+      "key": "QATM-26700",
+      "summary": "Registration - Step 4 Submission - Verify user receives notification upon activation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26700"
+    },
+    {
+      "key": "QATM-26701",
+      "summary": "Registration - Step 4 Submission - Verify activated user can login successfully",
+      "url": "https://yassir.atlassian.net/browse/QATM-26701"
+    },
+    {
+      "key": "QATM-26702",
+      "summary": "Dashboard - Global Navigation - Verify Yassir logo is displayed and links to Home",
+      "url": "https://yassir.atlassian.net/browse/QATM-26702"
+    },
+    {
+      "key": "QATM-26703",
+      "summary": "Dashboard - Global Navigation - Verify Budget Status Pill displays current financial status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26703"
+    },
+    {
+      "key": "QATM-26704",
+      "summary": "Dashboard - Global Navigation - Verify Budget Status Pill refresh icon updates balance",
+      "url": "https://yassir.atlassian.net/browse/QATM-26704"
+    },
+    {
+      "key": "QATM-26705",
+      "summary": "Dashboard - Global Navigation - Verify Language Selector offers English, Arabic, French",
+      "url": "https://yassir.atlassian.net/browse/QATM-26705"
+    },
+    {
+      "key": "QATM-26706",
+      "summary": "Dashboard - Global Navigation - Verify changing language updates interface text",
+      "url": "https://yassir.atlassian.net/browse/QATM-26706"
+    },
+    {
+      "key": "QATM-26707",
+      "summary": "Dashboard - Global Navigation - Verify Notification Bell displays alerts",
+      "url": "https://yassir.atlassian.net/browse/QATM-26707"
+    },
+    {
+      "key": "QATM-26708",
+      "summary": "Dashboard - User Profile - Verify User Profile displays name and position",
+      "url": "https://yassir.atlassian.net/browse/QATM-26708"
+    },
+    {
+      "key": "QATM-26709",
+      "summary": "Dashboard - User Profile - Verify 'Switch Company' option for multi-account users",
+      "url": "https://yassir.atlassian.net/browse/QATM-26709"
+    },
+    {
+      "key": "QATM-26710",
+      "summary": "Dashboard - User Profile - Verify 'Add New Company' option redirects to registration",
+      "url": "https://yassir.atlassian.net/browse/QATM-26710"
+    },
+    {
+      "key": "QATM-26711",
+      "summary": "Dashboard - User Profile - Verify 'Logout' securely exits session",
+      "url": "https://yassir.atlassian.net/browse/QATM-26711"
+    },
+    {
+      "key": "QATM-26712",
+      "summary": "Dashboard - Side Navigation - Verify all menu items are displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26712"
+    },
+    {
+      "key": "QATM-26713",
+      "summary": "Dashboard - Side Navigation - Verify Account menu is expandable with sub-items",
+      "url": "https://yassir.atlassian.net/browse/QATM-26713"
+    },
+    {
+      "key": "QATM-26714",
+      "summary": "Dashboard - Side Navigation - Verify Hide Button collapses sidebar",
+      "url": "https://yassir.atlassian.net/browse/QATM-26714"
+    },
+    {
+      "key": "QATM-26715",
+      "summary": "Dashboard - Onboarding Section - Verify 'Complete your business profile' appears for incomplete setup",
+      "url": "https://yassir.atlassian.net/browse/QATM-26715"
+    },
+    {
+      "key": "QATM-26716",
+      "summary": "Dashboard - Onboarding Section - Verify progress indicator shows completion percentage",
+      "url": "https://yassir.atlassian.net/browse/QATM-26716"
+    },
+    {
+      "key": "QATM-26717",
+      "summary": "Dashboard - Onboarding Section - Verify 'Update your details' card links to Profile Setup",
+      "url": "https://yassir.atlassian.net/browse/QATM-26717"
+    },
+    {
+      "key": "QATM-26718",
+      "summary": "Dashboard - Onboarding Section - Verify 'Set up your team' card links to Users & Groups",
+      "url": "https://yassir.atlassian.net/browse/QATM-26718"
+    },
+    {
+      "key": "QATM-26719",
+      "summary": "Dashboard - Onboarding Section - Verify 'Sign your contract' card links to Legal/Support",
+      "url": "https://yassir.atlassian.net/browse/QATM-26719"
+    },
+    {
+      "key": "QATM-26720",
+      "summary": "Dashboard - Member Quick View - Verify Total Members count is displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26720"
+    },
+    {
+      "key": "QATM-26721",
+      "summary": "Dashboard - Member Quick View - Verify 'Invite Members' redirects to Users and Groups",
+      "url": "https://yassir.atlassian.net/browse/QATM-26721"
+    },
+    {
+      "key": "QATM-26722",
+      "summary": "Dashboard - Member Quick View - Verify 'View all' redirects to full Users and Groups list",
+      "url": "https://yassir.atlassian.net/browse/QATM-26722"
+    },
+    {
+      "key": "QATM-26723",
+      "summary": "Dashboard - Cashback Widget - Verify Cashback percentage is displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26723"
+    },
+    {
+      "key": "QATM-26724",
+      "summary": "Dashboard - Cashback Widget - Verify 'Contact support' redirects to Support module",
+      "url": "https://yassir.atlassian.net/browse/QATM-26724"
+    },
+    {
+      "key": "QATM-26725",
+      "summary": "Dashboard - Rides Summary - Verify total Rides count is displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26725"
+    },
+    {
+      "key": "QATM-26726",
+      "summary": "Dashboard - Ongoing Rides - Verify counter shows currently active trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-26726"
+    },
+    {
+      "key": "QATM-26727",
+      "summary": "Dashboard - Ongoing Rides - Verify 'Request ride' redirects to Book Ride page",
+      "url": "https://yassir.atlassian.net/browse/QATM-26727"
+    },
+    {
+      "key": "QATM-26728",
+      "summary": "Dashboard - Ongoing Rides - Verify 'Rebook last ride' triggers quick action",
+      "url": "https://yassir.atlassian.net/browse/QATM-26728"
+    },
+    {
+      "key": "QATM-26729",
+      "summary": "Dashboard - Ongoing Rides - Verify 'View all' redirects to Trips page",
+      "url": "https://yassir.atlassian.net/browse/QATM-26729"
+    },
+    {
+      "key": "QATM-26730",
+      "summary": "Dashboard - Financial Widget Postpaid - Verify Postpaid plan shows Budget usage vs limit",
+      "url": "https://yassir.atlassian.net/browse/QATM-26730"
+    },
+    {
+      "key": "QATM-26731",
+      "summary": "Dashboard - Financial Widget Postpaid - Verify 'Pay Due Budget' redirects to Payments",
+      "url": "https://yassir.atlassian.net/browse/QATM-26731"
+    },
+    {
+      "key": "QATM-26732",
+      "summary": "Dashboard - Financial Widget Prepaid - Verify Prepaid plan shows Wallet Balance",
+      "url": "https://yassir.atlassian.net/browse/QATM-26732"
+    },
+    {
+      "key": "QATM-26733",
+      "summary": "Dashboard - Financial Widget Prepaid - Verify 'Top Up Budget' redirects to Payments",
+      "url": "https://yassir.atlassian.net/browse/QATM-26733"
+    },
+    {
+      "key": "QATM-26734",
+      "summary": "Dashboard - Rides Overview Chart - Verify 14-day time-series chart is displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26734"
+    },
+    {
+      "key": "QATM-26735",
+      "summary": "Dashboard - Rides Overview Chart - Verify Pink points represent Instant Rides",
+      "url": "https://yassir.atlassian.net/browse/QATM-26735"
+    },
+    {
+      "key": "QATM-26736",
+      "summary": "Dashboard - Rides Overview Chart - Verify Purple points represent Scheduled Rides",
+      "url": "https://yassir.atlassian.net/browse/QATM-26736"
+    },
+    {
+      "key": "QATM-26737",
+      "summary": "Dashboard - Members & Groups Section - Verify Total Members donut chart shows Active vs Pending",
+      "url": "https://yassir.atlassian.net/browse/QATM-26737"
+    },
+    {
+      "key": "QATM-26738",
+      "summary": "Dashboard - Members & Groups Section - Verify 'Create group' button in Total Groups card",
+      "url": "https://yassir.atlassian.net/browse/QATM-26738"
+    },
+    {
+      "key": "QATM-26739",
+      "summary": "Dashboard - Members & Groups Section - Verify 'Create program' button in Total Programs card",
+      "url": "https://yassir.atlassian.net/browse/QATM-26739"
+    },
+    {
+      "key": "QATM-26740",
+      "summary": "Dashboard - Referrals Section - Verify Referred businesses count is displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26740"
+    },
+    {
+      "key": "QATM-26741",
+      "summary": "Dashboard - Referrals Section - Verify 'Go to referrals' redirects to Referrals page",
+      "url": "https://yassir.atlassian.net/browse/QATM-26741"
+    },
+    {
+      "key": "QATM-26742",
+      "summary": "Users and Groups - Users Tab - Verify Users tab displays all platform users",
+      "url": "https://yassir.atlassian.net/browse/QATM-26742"
+    },
+    {
+      "key": "QATM-26743",
+      "summary": "Users and Groups - Users Tab - Verify filter by Programs",
+      "url": "https://yassir.atlassian.net/browse/QATM-26743"
+    },
+    {
+      "key": "QATM-26744",
+      "summary": "Users and Groups - Users Tab - Verify filter by Groups",
+      "url": "https://yassir.atlassian.net/browse/QATM-26744"
+    },
+    {
+      "key": "QATM-26745",
+      "summary": "Users and Groups - Users Tab - Verify filter by User Status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26745"
+    },
+    {
+      "key": "QATM-26746",
+      "summary": "Users and Groups - Users Tab - Verify search by email or username",
+      "url": "https://yassir.atlassian.net/browse/QATM-26746"
+    },
+    {
+      "key": "QATM-26747",
+      "summary": "Users and Groups - Edit User - Verify clicking edit icon opens edit modal",
+      "url": "https://yassir.atlassian.net/browse/QATM-26747"
+    },
+    {
+      "key": "QATM-26748",
+      "summary": "Users and Groups - Edit User - Verify Group assignment can be changed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26748"
+    },
+    {
+      "key": "QATM-26749",
+      "summary": "Users and Groups - Edit User - Verify Role can be changed (Program Moderator, Business Admin, Rider)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26749"
+    },
+    {
+      "key": "QATM-26750",
+      "summary": "Users and Groups - Edit User - Verify Ride Approval Settings can be modified",
+      "url": "https://yassir.atlassian.net/browse/QATM-26750"
+    },
+    {
+      "key": "QATM-26751",
+      "summary": "Users and Groups - Delete User - Verify delete icon triggers confirmation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26751"
+    },
+    {
+      "key": "QATM-26752",
+      "summary": "Users and Groups - Delete User - Verify confirmed deletion removes user",
+      "url": "https://yassir.atlassian.net/browse/QATM-26752"
+    },
+    {
+      "key": "QATM-26753",
+      "summary": "Users and Groups - Invite Users - Verify 'Invite Users' button opens invitation page",
+      "url": "https://yassir.atlassian.net/browse/QATM-26753"
+    },
+    {
+      "key": "QATM-26754",
+      "summary": "Users and Groups - Invite Users - Verify Group selection dropdown is available",
+      "url": "https://yassir.atlassian.net/browse/QATM-26754"
+    },
+    {
+      "key": "QATM-26755",
+      "summary": "Users and Groups - Invite Users - Verify Program selection dropdown is available",
+      "url": "https://yassir.atlassian.net/browse/QATM-26755"
+    },
+    {
+      "key": "QATM-26756",
+      "summary": "Users and Groups - Invite Users - Verify invitation by Email Address",
+      "url": "https://yassir.atlassian.net/browse/QATM-26756"
+    },
+    {
+      "key": "QATM-26757",
+      "summary": "Users and Groups - Invite Users - Verify invitation by Phone Number",
+      "url": "https://yassir.atlassian.net/browse/QATM-26757"
+    },
+    {
+      "key": "QATM-26758",
+      "summary": "Users and Groups - Invite Users - Verify bulk invitation via CSV upload",
+      "url": "https://yassir.atlassian.net/browse/QATM-26758"
+    },
+    {
+      "key": "QATM-26759",
+      "summary": "Users and Groups - Invite Users - Verify CSV template is available for download",
+      "url": "https://yassir.atlassian.net/browse/QATM-26759"
+    },
+    {
+      "key": "QATM-26760",
+      "summary": "Users and Groups - Invite Users - Verify invitation link generation for sharing",
+      "url": "https://yassir.atlassian.net/browse/QATM-26760"
+    },
+    {
+      "key": "QATM-26761",
+      "summary": "Users and Groups - Groups Tab - Verify Groups tab displays all existing groups",
+      "url": "https://yassir.atlassian.net/browse/QATM-26761"
+    },
+    {
+      "key": "QATM-26762",
+      "summary": "Users and Groups - Groups Tab - Verify search by group name",
+      "url": "https://yassir.atlassian.net/browse/QATM-26762"
+    },
+    {
+      "key": "QATM-26763",
+      "summary": "Users and Groups - Groups Tab - Verify delete group with migration requirement",
+      "url": "https://yassir.atlassian.net/browse/QATM-26763"
+    },
+    {
+      "key": "QATM-26764",
+      "summary": "Users and Groups - Groups Tab - Verify empty group can be deleted directly",
+      "url": "https://yassir.atlassian.net/browse/QATM-26764"
+    },
+    {
+      "key": "QATM-26765",
+      "summary": "Users and Groups - Edit Group - Verify edit icon opens group settings with two tabs",
+      "url": "https://yassir.atlassian.net/browse/QATM-26765"
+    },
+    {
+      "key": "QATM-26766",
+      "summary": "Users and Groups - Edit Group - Verify 'Add Users' button in Group Users tab",
+      "url": "https://yassir.atlassian.net/browse/QATM-26766"
+    },
+    {
+      "key": "QATM-26767",
+      "summary": "Users and Groups - Edit Group - Verify adding users to existing group doesn't show Group/Program selection",
+      "url": "https://yassir.atlassian.net/browse/QATM-26767"
+    },
+    {
+      "key": "QATM-26768",
+      "summary": "Users and Groups - Create Group - Verify 'Create a Group' opens creation page",
+      "url": "https://yassir.atlassian.net/browse/QATM-26768"
+    },
+    {
+      "key": "QATM-26769",
+      "summary": "Users and Groups - Create Group - Verify Group Name is required",
+      "url": "https://yassir.atlassian.net/browse/QATM-26769"
+    },
+    {
+      "key": "QATM-26770",
+      "summary": "Users and Groups - Create Group - Verify Program assignment is required",
+      "url": "https://yassir.atlassian.net/browse/QATM-26770"
+    },
+    {
+      "key": "QATM-26771",
+      "summary": "Users and Groups - Create Group - Verify optional user addition during group creation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26771"
+    },
+    {
+      "key": "QATM-26772",
+      "summary": "Programs - My Programs - Verify My Programs page displays all defined programs",
+      "url": "https://yassir.atlassian.net/browse/QATM-26772"
+    },
+    {
+      "key": "QATM-26773",
+      "summary": "Programs - My Programs - Verify search by Program Name",
+      "url": "https://yassir.atlassian.net/browse/QATM-26773"
+    },
+    {
+      "key": "QATM-26774",
+      "summary": "Programs - My Programs - Verify edit icon navigates to Edit program settings",
+      "url": "https://yassir.atlassian.net/browse/QATM-26774"
+    },
+    {
+      "key": "QATM-26775",
+      "summary": "Programs - My Programs - Verify deactivate active program requires group transfer",
+      "url": "https://yassir.atlassian.net/browse/QATM-26775"
+    },
+    {
+      "key": "QATM-26776",
+      "summary": "Programs - My Programs - Verify activate inactive program",
+      "url": "https://yassir.atlassian.net/browse/QATM-26776"
+    },
+    {
+      "key": "QATM-26777",
+      "summary": "Programs - My Programs - Verify only inactive programs can be deleted",
+      "url": "https://yassir.atlassian.net/browse/QATM-26777"
+    },
+    {
+      "key": "QATM-26778",
+      "summary": "Programs - My Programs - Verify inactive program can be deleted",
+      "url": "https://yassir.atlassian.net/browse/QATM-26778"
+    },
+    {
+      "key": "QATM-26779",
+      "summary": "Programs - Create Program - Verify 'Add new program' opens creation page",
+      "url": "https://yassir.atlassian.net/browse/QATM-26779"
+    },
+    {
+      "key": "QATM-26780",
+      "summary": "Programs - Create Program - Verify Program Name is required",
+      "url": "https://yassir.atlassian.net/browse/QATM-26780"
+    },
+    {
+      "key": "QATM-26781",
+      "summary": "Programs - Create Program - Verify Program Type is optional",
+      "url": "https://yassir.atlassian.net/browse/QATM-26781"
+    },
+    {
+      "key": "QATM-26782",
+      "summary": "Programs - Create Program Geo-fencing - Verify default Departure is 'Any location inside country'",
+      "url": "https://yassir.atlassian.net/browse/QATM-26782"
+    },
+    {
+      "key": "QATM-26783",
+      "summary": "Programs - Create Program Geo-fencing - Verify setting specific Departure restricts booking location",
+      "url": "https://yassir.atlassian.net/browse/QATM-26783"
+    },
+    {
+      "key": "QATM-26784",
+      "summary": "Programs - Create Program Geo-fencing - Verify round trips toggle functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26784"
+    },
+    {
+      "key": "QATM-26785",
+      "summary": "Programs - Create Program Schedule - Verify Daily frequency allows all days",
+      "url": "https://yassir.atlassian.net/browse/QATM-26785"
+    },
+    {
+      "key": "QATM-26786",
+      "summary": "Programs - Create Program Schedule - Verify Working Days blocks weekend (Friday & Saturday)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26786"
+    },
+    {
+      "key": "QATM-26787",
+      "summary": "Programs - Create Program Schedule - Verify Weekend allows only Friday & Saturday",
+      "url": "https://yassir.atlassian.net/browse/QATM-26787"
+    },
+    {
+      "key": "QATM-26788",
+      "summary": "Programs - Create Program Schedule - Verify Custom frequency allows specific day selection",
+      "url": "https://yassir.atlassian.net/browse/QATM-26788"
+    },
+    {
+      "key": "QATM-26789",
+      "summary": "Programs - Create Program Schedule - Verify Morning time range (5:00 to 14:00)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26789"
+    },
+    {
+      "key": "QATM-26790",
+      "summary": "Programs - Create Program Schedule - Verify Working Hours time range (7:00 to 18:00)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26790"
+    },
+    {
+      "key": "QATM-26791",
+      "summary": "Programs - Create Program Schedule - Verify Day time range allows 24 hours (0:00 to 24:00)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26791"
+    },
+    {
+      "key": "QATM-26792",
+      "summary": "Programs - Create Program Schedule - Verify Custom time range selection",
+      "url": "https://yassir.atlassian.net/browse/QATM-26792"
+    },
+    {
+      "key": "QATM-26793",
+      "summary": "Programs - Create Program Permissions - Verify Ride limit per member (Day/Week/Month)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26793"
+    },
+    {
+      "key": "QATM-26794",
+      "summary": "Programs - Create Program Permissions - Verify 'Unlimited trips' checkbox removes limits",
+      "url": "https://yassir.atlassian.net/browse/QATM-26794"
+    },
+    {
+      "key": "QATM-26795",
+      "summary": "Programs - Create Program Permissions - Verify Budget per member per ride limits",
+      "url": "https://yassir.atlassian.net/browse/QATM-26795"
+    },
+    {
+      "key": "QATM-26796",
+      "summary": "Programs - Create Program Permissions - Verify 'Unlimited budget' checkbox removes limits",
+      "url": "https://yassir.atlassian.net/browse/QATM-26796"
+    },
+    {
+      "key": "QATM-26797",
+      "summary": "Programs - Create Program Permissions - Verify Ride request auto-approval toggle ON",
+      "url": "https://yassir.atlassian.net/browse/QATM-26797"
+    },
+    {
+      "key": "QATM-26798",
+      "summary": "Programs - Create Program Permissions - Verify Ride request auto-approval toggle OFF requires manual approval",
+      "url": "https://yassir.atlassian.net/browse/QATM-26798"
+    },
+    {
+      "key": "QATM-26799",
+      "summary": "Programs - Create Program Permissions - Verify Show price to members toggle",
+      "url": "https://yassir.atlassian.net/browse/QATM-26799"
+    },
+    {
+      "key": "QATM-26800",
+      "summary": "Programs - Create Program Services - Verify service selection (Classic, Comfort, Premium, Cargo)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26800"
+    },
+    {
+      "key": "QATM-26801",
+      "summary": "Programs - Create Program Services - Verify disabled services are hidden from riders",
+      "url": "https://yassir.atlassian.net/browse/QATM-26801"
+    },
+    {
+      "key": "QATM-26802",
+      "summary": "Programs - Create Program - Verify 'Save Changes' creates the program",
+      "url": "https://yassir.atlassian.net/browse/QATM-26802"
+    },
+    {
+      "key": "QATM-26803",
+      "summary": "Account - Profile Details - Verify Profile Details displays user information",
+      "url": "https://yassir.atlassian.net/browse/QATM-26803"
+    },
+    {
+      "key": "QATM-26804",
+      "summary": "Account - Edit Profile - Verify Edit Profile allows updating personal and company info",
+      "url": "https://yassir.atlassian.net/browse/QATM-26804"
+    },
+    {
+      "key": "QATM-26805",
+      "summary": "Account - Edit Password - Verify password change requires current password",
+      "url": "https://yassir.atlassian.net/browse/QATM-26805"
+    },
+    {
+      "key": "QATM-26806",
+      "summary": "Account - Edit Password - Verify password change with correct credentials",
+      "url": "https://yassir.atlassian.net/browse/QATM-26806"
+    },
+    {
+      "key": "QATM-26807",
+      "summary": "Account - Settings - Verify Reports Language selection (French/English)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26807"
+    },
+    {
+      "key": "QATM-26808",
+      "summary": "Account - Legal Information - Verify Legal Information submission and status display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26808"
+    },
+    {
+      "key": "QATM-26809",
+      "summary": "Account - Legal Information - Verify document upload accepts PDF, JPEG, PNG (max 10MB)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26809"
+    },
+    {
+      "key": "QATM-26810",
+      "summary": "Account - Legal Information - Verify document upload rejects files over 10MB",
+      "url": "https://yassir.atlassian.net/browse/QATM-26810"
+    },
+    {
+      "key": "QATM-26811",
+      "summary": "Book Rides - Rider Selection - Verify 'Book for me' option selects current user as rider",
+      "url": "https://yassir.atlassian.net/browse/QATM-26811"
+    },
+    {
+      "key": "QATM-26812",
+      "summary": "Book Rides - Rider Selection - Verify booking for another member via rider dropdown",
+      "url": "https://yassir.atlassian.net/browse/QATM-26812"
+    },
+    {
+      "key": "QATM-26813",
+      "summary": "Book Rides - Rider Selection - Verify 'Request for a guest user' option",
+      "url": "https://yassir.atlassian.net/browse/QATM-26813"
+    },
+    {
+      "key": "QATM-26814",
+      "summary": "Book Rides - Instant vs Scheduled - Verify default booking is instant (immediate)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26814"
+    },
+    {
+      "key": "QATM-26815",
+      "summary": "Book Rides - Instant vs Scheduled - Verify 'Book for later' toggle enables scheduling",
+      "url": "https://yassir.atlassian.net/browse/QATM-26815"
+    },
+    {
+      "key": "QATM-26816",
+      "summary": "Book Rides - Locations - Verify Departure and Destination address input",
+      "url": "https://yassir.atlassian.net/browse/QATM-26816"
+    },
+    {
+      "key": "QATM-26817",
+      "summary": "Book Rides - Multi-stop - Verify adding multiple stops to trip",
+      "url": "https://yassir.atlassian.net/browse/QATM-26817"
+    },
+    {
+      "key": "QATM-26818",
+      "summary": "Book Rides - Service Selection - Verify available services based on program settings",
+      "url": "https://yassir.atlassian.net/browse/QATM-26818"
+    },
+    {
+      "key": "QATM-26819",
+      "summary": "Book Rides - Scheduled Rides - Verify date and time picker for scheduled trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-26819"
+    },
+    {
+      "key": "QATM-26820",
+      "summary": "Book Rides - Scheduled Rides - Verify cannot schedule trip in the past",
+      "url": "https://yassir.atlassian.net/browse/QATM-26820"
+    },
+    {
+      "key": "QATM-26821",
+      "summary": "Book Rides - Repeat Booking - Verify repeat booking option for scheduled trips",
+      "url": "https://yassir.atlassian.net/browse/QATM-26821"
+    },
+    {
+      "key": "QATM-26822",
+      "summary": "Book Rides - Confirmation - Verify 'Book Ride' button opens confirmation popup",
+      "url": "https://yassir.atlassian.net/browse/QATM-26822"
+    },
+    {
+      "key": "QATM-26823",
+      "summary": "Book Rides - Ride Status - Verify instant ride goes to Ongoing Rides after confirmation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26823"
+    },
+    {
+      "key": "QATM-26824",
+      "summary": "Book Rides - Ride Status - Verify scheduled ride goes to Upcoming Rides after confirmation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26824"
+    },
+    {
+      "key": "QATM-26825",
+      "summary": "Book Rides - Ride Status - Verify manual approval ride goes to Ride Requests",
+      "url": "https://yassir.atlassian.net/browse/QATM-26825"
+    },
+    {
+      "key": "QATM-26826",
+      "summary": "Book Rides - Trip Statuses - Verify all trip status transitions",
+      "url": "https://yassir.atlassian.net/browse/QATM-26826"
+    },
+    {
+      "key": "QATM-26827",
+      "summary": "Book Rides - Trip Statuses - Verify cancellation statuses display correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-26827"
+    },
+    {
+      "key": "QATM-26828",
+      "summary": "Payments - Prepaid View - Verify Prepaid account shows Remaining Budget and Top-up option",
+      "url": "https://yassir.atlassian.net/browse/QATM-26828"
+    },
+    {
+      "key": "QATM-26829",
+      "summary": "Payments - Postpaid View - Verify Postpaid account shows Budget limit without Top-up option",
+      "url": "https://yassir.atlassian.net/browse/QATM-26829"
+    },
+    {
+      "key": "QATM-26830",
+      "summary": "Payments - Monthly Invoices - Verify 'View all' opens monthly invoices list",
+      "url": "https://yassir.atlassian.net/browse/QATM-26830"
+    },
+    {
+      "key": "QATM-26831",
+      "summary": "Payments - Monthly Invoices - Verify invoice download functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26831"
+    },
+    {
+      "key": "QATM-26832",
+      "summary": "Trips - Overview - Verify Trips page displays Total Trips and Completed Trips counts",
+      "url": "https://yassir.atlassian.net/browse/QATM-26832"
+    },
+    {
+      "key": "QATM-26833",
+      "summary": "Trips - Filtering - Verify filter by Date Range, Riders, and Trip Status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26833"
+    },
+    {
+      "key": "QATM-26834",
+      "summary": "Trips - Export - Verify 'Export rides' downloads trip data",
+      "url": "https://yassir.atlassian.net/browse/QATM-26834"
+    },
+    {
+      "key": "QATM-26835",
+      "summary": "Trips - Data Grid - Verify trips table displays required columns",
+      "url": "https://yassir.atlassian.net/browse/QATM-26835"
+    },
+    {
+      "key": "QATM-26836",
+      "summary": "Trips - Re-booking - Verify 'Request Again' pre-fills trip details on Book Rides page",
+      "url": "https://yassir.atlassian.net/browse/QATM-26836"
+    },
+    {
+      "key": "QATM-26837",
+      "summary": "Referrals - Invites Tab - Verify Invites tab is default view",
+      "url": "https://yassir.atlassian.net/browse/QATM-26837"
+    },
+    {
+      "key": "QATM-26838",
+      "summary": "Referrals - Invites Tab - Verify pre-filled referral message with unique URL",
+      "url": "https://yassir.atlassian.net/browse/QATM-26838"
+    },
+    {
+      "key": "QATM-26839",
+      "summary": "Referrals - Invites Tab - Verify email invitation field accepts valid email",
+      "url": "https://yassir.atlassian.net/browse/QATM-26839"
+    },
+    {
+      "key": "QATM-26840",
+      "summary": "Referrals - Referrals Breakdown - Verify Pending Referrals card displays count",
+      "url": "https://yassir.atlassian.net/browse/QATM-26840"
+    },
+    {
+      "key": "QATM-26841",
+      "summary": "Business Challenge - Dashboard - Verify Challenges page displays active challenge banner",
+      "url": "https://yassir.atlassian.net/browse/QATM-26841"
+    },
+    {
+      "key": "QATM-26842",
+      "summary": "Business Challenge - Dashboard - Verify active challenge shows performance metrics",
+      "url": "https://yassir.atlassian.net/browse/QATM-26842"
+    },
+    {
+      "key": "QATM-26843",
+      "summary": "Business Challenge - Challenge Details - Verify Progress Bar shows completion percentage",
+      "url": "https://yassir.atlassian.net/browse/QATM-26843"
+    },
+    {
+      "key": "QATM-26844",
+      "summary": "Business Challenge - Challenge Details - Verify badges light up when criteria met",
+      "url": "https://yassir.atlassian.net/browse/QATM-26844"
+    },
+    {
+      "key": "QATM-26845",
+      "summary": "Business Challenge - Challenge Details - Verify Performance Sidebar shows Rides Completed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26845"
+    },
+    {
+      "key": "QATM-26846",
+      "summary": "Gift Cards - Buy Gift Cards - Verify 'Buy gift cards' tab displays available templates",
+      "url": "https://yassir.atlassian.net/browse/QATM-26846"
+    },
+    {
+      "key": "QATM-26847",
+      "summary": "Gift Cards - Buy Gift Cards - Verify 'Customize card' button when budget is sufficient",
+      "url": "https://yassir.atlassian.net/browse/QATM-26847"
+    },
+    {
+      "key": "QATM-26848",
+      "summary": "Gift Cards - Buy Gift Cards - Verify button is disabled when budget is insufficient",
+      "url": "https://yassir.atlassian.net/browse/QATM-26848"
+    },
+    {
+      "key": "QATM-26849",
+      "summary": "Gift Cards - Buy Gift Cards - Verify cost deduction from wallet on purchase",
+      "url": "https://yassir.atlassian.net/browse/QATM-26849"
+    },
+    {
+      "key": "QATM-26850",
+      "summary": "Gift Cards - Customization - Verify customization form appears after purchase",
+      "url": "https://yassir.atlassian.net/browse/QATM-26850"
+    },
+    {
+      "key": "QATM-26851",
+      "summary": "Gift Cards - Customization - Verify Validity Period configuration (Start/End dates)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26851"
+    },
+    {
+      "key": "QATM-26852",
+      "summary": "Gift Cards - Customization - Verify 'Use default settings' skips configuration",
+      "url": "https://yassir.atlassian.net/browse/QATM-26852"
+    },
+    {
+      "key": "QATM-26853",
+      "summary": "Gift Cards - My Cards - Verify 'My cards' tab displays purchased cards",
+      "url": "https://yassir.atlassian.net/browse/QATM-26853"
+    },
+    {
+      "key": "QATM-26854",
+      "summary": "Gift Cards - Distribution - Verify 'Download as PDF' generates printable voucher",
+      "url": "https://yassir.atlassian.net/browse/QATM-26854"
+    },
+    {
+      "key": "QATM-26855",
+      "summary": "Gift Cards - Usage Tracking - Verify 'View usage history' shows trip log",
+      "url": "https://yassir.atlassian.net/browse/QATM-26855"
+    },
+    {
+      "key": "QATM-26856",
+      "summary": "Gift Cards - Financial Reversal - Verify refund credits company wallet",
+      "url": "https://yassir.atlassian.net/browse/QATM-26856"
+    },
+    {
+      "key": "QATM-26857",
+      "summary": "Support - Search - Verify Global Search bar is prominently displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26857"
+    },
+    {
+      "key": "QATM-26858",
+      "summary": "Support - FAQs - Verify Popular FAQs accordion functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26858"
+    },
+    {
+      "key": "QATM-26859",
+      "summary": "Support - Tutorial Videos - Verify clicking video card opens video player modal",
+      "url": "https://yassir.atlassian.net/browse/QATM-26859"
+    },
+    {
+      "key": "QATM-26860",
+      "summary": "Support - Phone Support - Verify 24/7 availability is indicated",
+      "url": "https://yassir.atlassian.net/browse/QATM-26860"
+    },
+    {
+      "key": "QATM-26861",
+      "summary": "Support - Dedicated Support - Verify Key Account Manager info is displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-26861"
+    },
+    {
+      "key": "QATM-26862",
+      "summary": "Integration - Program-User - Verify program restrictions apply to assigned users",
+      "url": "https://yassir.atlassian.net/browse/QATM-26862"
+    },
+    {
+      "key": "QATM-26863",
+      "summary": "Integration - Payment-Booking - Verify insufficient budget blocks booking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26863"
+    },
+    {
+      "key": "QATM-26864",
+      "summary": "Integration - Approval-Workflow - Verify manual approval workflow end-to-end",
+      "url": "https://yassir.atlassian.net/browse/QATM-26864"
+    },
+    {
+      "key": "QATM-26865",
+      "summary": "Integration - Challenge-Discount - Verify challenge completion applies discount to invoice",
+      "url": "https://yassir.atlassian.net/browse/QATM-26865"
+    },
+    {
+      "key": "QATM-26866",
+      "summary": "Integration - Referral-Reward - Verify referral completion triggers reward",
+      "url": "https://yassir.atlassian.net/browse/QATM-26866"
+    },
+    {
+      "key": "QATM-26867",
+      "summary": "Integration - Gift Card-Trip - Verify gift card discount applies correctly to ride",
+      "url": "https://yassir.atlassian.net/browse/QATM-26867"
+    },
+    {
+      "key": "QATM-26868",
+      "summary": "Integration - User-Role-Permission - Verify role-based access across modules",
+      "url": "https://yassir.atlassian.net/browse/QATM-26868"
+    },
+    {
+      "key": "QATM-26869",
+      "summary": "Integration - Group-Program - Verify group members inherit program settings",
+      "url": "https://yassir.atlassian.net/browse/QATM-26869"
+    },
+    {
+      "key": "QATM-26870",
+      "summary": "Security - Session - Verify session token expires after logout",
+      "url": "https://yassir.atlassian.net/browse/QATM-26870"
+    },
+    {
+      "key": "QATM-26871",
+      "summary": "Security - Authorization - Verify users cannot access other companies' data",
+      "url": "https://yassir.atlassian.net/browse/QATM-26871"
+    },
+    {
+      "key": "QATM-26872",
+      "summary": "Security - Input Validation - Verify XSS prevention in form fields",
+      "url": "https://yassir.atlassian.net/browse/QATM-26872"
+    },
+    {
+      "key": "QATM-26873",
+      "summary": "Security - Data Protection - Verify sensitive data is masked in UI",
+      "url": "https://yassir.atlassian.net/browse/QATM-26873"
+    },
+    {
+      "key": "QATM-26874",
+      "summary": "Security - Password - Verify password is not visible during entry",
+      "url": "https://yassir.atlassian.net/browse/QATM-26874"
+    },
+    {
+      "key": "QATM-26875",
+      "summary": "Security - HTTPS - Verify all pages use HTTPS",
+      "url": "https://yassir.atlassian.net/browse/QATM-26875"
+    },
+    {
+      "key": "QATM-26876",
+      "summary": "Performance - Page Load - Verify Dashboard loads within acceptable time",
+      "url": "https://yassir.atlassian.net/browse/QATM-26876"
+    },
+    {
+      "key": "QATM-26877",
+      "summary": "Performance - Search - Verify search results return quickly",
+      "url": "https://yassir.atlassian.net/browse/QATM-26877"
+    },
+    {
+      "key": "QATM-26878",
+      "summary": "Performance - Large Data - Verify trips list pagination with large datasets",
+      "url": "https://yassir.atlassian.net/browse/QATM-26878"
+    },
+    {
+      "key": "QATM-26879",
+      "summary": "Usability - Mobile Responsive - Verify Dashboard is responsive on mobile devices",
+      "url": "https://yassir.atlassian.net/browse/QATM-26879"
+    },
+    {
+      "key": "QATM-26880",
+      "summary": "Usability - Error Messages - Verify error messages are clear and actionable",
+      "url": "https://yassir.atlassian.net/browse/QATM-26880"
+    },
+    {
+      "key": "QATM-26881",
+      "summary": "Usability - Form Validation - Verify inline validation provides immediate feedback",
+      "url": "https://yassir.atlassian.net/browse/QATM-26881"
+    },
+    {
+      "key": "QATM-27185",
+      "summary": "Login - Global Navigation - Verify changing language updates interface text (French) - Language Switch",
+      "url": "https://yassir.atlassian.net/browse/QATM-27185"
+    },
+    {
+      "key": "QATM-27186",
+      "summary": "Login - Global Navigation - Verify French text display on login page",
+      "url": "https://yassir.atlassian.net/browse/QATM-27186"
+    },
+    {
+      "key": "QATM-27187",
+      "summary": "Login - Global Navigation - Verify French input text direction",
+      "url": "https://yassir.atlassian.net/browse/QATM-27187"
+    },
+    {
+      "key": "QATM-27188",
+      "summary": "Login - Global Navigation - Verify French action buttons",
+      "url": "https://yassir.atlassian.net/browse/QATM-27188"
+    },
+    {
+      "key": "QATM-27189",
+      "summary": "Login - Global Navigation - Verify changing language updates interface text (English) - Language Switch",
+      "url": "https://yassir.atlassian.net/browse/QATM-27189"
+    },
+    {
+      "key": "QATM-27190",
+      "summary": "Login - Global Navigation - Verify English text display on login page",
+      "url": "https://yassir.atlassian.net/browse/QATM-27190"
+    },
+    {
+      "key": "QATM-27191",
+      "summary": "Login - Global Navigation - Verify English input text direction",
+      "url": "https://yassir.atlassian.net/browse/QATM-27191"
+    },
+    {
+      "key": "QATM-27192",
+      "summary": "Login - Global Navigation - Verify English action buttons",
+      "url": "https://yassir.atlassian.net/browse/QATM-27192"
+    },
+    {
+      "key": "QATM-27193",
+      "summary": "Login - Phone Number - Verify phone options dialog displays SMS and WhatsApp",
+      "url": "https://yassir.atlassian.net/browse/QATM-27193"
+    },
+    {
+      "key": "QATM-27194",
+      "summary": "Login - Phone Number - Verify Magic Link option from other options dialog",
+      "url": "https://yassir.atlassian.net/browse/QATM-27194"
+    },
+    {
+      "key": "QATM-27195",
+      "summary": "Login - Phone Number - Verify Password option from other options dialog",
+      "url": "https://yassir.atlassian.net/browse/QATM-27195"
+    },
+    {
+      "key": "QATM-27196",
+      "summary": "Login - Phone Number - Verify SMS OTP option from other options dialog",
+      "url": "https://yassir.atlassian.net/browse/QATM-27196"
+    },
+    {
+      "key": "QATM-27197",
+      "summary": "Login - Phone Number - Verify WhatsApp OTP option from other options dialog",
+      "url": "https://yassir.atlassian.net/browse/QATM-27197"
+    },
+    {
+      "key": "QATM-27198",
+      "summary": "Forgot Password - Verify navigation to forgot password page",
+      "url": "https://yassir.atlassian.net/browse/QATM-27198"
+    },
+    {
+      "key": "QATM-27199",
+      "summary": "Forgot Password - Verify error for unregistered email",
+      "url": "https://yassir.atlassian.net/browse/QATM-27199"
+    },
+    {
+      "key": "QATM-27200",
+      "summary": "Reset Password - Verify reset password form displays correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-27200"
+    },
+    {
+      "key": "QATM-27201",
+      "summary": "Reset Password - Verify password changed successfully",
+      "url": "https://yassir.atlassian.net/browse/QATM-27201"
+    },
+    {
+      "key": "QATM-27202",
+      "summary": "Reset Password - Verify passwords must match validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27202"
+    },
+    {
+      "key": "QATM-27203",
+      "summary": "Reset Password - Verify password without special character fails validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27203"
+    },
+    {
+      "key": "QATM-27204",
+      "summary": "Reset Password - Verify password without number fails validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27204"
+    },
+    {
+      "key": "QATM-27205",
+      "summary": "Reset Password - Verify password less than 8 characters fails validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27205"
+    },
+    {
+      "key": "QATM-27249",
+      "summary": "Registration - SignUp Page - Verify navigation from login to registration page (QATM-1578)",
+      "url": "https://yassir.atlassian.net/browse/QATM-27249"
+    },
+    {
+      "key": "QATM-27250",
+      "summary": "Registration - Email Validation - Verify failed email format validation (QATM-1579)",
+      "url": "https://yassir.atlassian.net/browse/QATM-27250"
+    },
+    {
+      "key": "QATM-27251",
+      "summary": "Registration - Email Verification - Verify password setup page after email verification",
+      "url": "https://yassir.atlassian.net/browse/QATM-27251"
+    },
+    {
+      "key": "QATM-27252",
+      "summary": "Registration - Password Validation - Verify successful password setup with valid password",
+      "url": "https://yassir.atlassian.net/browse/QATM-27252"
+    },
+    {
+      "key": "QATM-27253",
+      "summary": "Registration - Phone Validation - Verify failed phone number validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27253"
+    },
+    {
+      "key": "QATM-27254",
+      "summary": "Registration - PIN Code Validation - Verify failed verification code validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27254"
+    },
+    {
+      "key": "QATM-27255",
+      "summary": "Registration - User Persona - Verify Personal and Company Information form completion",
+      "url": "https://yassir.atlassian.net/browse/QATM-27255"
+    }
+  ],
+  "unlabeledTests": []
+}

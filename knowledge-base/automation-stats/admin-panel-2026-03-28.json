@@ -1,0 +1,1530 @@
+{
+  "suiteId": "admin-panel",
+  "date": "2026-03-28",
+  "total": 303,
+  "automated": 1,
+  "notAutomated": 247,
+  "unlabeled": 55,
+  "coveragePercent": 0.3,
+  "automatedTests": [
+    {
+      "key": "QATM-26662",
+      "summary": "Notifications - Create Step 2 - Verify target count display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26662"
+    }
+  ],
+  "notAutomatedTests": [
+    {
+      "key": "QATM-26418",
+      "summary": "Global Navigation - Logo - Verify Yassir logo is displayed in the Admin Panel header",
+      "url": "https://yassir.atlassian.net/browse/QATM-26418"
+    },
+    {
+      "key": "QATM-26419",
+      "summary": "Global Navigation - Country Selector - Verify country selector dropdown displays all supported countries",
+      "url": "https://yassir.atlassian.net/browse/QATM-26419"
+    },
+    {
+      "key": "QATM-26420",
+      "summary": "Global Navigation - Country Selector - Verify selecting a country filters all data to that region",
+      "url": "https://yassir.atlassian.net/browse/QATM-26420"
+    },
+    {
+      "key": "QATM-26421",
+      "summary": "Global Navigation - Data Isolation - Verify admin can only see data for their assigned countries",
+      "url": "https://yassir.atlassian.net/browse/QATM-26421"
+    },
+    {
+      "key": "QATM-26422",
+      "summary": "Global Navigation - Notifications - Verify notification icon displays alert count",
+      "url": "https://yassir.atlassian.net/browse/QATM-26422"
+    },
+    {
+      "key": "QATM-26423",
+      "summary": "Global Navigation - Profile Menu - Verify admin profile dropdown shows account options",
+      "url": "https://yassir.atlassian.net/browse/QATM-26423"
+    },
+    {
+      "key": "QATM-26424",
+      "summary": "Global Navigation - Side Navigation - Verify all main menu items are visible and accessible",
+      "url": "https://yassir.atlassian.net/browse/QATM-26424"
+    },
+    {
+      "key": "QATM-26425",
+      "summary": "Global Navigation - Breadcrumbs - Verify breadcrumb navigation shows current location",
+      "url": "https://yassir.atlassian.net/browse/QATM-26425"
+    },
+    {
+      "key": "QATM-26426",
+      "summary": "Global Navigation - Session - Verify session timeout redirects to login",
+      "url": "https://yassir.atlassian.net/browse/QATM-26426"
+    },
+    {
+      "key": "QATM-26427",
+      "summary": "Global Navigation - Responsive - Verify Admin Panel is accessible on different screen sizes",
+      "url": "https://yassir.atlassian.net/browse/QATM-26427"
+    },
+    {
+      "key": "QATM-26428",
+      "summary": "Enterprises - Search & Filtering - Verify search by Enterprise Name returns matching results",
+      "url": "https://yassir.atlassian.net/browse/QATM-26428"
+    },
+    {
+      "key": "QATM-26429",
+      "summary": "Enterprises - Search & Filtering - Verify search by Phone Number returns matching enterprise",
+      "url": "https://yassir.atlassian.net/browse/QATM-26429"
+    },
+    {
+      "key": "QATM-26430",
+      "summary": "Enterprises - Search & Filtering - Verify search by Email returns matching enterprise",
+      "url": "https://yassir.atlassian.net/browse/QATM-26430"
+    },
+    {
+      "key": "QATM-26431",
+      "summary": "Enterprises - Search & Filtering - Verify filter by Registration Date range",
+      "url": "https://yassir.atlassian.net/browse/QATM-26431"
+    },
+    {
+      "key": "QATM-26432",
+      "summary": "Enterprises - Search & Filtering - Verify filter by Payment Plan (Prepaid/Postpaid)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26432"
+    },
+    {
+      "key": "QATM-26433",
+      "summary": "Enterprises - Search & Filtering - Verify filter by Enterprise Status (Active/Inactive/Pending)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26433"
+    },
+    {
+      "key": "QATM-26434",
+      "summary": "Enterprises - Search & Filtering - Verify filter by Service Area/City",
+      "url": "https://yassir.atlassian.net/browse/QATM-26434"
+    },
+    {
+      "key": "QATM-26435",
+      "summary": "Enterprises - Search & Filtering - Verify filter by Assigned Sales Representative",
+      "url": "https://yassir.atlassian.net/browse/QATM-26435"
+    },
+    {
+      "key": "QATM-26436",
+      "summary": "Enterprises - Search & Filtering - Verify combining multiple filters",
+      "url": "https://yassir.atlassian.net/browse/QATM-26436"
+    },
+    {
+      "key": "QATM-26437",
+      "summary": "Enterprises - Search & Filtering - Verify clearing all filters resets the list",
+      "url": "https://yassir.atlassian.net/browse/QATM-26437"
+    },
+    {
+      "key": "QATM-26438",
+      "summary": "Enterprises - Search & Filtering - Verify search is case-insensitive",
+      "url": "https://yassir.atlassian.net/browse/QATM-26438"
+    },
+    {
+      "key": "QATM-26439",
+      "summary": "Enterprises - Search & Filtering - Verify partial search returns relevant results",
+      "url": "https://yassir.atlassian.net/browse/QATM-26439"
+    },
+    {
+      "key": "QATM-26440",
+      "summary": "Enterprises - Search & Filtering - Verify empty search shows all results",
+      "url": "https://yassir.atlassian.net/browse/QATM-26440"
+    },
+    {
+      "key": "QATM-26441",
+      "summary": "Enterprises - Search & Filtering - Verify no results message for unmatched search",
+      "url": "https://yassir.atlassian.net/browse/QATM-26441"
+    },
+    {
+      "key": "QATM-26442",
+      "summary": "Enterprises - Data Grid - Verify grid displays all required columns",
+      "url": "https://yassir.atlassian.net/browse/QATM-26442"
+    },
+    {
+      "key": "QATM-26443",
+      "summary": "Enterprises - Data Grid - Verify source indicator shows lead origin",
+      "url": "https://yassir.atlassian.net/browse/QATM-26443"
+    },
+    {
+      "key": "QATM-26444",
+      "summary": "Enterprises - Data Grid - Verify status column displays correct color coding",
+      "url": "https://yassir.atlassian.net/browse/QATM-26444"
+    },
+    {
+      "key": "QATM-26445",
+      "summary": "Enterprises - Data Grid - Verify pagination works correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-26445"
+    },
+    {
+      "key": "QATM-26446",
+      "summary": "Enterprises - Data Grid - Verify sorting by column headers",
+      "url": "https://yassir.atlassian.net/browse/QATM-26446"
+    },
+    {
+      "key": "QATM-26447",
+      "summary": "Enterprises - Data Grid - Verify rows per page selection",
+      "url": "https://yassir.atlassian.net/browse/QATM-26447"
+    },
+    {
+      "key": "QATM-26448",
+      "summary": "Enterprises - Data Grid - Verify clicking enterprise name opens details",
+      "url": "https://yassir.atlassian.net/browse/QATM-26448"
+    },
+    {
+      "key": "QATM-26449",
+      "summary": "Enterprises - Data Grid - Verify action icons are visible and functional",
+      "url": "https://yassir.atlassian.net/browse/QATM-26449"
+    },
+    {
+      "key": "QATM-26450",
+      "summary": "Enterprises - Data Grid - Verify loading indicator during data fetch",
+      "url": "https://yassir.atlassian.net/browse/QATM-26450"
+    },
+    {
+      "key": "QATM-26451",
+      "summary": "Enterprises - Data Grid - Verify grid handles large datasets",
+      "url": "https://yassir.atlassian.net/browse/QATM-26451"
+    },
+    {
+      "key": "QATM-26452",
+      "summary": "Enterprises - Management Actions - Verify 'Add New Enterprise' button opens creation form",
+      "url": "https://yassir.atlassian.net/browse/QATM-26452"
+    },
+    {
+      "key": "QATM-26453",
+      "summary": "Enterprises - Management Actions - Verify creating new enterprise with required fields",
+      "url": "https://yassir.atlassian.net/browse/QATM-26453"
+    },
+    {
+      "key": "QATM-26454",
+      "summary": "Enterprises - Management Actions - Verify validation for required fields during creation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26454"
+    },
+    {
+      "key": "QATM-26455",
+      "summary": "Enterprises - Management Actions - Verify 'Export' button generates downloadable file",
+      "url": "https://yassir.atlassian.net/browse/QATM-26455"
+    },
+    {
+      "key": "QATM-26456",
+      "summary": "Enterprises - Management Actions - Verify 'Delete Enterprise' requires confirmation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26456"
+    },
+    {
+      "key": "QATM-26457",
+      "summary": "Enterprises - Management Actions - Verify enterprise deletion rules (only Inactive can be deleted)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26457"
+    },
+    {
+      "key": "QATM-26458",
+      "summary": "Enterprises - Management Actions - Verify export includes all filtered data",
+      "url": "https://yassir.atlassian.net/browse/QATM-26458"
+    },
+    {
+      "key": "QATM-26459",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify Account Manager assignment dropdown",
+      "url": "https://yassir.atlassian.net/browse/QATM-26459"
+    },
+    {
+      "key": "QATM-26460",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify default commission rate is 19%",
+      "url": "https://yassir.atlassian.net/browse/QATM-26460"
+    },
+    {
+      "key": "QATM-26461",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify custom commission rate can be set",
+      "url": "https://yassir.atlassian.net/browse/QATM-26461"
+    },
+    {
+      "key": "QATM-26462",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify commission rate validation (0-100%)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26462"
+    },
+    {
+      "key": "QATM-26463",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify discount rules based on spending triggers",
+      "url": "https://yassir.atlassian.net/browse/QATM-26463"
+    },
+    {
+      "key": "QATM-26464",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify discount rules based on ride count triggers",
+      "url": "https://yassir.atlassian.net/browse/QATM-26464"
+    },
+    {
+      "key": "QATM-26465",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify multiple discount rules can coexist",
+      "url": "https://yassir.atlassian.net/browse/QATM-26465"
+    },
+    {
+      "key": "QATM-26466",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify Account Type selection (Prepaid/Postpaid)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26466"
+    },
+    {
+      "key": "QATM-26467",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify Validation Status display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26467"
+    },
+    {
+      "key": "QATM-26468",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify legal document upload accepts PDF and Docx",
+      "url": "https://yassir.atlassian.net/browse/QATM-26468"
+    },
+    {
+      "key": "QATM-26469",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify legal document upload rejects files over 10MB",
+      "url": "https://yassir.atlassian.net/browse/QATM-26469"
+    },
+    {
+      "key": "QATM-26470",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify legal document upload rejects invalid file types",
+      "url": "https://yassir.atlassian.net/browse/QATM-26470"
+    },
+    {
+      "key": "QATM-26471",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify NIF/NIS/RC/AI fields are available",
+      "url": "https://yassir.atlassian.net/browse/QATM-26471"
+    },
+    {
+      "key": "QATM-26472",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify billing frequency configuration",
+      "url": "https://yassir.atlassian.net/browse/QATM-26472"
+    },
+    {
+      "key": "QATM-26473",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify enterprise contact information edit",
+      "url": "https://yassir.atlassian.net/browse/QATM-26473"
+    },
+    {
+      "key": "QATM-26474",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify enterprise address edit",
+      "url": "https://yassir.atlassian.net/browse/QATM-26474"
+    },
+    {
+      "key": "QATM-26475",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify view uploaded documents",
+      "url": "https://yassir.atlassian.net/browse/QATM-26475"
+    },
+    {
+      "key": "QATM-26476",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify delete uploaded documents",
+      "url": "https://yassir.atlassian.net/browse/QATM-26476"
+    },
+    {
+      "key": "QATM-26477",
+      "summary": "Enterprise Details - Tab 1 Enterprise Information - Verify document upload history tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26477"
+    },
+    {
+      "key": "QATM-26478",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify Access Dashboard displays all enterprise users",
+      "url": "https://yassir.atlassian.net/browse/QATM-26478"
+    },
+    {
+      "key": "QATM-26479",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify 'Re-invite' functionality for pending users",
+      "url": "https://yassir.atlassian.net/browse/QATM-26479"
+    },
+    {
+      "key": "QATM-26480",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify phone number validation during user creation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26480"
+    },
+    {
+      "key": "QATM-26481",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify email validation during user creation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26481"
+    },
+    {
+      "key": "QATM-26482",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify Super Admin is marked with star icon",
+      "url": "https://yassir.atlassian.net/browse/QATM-26482"
+    },
+    {
+      "key": "QATM-26483",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify Active/Pending status indicators",
+      "url": "https://yassir.atlassian.net/browse/QATM-26483"
+    },
+    {
+      "key": "QATM-26484",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify Edit User functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26484"
+    },
+    {
+      "key": "QATM-26485",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify Single Admin Policy (only one Super Admin)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26485"
+    },
+    {
+      "key": "QATM-26486",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify role management options",
+      "url": "https://yassir.atlassian.net/browse/QATM-26486"
+    },
+    {
+      "key": "QATM-26487",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify user search within enterprise",
+      "url": "https://yassir.atlassian.net/browse/QATM-26487"
+    },
+    {
+      "key": "QATM-26488",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify user filter by role",
+      "url": "https://yassir.atlassian.net/browse/QATM-26488"
+    },
+    {
+      "key": "QATM-26489",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify user filter by status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26489"
+    },
+    {
+      "key": "QATM-26490",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify delete user functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26490"
+    },
+    {
+      "key": "QATM-26491",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify cannot delete Super Admin",
+      "url": "https://yassir.atlassian.net/browse/QATM-26491"
+    },
+    {
+      "key": "QATM-26492",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify bulk user actions",
+      "url": "https://yassir.atlassian.net/browse/QATM-26492"
+    },
+    {
+      "key": "QATM-26493",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify user group assignment",
+      "url": "https://yassir.atlassian.net/browse/QATM-26493"
+    },
+    {
+      "key": "QATM-26494",
+      "summary": "Enterprise Details - Tab 2 User Management - Verify user program assignment",
+      "url": "https://yassir.atlassian.net/browse/QATM-26494"
+    },
+    {
+      "key": "QATM-26495",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify Invoice History displays with Paid/Unpaid filters",
+      "url": "https://yassir.atlassian.net/browse/QATM-26495"
+    },
+    {
+      "key": "QATM-26496",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify invoice generation as CSV with links",
+      "url": "https://yassir.atlassian.net/browse/QATM-26496"
+    },
+    {
+      "key": "QATM-26497",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify payment status update functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26497"
+    },
+    {
+      "key": "QATM-26498",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify Prepaid wallet top-up functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26498"
+    },
+    {
+      "key": "QATM-26499",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify Postpaid budget/credit limit display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26499"
+    },
+    {
+      "key": "QATM-26500",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify plan switching with balance deduction warning",
+      "url": "https://yassir.atlassian.net/browse/QATM-26500"
+    },
+    {
+      "key": "QATM-26501",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify invoice date range filter",
+      "url": "https://yassir.atlassian.net/browse/QATM-26501"
+    },
+    {
+      "key": "QATM-26502",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify invoice download as PDF",
+      "url": "https://yassir.atlassian.net/browse/QATM-26502"
+    },
+    {
+      "key": "QATM-26503",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify payment history audit trail",
+      "url": "https://yassir.atlassian.net/browse/QATM-26503"
+    },
+    {
+      "key": "QATM-26504",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify wallet balance calculation accuracy",
+      "url": "https://yassir.atlassian.net/browse/QATM-26504"
+    },
+    {
+      "key": "QATM-26505",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify credit limit modification for Postpaid",
+      "url": "https://yassir.atlassian.net/browse/QATM-26505"
+    },
+    {
+      "key": "QATM-26506",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify payment method display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26506"
+    },
+    {
+      "key": "QATM-26507",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify overdue invoice highlighting",
+      "url": "https://yassir.atlassian.net/browse/QATM-26507"
+    },
+    {
+      "key": "QATM-26508",
+      "summary": "Enterprise Details - Tab 3 Payments - Verify partial payment recording",
+      "url": "https://yassir.atlassian.net/browse/QATM-26508"
+    },
+    {
+      "key": "QATM-26509",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify Audit Log displays all enterprise activities",
+      "url": "https://yassir.atlassian.net/browse/QATM-26509"
+    },
+    {
+      "key": "QATM-26510",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify filter by Date range",
+      "url": "https://yassir.atlassian.net/browse/QATM-26510"
+    },
+    {
+      "key": "QATM-26511",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify filter by Action Type",
+      "url": "https://yassir.atlassian.net/browse/QATM-26511"
+    },
+    {
+      "key": "QATM-26512",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify Refresh button updates transaction list",
+      "url": "https://yassir.atlassian.net/browse/QATM-26512"
+    },
+    {
+      "key": "QATM-26513",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify Action Taker shows admin email or SYSTEM_TASK_HANDLER",
+      "url": "https://yassir.atlassian.net/browse/QATM-26513"
+    },
+    {
+      "key": "QATM-26514",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify Change Log format is readable",
+      "url": "https://yassir.atlassian.net/browse/QATM-26514"
+    },
+    {
+      "key": "QATM-26515",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify downloadable proof files are accessible",
+      "url": "https://yassir.atlassian.net/browse/QATM-26515"
+    },
+    {
+      "key": "QATM-26516",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify transaction search functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26516"
+    },
+    {
+      "key": "QATM-26517",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify transaction export to CSV",
+      "url": "https://yassir.atlassian.net/browse/QATM-26517"
+    },
+    {
+      "key": "QATM-26518",
+      "summary": "Enterprise Details - Tab 4 Transactions - Verify pagination for large transaction lists",
+      "url": "https://yassir.atlassian.net/browse/QATM-26518"
+    },
+    {
+      "key": "QATM-26519",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify Export functionality with 31-day limit",
+      "url": "https://yassir.atlassian.net/browse/QATM-26519"
+    },
+    {
+      "key": "QATM-26520",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify async email delivery for large exports",
+      "url": "https://yassir.atlassian.net/browse/QATM-26520"
+    },
+    {
+      "key": "QATM-26521",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify filter by Trip Status (9 statuses available)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26521"
+    },
+    {
+      "key": "QATM-26522",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify search by Trip ID",
+      "url": "https://yassir.atlassian.net/browse/QATM-26522"
+    },
+    {
+      "key": "QATM-26523",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify search by Rider name/identifier",
+      "url": "https://yassir.atlassian.net/browse/QATM-26523"
+    },
+    {
+      "key": "QATM-26524",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify grid columns display correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-26524"
+    },
+    {
+      "key": "QATM-26525",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify trip details expand/view",
+      "url": "https://yassir.atlassian.net/browse/QATM-26525"
+    },
+    {
+      "key": "QATM-26526",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify date range filter",
+      "url": "https://yassir.atlassian.net/browse/QATM-26526"
+    },
+    {
+      "key": "QATM-26527",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify refund column display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26527"
+    },
+    {
+      "key": "QATM-26528",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify budget before/after tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26528"
+    },
+    {
+      "key": "QATM-26529",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify export format includes all trip data",
+      "url": "https://yassir.atlassian.net/browse/QATM-26529"
+    },
+    {
+      "key": "QATM-26530",
+      "summary": "Enterprise Details - Tab 5 Trips - Verify location display with pickup/dropoff markers",
+      "url": "https://yassir.atlassian.net/browse/QATM-26530"
+    },
+    {
+      "key": "QATM-26531",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify Support Admin assignment options",
+      "url": "https://yassir.atlassian.net/browse/QATM-26531"
+    },
+    {
+      "key": "QATM-26532",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify Sales Rep assignment functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26532"
+    },
+    {
+      "key": "QATM-26533",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify Sales Rep removal functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26533"
+    },
+    {
+      "key": "QATM-26534",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify Activate/Deactivate enterprise functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26534"
+    },
+    {
+      "key": "QATM-26535",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify Delete requires Inactive status first",
+      "url": "https://yassir.atlassian.net/browse/QATM-26535"
+    },
+    {
+      "key": "QATM-26536",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify deactivation freezes all enterprise operations",
+      "url": "https://yassir.atlassian.net/browse/QATM-26536"
+    },
+    {
+      "key": "QATM-26537",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify reactivation restores enterprise operations",
+      "url": "https://yassir.atlassian.net/browse/QATM-26537"
+    },
+    {
+      "key": "QATM-26538",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify notification settings configuration",
+      "url": "https://yassir.atlassian.net/browse/QATM-26538"
+    },
+    {
+      "key": "QATM-26539",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify service area restrictions",
+      "url": "https://yassir.atlassian.net/browse/QATM-26539"
+    },
+    {
+      "key": "QATM-26540",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify allowed services configuration",
+      "url": "https://yassir.atlassian.net/browse/QATM-26540"
+    },
+    {
+      "key": "QATM-26541",
+      "summary": "Enterprise Details - Tab 6 Settings - Verify account deletion with confirmation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26541"
+    },
+    {
+      "key": "QATM-26542",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify Referral Metrics display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26542"
+    },
+    {
+      "key": "QATM-26543",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify Referral Link copy functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26543"
+    },
+    {
+      "key": "QATM-26544",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify Referred Enterprises list",
+      "url": "https://yassir.atlassian.net/browse/QATM-26544"
+    },
+    {
+      "key": "QATM-26545",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify custom referral rules for Prepaid (max 20 free trips)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26545"
+    },
+    {
+      "key": "QATM-26546",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify custom referral rules for Postpaid (discount %)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26546"
+    },
+    {
+      "key": "QATM-26547",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify country config inheritance",
+      "url": "https://yassir.atlassian.net/browse/QATM-26547"
+    },
+    {
+      "key": "QATM-26548",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify reward accumulation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26548"
+    },
+    {
+      "key": "QATM-26549",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify plan switch expires accumulated rewards",
+      "url": "https://yassir.atlassian.net/browse/QATM-26549"
+    },
+    {
+      "key": "QATM-26550",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify referral rule precedence (enterprise over country)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26550"
+    },
+    {
+      "key": "QATM-26551",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify referral status tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26551"
+    },
+    {
+      "key": "QATM-26552",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify referral expiration handling",
+      "url": "https://yassir.atlassian.net/browse/QATM-26552"
+    },
+    {
+      "key": "QATM-26553",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify referral reward redemption tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26553"
+    },
+    {
+      "key": "QATM-26554",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify edit custom referral rules",
+      "url": "https://yassir.atlassian.net/browse/QATM-26554"
+    },
+    {
+      "key": "QATM-26555",
+      "summary": "Enterprise Details - Tab 7 Referrals - Verify delete custom referral rules",
+      "url": "https://yassir.atlassian.net/browse/QATM-26555"
+    },
+    {
+      "key": "QATM-26556",
+      "summary": "Review Legal Info - Dashboard - Verify Pending Submissions dashboard displays all pending reviews",
+      "url": "https://yassir.atlassian.net/browse/QATM-26556"
+    },
+    {
+      "key": "QATM-26557",
+      "summary": "Review Legal Info - Search - Verify search by enterprise name",
+      "url": "https://yassir.atlassian.net/browse/QATM-26557"
+    },
+    {
+      "key": "QATM-26558",
+      "summary": "Review Legal Info - Filters - Verify filter by submission status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26558"
+    },
+    {
+      "key": "QATM-26559",
+      "summary": "Review Legal Info - Filters - Verify filter by submission date",
+      "url": "https://yassir.atlassian.net/browse/QATM-26559"
+    },
+    {
+      "key": "QATM-26560",
+      "summary": "Review Legal Info - Status Display - Verify color coding (Red/Yellow/Green)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26560"
+    },
+    {
+      "key": "QATM-26561",
+      "summary": "Review Legal Info - Actions - Verify 'Review Submission' link appears only for Pending status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26561"
+    },
+    {
+      "key": "QATM-26562",
+      "summary": "Review Legal Info - Workflow - Verify Approve workflow updates enterprise status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26562"
+    },
+    {
+      "key": "QATM-26563",
+      "summary": "Review Legal Info - Workflow - Verify Reject workflow requires reason",
+      "url": "https://yassir.atlassian.net/browse/QATM-26563"
+    },
+    {
+      "key": "QATM-26564",
+      "summary": "Review Legal Info - Notifications - Verify notification is sent on status change",
+      "url": "https://yassir.atlassian.net/browse/QATM-26564"
+    },
+    {
+      "key": "QATM-26565",
+      "summary": "Review Legal Info - Workflow - Verify document preview functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26565"
+    },
+    {
+      "key": "QATM-26566",
+      "summary": "Review Legal Info - Workflow - Verify document download functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26566"
+    },
+    {
+      "key": "QATM-26567",
+      "summary": "Review Legal Info - History - Verify review history is tracked",
+      "url": "https://yassir.atlassian.net/browse/QATM-26567"
+    },
+    {
+      "key": "QATM-26568",
+      "summary": "Manage Admins - All Administrators - Verify search by Name returns matching admins",
+      "url": "https://yassir.atlassian.net/browse/QATM-26568"
+    },
+    {
+      "key": "QATM-26569",
+      "summary": "Manage Admins - All Administrators - Verify search by Email returns matching admin",
+      "url": "https://yassir.atlassian.net/browse/QATM-26569"
+    },
+    {
+      "key": "QATM-26570",
+      "summary": "Manage Admins - All Administrators - Verify filter by Country",
+      "url": "https://yassir.atlassian.net/browse/QATM-26570"
+    },
+    {
+      "key": "QATM-26571",
+      "summary": "Manage Admins - All Administrators - Verify filter by Status (Active/Inactive)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26571"
+    },
+    {
+      "key": "QATM-26572",
+      "summary": "Manage Admins - All Administrators - Verify filter by Role",
+      "url": "https://yassir.atlassian.net/browse/QATM-26572"
+    },
+    {
+      "key": "QATM-26573",
+      "summary": "Manage Admins - All Administrators - Verify self-management constraint (cannot edit own profile)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26573"
+    },
+    {
+      "key": "QATM-26574",
+      "summary": "Manage Admins - All Administrators - Verify self-management constraint (cannot delete own profile)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26574"
+    },
+    {
+      "key": "QATM-26575",
+      "summary": "Manage Admins - All Administrators - Verify Edit sidebar opens with role toggles",
+      "url": "https://yassir.atlassian.net/browse/QATM-26575"
+    },
+    {
+      "key": "QATM-26576",
+      "summary": "Manage Admins - All Administrators - Verify Full Access vs Limited Access permissions",
+      "url": "https://yassir.atlassian.net/browse/QATM-26576"
+    },
+    {
+      "key": "QATM-26577",
+      "summary": "Manage Admins - All Administrators - Verify Delete with confirmation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26577"
+    },
+    {
+      "key": "QATM-26578",
+      "summary": "Manage Admins - All Administrators - Verify add new administrator",
+      "url": "https://yassir.atlassian.net/browse/QATM-26578"
+    },
+    {
+      "key": "QATM-26579",
+      "summary": "Manage Admins - All Administrators - Verify admin invitation via email",
+      "url": "https://yassir.atlassian.net/browse/QATM-26579"
+    },
+    {
+      "key": "QATM-26580",
+      "summary": "Manage Admins - All Administrators - Verify country assignment for admin",
+      "url": "https://yassir.atlassian.net/browse/QATM-26580"
+    },
+    {
+      "key": "QATM-26581",
+      "summary": "Manage Admins - All Administrators - Verify service area assignment for admin",
+      "url": "https://yassir.atlassian.net/browse/QATM-26581"
+    },
+    {
+      "key": "QATM-26582",
+      "summary": "Manage Admins - All Administrators - Verify admin status toggle (activate/deactivate)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26582"
+    },
+    {
+      "key": "QATM-26583",
+      "summary": "Manage Admins - Sales Representatives - Verify Sales Rep search by name/email",
+      "url": "https://yassir.atlassian.net/browse/QATM-26583"
+    },
+    {
+      "key": "QATM-26584",
+      "summary": "Manage Admins - Sales Representatives - Verify filter by country and status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26584"
+    },
+    {
+      "key": "QATM-26585",
+      "summary": "Manage Admins - Sales Representatives - Verify Edit shows Assigned Enterprises list",
+      "url": "https://yassir.atlassian.net/browse/QATM-26585"
+    },
+    {
+      "key": "QATM-26586",
+      "summary": "Manage Admins - Sales Representatives - Verify bulk assignment via Update List",
+      "url": "https://yassir.atlassian.net/browse/QATM-26586"
+    },
+    {
+      "key": "QATM-26587",
+      "summary": "Manage Admins - Sales Representatives - Verify Delete requires reassignment of enterprises",
+      "url": "https://yassir.atlassian.net/browse/QATM-26587"
+    },
+    {
+      "key": "QATM-26588",
+      "summary": "Manage Admins - Sales Representatives - Verify demotion vs full deletion options",
+      "url": "https://yassir.atlassian.net/browse/QATM-26588"
+    },
+    {
+      "key": "QATM-26589",
+      "summary": "Manage Admins - Sales Representatives - Verify sales rep performance metrics",
+      "url": "https://yassir.atlassian.net/browse/QATM-26589"
+    },
+    {
+      "key": "QATM-26590",
+      "summary": "Manage Admins - Sales Representatives - Verify enterprise assignment history",
+      "url": "https://yassir.atlassian.net/browse/QATM-26590"
+    },
+    {
+      "key": "QATM-26591",
+      "summary": "Manage Admins - Sales Representatives - Verify promote admin to sales rep",
+      "url": "https://yassir.atlassian.net/browse/QATM-26591"
+    },
+    {
+      "key": "QATM-26592",
+      "summary": "Manage Admins - Sales Representatives - Verify create new sales rep directly",
+      "url": "https://yassir.atlassian.net/browse/QATM-26592"
+    },
+    {
+      "key": "QATM-26593",
+      "summary": "Manage Admins - Inside Sales - Verify Inside Sales toggle recognition",
+      "url": "https://yassir.atlassian.net/browse/QATM-26593"
+    },
+    {
+      "key": "QATM-26594",
+      "summary": "Manage Admins - Inside Sales - Verify Inside Sales login redirects to Leads Management only",
+      "url": "https://yassir.atlassian.net/browse/QATM-26594"
+    },
+    {
+      "key": "QATM-26595",
+      "summary": "Manage Admins - Inside Sales - Verify data isolation (only assigned leads visible)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26595"
+    },
+    {
+      "key": "QATM-26596",
+      "summary": "Manage Admins - Inside Sales - Verify cannot access full Enterprise directory",
+      "url": "https://yassir.atlassian.net/browse/QATM-26596"
+    },
+    {
+      "key": "QATM-26597",
+      "summary": "Manage Admins - Inside Sales - Verify Delete options (demotion vs full)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26597"
+    },
+    {
+      "key": "QATM-26598",
+      "summary": "Manage Admins - Inside Sales - Verify orphaned leads revert to Unassigned",
+      "url": "https://yassir.atlassian.net/browse/QATM-26598"
+    },
+    {
+      "key": "QATM-26599",
+      "summary": "Manage Admins - Inside Sales - Verify Inside Sales creation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26599"
+    },
+    {
+      "key": "QATM-26600",
+      "summary": "Manage Admins - Inside Sales - Verify Inside Sales lead assignment",
+      "url": "https://yassir.atlassian.net/browse/QATM-26600"
+    },
+    {
+      "key": "QATM-26601",
+      "summary": "Manage Admins - Inside Sales - Verify Inside Sales territory assignment",
+      "url": "https://yassir.atlassian.net/browse/QATM-26601"
+    },
+    {
+      "key": "QATM-26602",
+      "summary": "Manage Admins - Inside Sales - Verify Inside Sales performance tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26602"
+    },
+    {
+      "key": "QATM-26603",
+      "summary": "Country Reports - Monthly Invoices - Verify request by month and year",
+      "url": "https://yassir.atlassian.net/browse/QATM-26603"
+    },
+    {
+      "key": "QATM-26604",
+      "summary": "Country Reports - Monthly Invoices - Verify master CSV download with Invoice Links",
+      "url": "https://yassir.atlassian.net/browse/QATM-26604"
+    },
+    {
+      "key": "QATM-26605",
+      "summary": "Country Reports - Monthly Invoices - Verify invoice links are functional",
+      "url": "https://yassir.atlassian.net/browse/QATM-26605"
+    },
+    {
+      "key": "QATM-26606",
+      "summary": "Country Reports - Monthly Invoices - Verify report generation status tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26606"
+    },
+    {
+      "key": "QATM-26607",
+      "summary": "Country Reports - Monthly Finance Reports - Verify archive by year and month",
+      "url": "https://yassir.atlassian.net/browse/QATM-26607"
+    },
+    {
+      "key": "QATM-26608",
+      "summary": "Country Reports - Monthly Finance Reports - Verify async email delivery",
+      "url": "https://yassir.atlassian.net/browse/QATM-26608"
+    },
+    {
+      "key": "QATM-26609",
+      "summary": "Country Reports - Monthly Finance Reports - Verify report contains all required columns",
+      "url": "https://yassir.atlassian.net/browse/QATM-26609"
+    },
+    {
+      "key": "QATM-26610",
+      "summary": "Leads Management - Lead Creation - Verify B2B leads only restriction",
+      "url": "https://yassir.atlassian.net/browse/QATM-26610"
+    },
+    {
+      "key": "QATM-26611",
+      "summary": "Leads Management - Lead Creation - Verify country auto-population from phone prefix",
+      "url": "https://yassir.atlassian.net/browse/QATM-26611"
+    },
+    {
+      "key": "QATM-26612",
+      "summary": "Leads Management - Lead Creation - Verify mandatory fields validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26612"
+    },
+    {
+      "key": "QATM-26613",
+      "summary": "Leads Management - Lead Creation - Verify source tagging",
+      "url": "https://yassir.atlassian.net/browse/QATM-26613"
+    },
+    {
+      "key": "QATM-26614",
+      "summary": "Leads Management - Lead Creation - Verify duplicate phone number detection",
+      "url": "https://yassir.atlassian.net/browse/QATM-26614"
+    },
+    {
+      "key": "QATM-26615",
+      "summary": "Leads Management - Lead Creation - Verify duplicate email detection",
+      "url": "https://yassir.atlassian.net/browse/QATM-26615"
+    },
+    {
+      "key": "QATM-26616",
+      "summary": "Leads Management - Display - Verify legacy leads show empty Inside Sales field",
+      "url": "https://yassir.atlassian.net/browse/QATM-26616"
+    },
+    {
+      "key": "QATM-26617",
+      "summary": "Leads Management - Filtering - Verify filter by status",
+      "url": "https://yassir.atlassian.net/browse/QATM-26617"
+    },
+    {
+      "key": "QATM-26618",
+      "summary": "Leads Management - Filtering - Verify filter by assignment",
+      "url": "https://yassir.atlassian.net/browse/QATM-26618"
+    },
+    {
+      "key": "QATM-26619",
+      "summary": "Leads Management - Filtering - Verify filter by date range",
+      "url": "https://yassir.atlassian.net/browse/QATM-26619"
+    },
+    {
+      "key": "QATM-26620",
+      "summary": "Leads Management - Filtering - Verify filter by source",
+      "url": "https://yassir.atlassian.net/browse/QATM-26620"
+    },
+    {
+      "key": "QATM-26621",
+      "summary": "Leads Management - Lifecycle - Verify status transitions from New to Won/Lost",
+      "url": "https://yassir.atlassian.net/browse/QATM-26621"
+    },
+    {
+      "key": "QATM-26622",
+      "summary": "Leads Management - Lifecycle - Verify status cannot skip stages",
+      "url": "https://yassir.atlassian.net/browse/QATM-26622"
+    },
+    {
+      "key": "QATM-26623",
+      "summary": "Leads Management - Lifecycle - Verify status can move backwards",
+      "url": "https://yassir.atlassian.net/browse/QATM-26623"
+    },
+    {
+      "key": "QATM-26624",
+      "summary": "Leads Management - Conversion - Verify Won lead converts to Enterprise with source indicator",
+      "url": "https://yassir.atlassian.net/browse/QATM-26624"
+    },
+    {
+      "key": "QATM-26625",
+      "summary": "Leads Management - Conversion - Verify Inside Sales rep becomes Sales Rep on conversion",
+      "url": "https://yassir.atlassian.net/browse/QATM-26625"
+    },
+    {
+      "key": "QATM-26626",
+      "summary": "Leads Management - Conversion - Verify lead data transfers to enterprise",
+      "url": "https://yassir.atlassian.net/browse/QATM-26626"
+    },
+    {
+      "key": "QATM-26627",
+      "summary": "Leads Management - Reassignment - Verify single lead reassignment",
+      "url": "https://yassir.atlassian.net/browse/QATM-26627"
+    },
+    {
+      "key": "QATM-26628",
+      "summary": "Leads Management - Reassignment - Verify bulk handover on rep departure",
+      "url": "https://yassir.atlassian.net/browse/QATM-26628"
+    },
+    {
+      "key": "QATM-26629",
+      "summary": "Leads Management - Reassignment - Verify reassignment notification",
+      "url": "https://yassir.atlassian.net/browse/QATM-26629"
+    },
+    {
+      "key": "QATM-26630",
+      "summary": "Leads Management - Notes - Verify add notes to lead",
+      "url": "https://yassir.atlassian.net/browse/QATM-26630"
+    },
+    {
+      "key": "QATM-26631",
+      "summary": "Leads Management - Notes - Verify note history tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26631"
+    },
+    {
+      "key": "QATM-26632",
+      "summary": "Leads Management - Activity - Verify activity log tracking",
+      "url": "https://yassir.atlassian.net/browse/QATM-26632"
+    },
+    {
+      "key": "QATM-26633",
+      "summary": "Services Config - Display - Verify Service cards displayed per country",
+      "url": "https://yassir.atlassian.net/browse/QATM-26633"
+    },
+    {
+      "key": "QATM-26635",
+      "summary": "Services Config - Edit Allowed Services - Verify disable/enable for all enterprises",
+      "url": "https://yassir.atlassian.net/browse/QATM-26635"
+    },
+    {
+      "key": "QATM-26636",
+      "summary": "Services Config - Edit Allowed Services - Verify master checkbox toggles all services",
+      "url": "https://yassir.atlassian.net/browse/QATM-26636"
+    },
+    {
+      "key": "QATM-26637",
+      "summary": "Services Config - Edit Allowed Services - Verify search within services list",
+      "url": "https://yassir.atlassian.net/browse/QATM-26637"
+    },
+    {
+      "key": "QATM-26638",
+      "summary": "Services Config - Edit Allowed Services - Verify individual service toggles",
+      "url": "https://yassir.atlassian.net/browse/QATM-26638"
+    },
+    {
+      "key": "QATM-26639",
+      "summary": "Services Config - Edit Allowed Services - Verify service configuration persistence",
+      "url": "https://yassir.atlassian.net/browse/QATM-26639"
+    },
+    {
+      "key": "QATM-26640",
+      "summary": "Services Config - Edit Allowed Services - Verify service pricing display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26640"
+    },
+    {
+      "key": "QATM-26641",
+      "summary": "Services Config - Edit Allowed Services - Verify service availability scheduling",
+      "url": "https://yassir.atlassian.net/browse/QATM-26641"
+    },
+    {
+      "key": "QATM-26643",
+      "summary": "Notifications - Display - Verify Sent/Scheduled tabs exist",
+      "url": "https://yassir.atlassian.net/browse/QATM-26643"
+    },
+    {
+      "key": "QATM-26644",
+      "summary": "Notifications - Display - Verify grid columns are correct",
+      "url": "https://yassir.atlassian.net/browse/QATM-26644"
+    },
+    {
+      "key": "QATM-26645",
+      "summary": "Notifications - Display - Verify status badges (Green for Sent, Orange for Scheduled)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26645"
+    },
+    {
+      "key": "QATM-26646",
+      "summary": "Notifications - Display - Verify notification preview on hover/click",
+      "url": "https://yassir.atlassian.net/browse/QATM-26646"
+    },
+    {
+      "key": "QATM-26647",
+      "summary": "Notifications - Actions - Verify Delete is available only for Scheduled notifications",
+      "url": "https://yassir.atlassian.net/browse/QATM-26647"
+    },
+    {
+      "key": "QATM-26648",
+      "summary": "Notifications - Actions - Verify Edit is available only for Scheduled notifications",
+      "url": "https://yassir.atlassian.net/browse/QATM-26648"
+    },
+    {
+      "key": "QATM-26649",
+      "summary": "Notifications - Actions - Verify duplicate notification functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-26649"
+    },
+    {
+      "key": "QATM-26650",
+      "summary": "Notifications - Create Step 1 - Verify Title field is required",
+      "url": "https://yassir.atlassian.net/browse/QATM-26650"
+    },
+    {
+      "key": "QATM-26651",
+      "summary": "Notifications - Create Step 1 - Verify Content has 150 character maximum",
+      "url": "https://yassir.atlassian.net/browse/QATM-26651"
+    },
+    {
+      "key": "QATM-26652",
+      "summary": "Notifications - Create Step 1 - Verify character counter display",
+      "url": "https://yassir.atlassian.net/browse/QATM-26652"
+    },
+    {
+      "key": "QATM-26653",
+      "summary": "Notifications - Create Step 1 - Verify Deep Linking options",
+      "url": "https://yassir.atlassian.net/browse/QATM-26653"
+    },
+    {
+      "key": "QATM-26654",
+      "summary": "Notifications - Create Step 1 - Verify Deep Link URL validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-26654"
+    },
+    {
+      "key": "QATM-26655",
+      "summary": "Notifications - Create Step 1 - Verify notification preview",
+      "url": "https://yassir.atlassian.net/browse/QATM-26655"
+    },
+    {
+      "key": "QATM-26656",
+      "summary": "Notifications - Create Step 2 - Verify enterprise selection with filters",
+      "url": "https://yassir.atlassian.net/browse/QATM-26656"
+    },
+    {
+      "key": "QATM-26657",
+      "summary": "Notifications - Create Step 2 - Verify select all enterprises option",
+      "url": "https://yassir.atlassian.net/browse/QATM-26657"
+    },
+    {
+      "key": "QATM-26658",
+      "summary": "Notifications - Create Step 2 - Verify User Roles targeting",
+      "url": "https://yassir.atlassian.net/browse/QATM-26658"
+    },
+    {
+      "key": "QATM-26659",
+      "summary": "Notifications - Create Step 2 - Verify Instant Send option",
+      "url": "https://yassir.atlassian.net/browse/QATM-26659"
+    },
+    {
+      "key": "QATM-26660",
+      "summary": "Notifications - Create Step 2 - Verify Schedule for later with date/time picker",
+      "url": "https://yassir.atlassian.net/browse/QATM-26660"
+    },
+    {
+      "key": "QATM-26661",
+      "summary": "Notifications - Create Step 2 - Verify cannot schedule in the past",
+      "url": "https://yassir.atlassian.net/browse/QATM-26661"
+    },
+    {
+      "key": "QATM-26663",
+      "summary": "Notifications - Create Step 2 - Verify confirmation before send",
+      "url": "https://yassir.atlassian.net/browse/QATM-26663"
+    },
+    {
+      "key": "QATM-26664",
+      "summary": "Global Referral - Configuration - Verify Payment plan toggle (Prepaid/Postpaid)",
+      "url": "https://yassir.atlassian.net/browse/QATM-26664"
+    },
+    {
+      "key": "QATM-26665",
+      "summary": "Global Referral - Prepaid Rules - Verify Budget top-up/Rides/Members triggers",
+      "url": "https://yassir.atlassian.net/browse/QATM-26665"
+    },
+    {
+      "key": "QATM-26666",
+      "summary": "Global Referral - Prepaid Rules - Verify max 20 free trips limit",
+      "url": "https://yassir.atlassian.net/browse/QATM-26666"
+    },
+    {
+      "key": "QATM-26667",
+      "summary": "Global Referral - Postpaid Rules - Verify Amount Spent/Rides/Members triggers",
+      "url": "https://yassir.atlassian.net/browse/QATM-26667"
+    }
+  ],
+  "unlabeledTests": [
+    {
+      "key": "QATM-27008",
+      "summary": "Global Referral - Postpaid Rules - Verify Discount percentage configuration",
+      "url": "https://yassir.atlassian.net/browse/QATM-27008"
+    },
+    {
+      "key": "QATM-27009",
+      "summary": "Global Referral - Statistics - Verify statistics overview displays correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-27009"
+    },
+    {
+      "key": "QATM-27010",
+      "summary": "Global Referral - Default Rules - Verify country rules apply when no custom enterprise rules exist",
+      "url": "https://yassir.atlassian.net/browse/QATM-27010"
+    },
+    {
+      "key": "QATM-27011",
+      "summary": "Challenges - Search - Verify search by Challenge Name",
+      "url": "https://yassir.atlassian.net/browse/QATM-27011"
+    },
+    {
+      "key": "QATM-27012",
+      "summary": "Challenges - Filters - Verify filter by Date range",
+      "url": "https://yassir.atlassian.net/browse/QATM-27012"
+    },
+    {
+      "key": "QATM-27013",
+      "summary": "Challenges - Filters - Verify filter by Status (Upcoming/Ongoing/Completed/Expired)",
+      "url": "https://yassir.atlassian.net/browse/QATM-27013"
+    },
+    {
+      "key": "QATM-27014",
+      "summary": "Challenges - Filters - Verify filter by Activation status",
+      "url": "https://yassir.atlassian.net/browse/QATM-27014"
+    },
+    {
+      "key": "QATM-27015",
+      "summary": "Challenges - Create - Verify Name field has 30 character maximum",
+      "url": "https://yassir.atlassian.net/browse/QATM-27015"
+    },
+    {
+      "key": "QATM-27016",
+      "summary": "Challenges - Create - Verify past dates are not allowed",
+      "url": "https://yassir.atlassian.net/browse/QATM-27016"
+    },
+    {
+      "key": "QATM-27017",
+      "summary": "Challenges - Create - Verify no date overlaps for same companies",
+      "url": "https://yassir.atlassian.net/browse/QATM-27017"
+    },
+    {
+      "key": "QATM-27018",
+      "summary": "Challenges - Create - Verify Eligibility targeting configuration",
+      "url": "https://yassir.atlassian.net/browse/QATM-27018"
+    },
+    {
+      "key": "QATM-27019",
+      "summary": "Challenges - Create - Verify challenge description field",
+      "url": "https://yassir.atlassian.net/browse/QATM-27019"
+    },
+    {
+      "key": "QATM-27021",
+      "summary": "Challenges - Tier Configuration - Verify up to 10 tier levels can be created",
+      "url": "https://yassir.atlassian.net/browse/QATM-27021"
+    },
+    {
+      "key": "QATM-27022",
+      "summary": "Challenges - Tier Configuration - Verify sequential logic (n+1 starts at n+1)",
+      "url": "https://yassir.atlassian.net/browse/QATM-27022"
+    },
+    {
+      "key": "QATM-27023",
+      "summary": "Challenges - Tier Configuration - Verify cumulative rewards max 100%",
+      "url": "https://yassir.atlassian.net/browse/QATM-27023"
+    },
+    {
+      "key": "QATM-27024",
+      "summary": "Challenges - Tier Configuration - Verify tier name customization",
+      "url": "https://yassir.atlassian.net/browse/QATM-27024"
+    },
+    {
+      "key": "QATM-27025",
+      "summary": "Challenges - Tier Configuration - Verify tier badge/icon selection",
+      "url": "https://yassir.atlassian.net/browse/QATM-27025"
+    },
+    {
+      "key": "QATM-27026",
+      "summary": "Challenges - Tier Configuration - Verify tier progression display",
+      "url": "https://yassir.atlassian.net/browse/QATM-27026"
+    },
+    {
+      "key": "QATM-27027",
+      "summary": "Challenges - Lifecycle - Verify UPCOMING challenges are editable",
+      "url": "https://yassir.atlassian.net/browse/QATM-27027"
+    },
+    {
+      "key": "QATM-27028",
+      "summary": "Challenges - Lifecycle - Verify ONGOING/COMPLETED/EXPIRED challenges are locked",
+      "url": "https://yassir.atlassian.net/browse/QATM-27028"
+    },
+    {
+      "key": "QATM-27029",
+      "summary": "Challenges - Lifecycle - Verify challenge activation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27029"
+    },
+    {
+      "key": "QATM-27030",
+      "summary": "Challenges - Lifecycle - Verify challenge completion",
+      "url": "https://yassir.atlassian.net/browse/QATM-27030"
+    },
+    {
+      "key": "QATM-27031",
+      "summary": "Challenges - Lifecycle - Verify manual challenge cancellation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27031"
+    },
+    {
+      "key": "QATM-27032",
+      "summary": "Challenges - Metrics - Verify Performance Metrics display correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-27032"
+    },
+    {
+      "key": "QATM-27033",
+      "summary": "Challenges - Metrics - Verify participant list display",
+      "url": "https://yassir.atlassian.net/browse/QATM-27033"
+    },
+    {
+      "key": "QATM-27034",
+      "summary": "Challenges - Metrics - Verify leaderboard display",
+      "url": "https://yassir.atlassian.net/browse/QATM-27034"
+    },
+    {
+      "key": "QATM-27035",
+      "summary": "Challenges - Activity Log - Verify Activity Log tracks challenge changes",
+      "url": "https://yassir.atlassian.net/browse/QATM-27035"
+    },
+    {
+      "key": "QATM-27036",
+      "summary": "Yassir Legal Info - Display - Verify Corporate metadata fields are shown",
+      "url": "https://yassir.atlassian.net/browse/QATM-27036"
+    },
+    {
+      "key": "QATM-27037",
+      "summary": "Yassir Legal Info - Display - Verify Regulatory Identifiers are displayed",
+      "url": "https://yassir.atlassian.net/browse/QATM-27037"
+    },
+    {
+      "key": "QATM-27038",
+      "summary": "Yassir Legal Info - Display - Verify Banking Details are shown",
+      "url": "https://yassir.atlassian.net/browse/QATM-27038"
+    },
+    {
+      "key": "QATM-27039",
+      "summary": "Yassir Legal Info - Edit - Verify Edit functionality updates company details",
+      "url": "https://yassir.atlassian.net/browse/QATM-27039"
+    },
+    {
+      "key": "QATM-27040",
+      "summary": "Yassir Legal Info - Integration - Verify changes reflect on generated invoices",
+      "url": "https://yassir.atlassian.net/browse/QATM-27040"
+    },
+    {
+      "key": "QATM-27041",
+      "summary": "Yassir Legal Info - Validation - Verify required fields validation",
+      "url": "https://yassir.atlassian.net/browse/QATM-27041"
+    },
+    {
+      "key": "QATM-27042",
+      "summary": "Gift Cards - Template List - Verify template list displays all available templates",
+      "url": "https://yassir.atlassian.net/browse/QATM-27042"
+    },
+    {
+      "key": "QATM-27043",
+      "summary": "Gift Cards - Search - Verify search by template name",
+      "url": "https://yassir.atlassian.net/browse/QATM-27043"
+    },
+    {
+      "key": "QATM-27044",
+      "summary": "Gift Cards - Filters - Verify filter by status and theme",
+      "url": "https://yassir.atlassian.net/browse/QATM-27044"
+    },
+    {
+      "key": "QATM-27045",
+      "summary": "Gift Cards - Grid - Verify grid columns display correctly",
+      "url": "https://yassir.atlassian.net/browse/QATM-27045"
+    },
+    {
+      "key": "QATM-27046",
+      "summary": "Gift Cards - Grid - Verify purchase count links to Usage Report",
+      "url": "https://yassir.atlassian.net/browse/QATM-27046"
+    },
+    {
+      "key": "QATM-27047",
+      "summary": "Gift Cards - Create - Verify Name field is required",
+      "url": "https://yassir.atlassian.net/browse/QATM-27047"
+    },
+    {
+      "key": "QATM-27048",
+      "summary": "Gift Cards - Create - Verify Amount field is required",
+      "url": "https://yassir.atlassian.net/browse/QATM-27048"
+    },
+    {
+      "key": "QATM-27049",
+      "summary": "Gift Cards - Create - Verify Country is locked to admin's region",
+      "url": "https://yassir.atlassian.net/browse/QATM-27049"
+    },
+    {
+      "key": "QATM-27050",
+      "summary": "Gift Cards - Create - Verify Theme gallery options",
+      "url": "https://yassir.atlassian.net/browse/QATM-27050"
+    },
+    {
+      "key": "QATM-27051",
+      "summary": "Gift Cards - Create - Verify Preview design functionality",
+      "url": "https://yassir.atlassian.net/browse/QATM-27051"
+    },
+    {
+      "key": "QATM-27052",
+      "summary": "Gift Cards - Create - Verify Amount validation (positive numbers only)",
+      "url": "https://yassir.atlassian.net/browse/QATM-27052"
+    },
+    {
+      "key": "QATM-27053",
+      "summary": "Gift Cards - Isolation - Verify country-specific isolation of templates",
+      "url": "https://yassir.atlassian.net/browse/QATM-27053"
+    },
+    {
+      "key": "QATM-27054",
+      "summary": "Gift Cards - Lifecycle - Verify Deactivation when Purchases >= 1",
+      "url": "https://yassir.atlassian.net/browse/QATM-27054"
+    },
+    {
+      "key": "QATM-27055",
+      "summary": "Gift Cards - Lifecycle - Verify Deletion only when Purchases = 0",
+      "url": "https://yassir.atlassian.net/browse/QATM-27055"
+    },
+    {
+      "key": "QATM-27056",
+      "summary": "Gift Cards - Lifecycle - Verify cannot delete template with purchases",
+      "url": "https://yassir.atlassian.net/browse/QATM-27056"
+    },
+    {
+      "key": "QATM-27057",
+      "summary": "Gift Cards - Lifecycle - Verify reactivation of deactivated template",
+      "url": "https://yassir.atlassian.net/browse/QATM-27057"
+    },
+    {
+      "key": "QATM-27058",
+      "summary": "Gift Cards - Usage Report - Verify Purchased Instances display",
+      "url": "https://yassir.atlassian.net/browse/QATM-27058"
+    },
+    {
+      "key": "QATM-27059",
+      "summary": "Gift Cards - Usage Report - Verify View trip log per instance",
+      "url": "https://yassir.atlassian.net/browse/QATM-27059"
+    },
+    {
+      "key": "QATM-27060",
+      "summary": "Gift Cards - Usage Report - Verify filter by business",
+      "url": "https://yassir.atlassian.net/browse/QATM-27060"
+    },
+    {
+      "key": "QATM-27061",
+      "summary": "Gift Cards - Usage Report - Verify filter by status (Active/Used/Expired)",
+      "url": "https://yassir.atlassian.net/browse/QATM-27061"
+    },
+    {
+      "key": "QATM-27062",
+      "summary": "Gift Cards - Usage Report - Verify export usage data",
+      "url": "https://yassir.atlassian.net/browse/QATM-27062"
+    },
+    {
+      "key": "QATM-27063",
+      "summary": "Gift Cards - Activity Log - Verify Activity Log tracks template changes",
+      "url": "https://yassir.atlassian.net/browse/QATM-27063"
+    }
+  ]
+}
